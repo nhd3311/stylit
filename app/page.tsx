@@ -1,17 +1,6 @@
-"use client";
-
-import { FormEvent, useState } from "react";
+import { WaitlistForm } from "@/components/waitlist-form";
 
 export default function Home() {
-  const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!email.trim()) return;
-    setSubmitted(true);
-  }
-
   return (
     <div className="relative flex min-h-full flex-1 flex-col overflow-hidden bg-zinc-950 text-white">
       <div
@@ -45,35 +34,7 @@ export default function Home() {
         </p>
 
         <div className="mt-10 w-full max-w-md">
-          {submitted ? (
-            <p className="rounded-2xl border border-violet-500/30 bg-violet-500/10 px-5 py-4 text-center text-sm text-violet-200 sm:text-base">
-              Cảm ơn bạn! Chúng mình sẽ liên hệ sớm nhất.
-            </p>
-          ) : (
-            <form
-              onSubmit={handleSubmit}
-              className="flex flex-col gap-3 sm:flex-row"
-            >
-              <label htmlFor="email" className="sr-only">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email của bạn"
-                className="h-12 flex-1 rounded-xl border border-zinc-800 bg-zinc-900/80 px-4 text-base text-white placeholder:text-zinc-500 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
-              />
-              <button
-                type="submit"
-                className="h-12 shrink-0 rounded-xl bg-linear-to-r from-violet-600 to-fuchsia-600 px-6 text-sm font-semibold text-white transition hover:from-violet-500 hover:to-fuchsia-500 active:scale-[0.98] sm:text-base"
-              >
-                Đăng ký trải nghiệm sớm
-              </button>
-            </form>
-          )}
+          <WaitlistForm />
         </div>
 
         <p className="mt-8 text-xs text-zinc-600 sm:text-sm">

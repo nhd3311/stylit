@@ -33,7 +33,7 @@ export default function Home() {
         </p>
 
         <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl sm:leading-tight lg:text-6xl">
-          Stylit —{" "}
+          Fitcheck —{" "}
           <span className="bg-linear-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
             Tủ đồ thông minh của bạn
           </span>
@@ -82,7 +82,7 @@ export default function Home() {
       </main>
 
       <footer className="relative z-10 px-6 py-6 text-center text-xs text-zinc-600 sm:px-8">
-        © {new Date().getFullYear()} Stylit
+        © {new Date().getFullYear()} Fitcheck
       </footer>
     </div>
   );

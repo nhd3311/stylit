@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { useTranslations } from "next-intl";
 import { AuthShell } from "@/components/auth-shell";
 import { SignupForm } from "@/components/signup-form";
 
@@ -8,11 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function SignupPage() {
+  const t = useTranslations("auth");
   return (
-    <AuthShell
-      title="Sign up"
-      subtitle="Create an account to start styling smarter"
-    >
+    <AuthShell title={t("signupTitle")} subtitle={t("signupSubtitle")}>
       <SignupForm />
     </AuthShell>
   );

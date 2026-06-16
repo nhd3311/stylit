@@ -10,7 +10,7 @@ type AuthShellProps = {
 
 export function AuthShell({ title, subtitle, children, footer }: AuthShellProps) {
   return (
-    <div className="relative flex min-h-full flex-1 flex-col overflow-hidden bg-zinc-950 text-white">
+    <div className="relative flex min-h-full flex-1 flex-col overflow-hidden bg-background text-foreground">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(168,85,247,0.25),transparent)]"
@@ -34,21 +34,21 @@ export function AuthShell({ title, subtitle, children, footer }: AuthShellProps)
 
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{title}</h1>
         {subtitle && (
-          <p className="mt-2 text-sm text-zinc-400 sm:text-base">{subtitle}</p>
+          <p className="mt-2 text-sm text-muted-foreground sm:text-base">{subtitle}</p>
         )}
 
         <div className="mt-8">{children}</div>
 
-        {footer && <div className="mt-6 text-center text-sm text-zinc-500">{footer}</div>}
+        {footer && <div className="mt-6 text-center text-sm text-muted-foreground">{footer}</div>}
       </main>
     </div>
   );
 }
 
 export const authInputClassName =
-  "h-12 w-full rounded-xl border border-zinc-800 bg-zinc-900/80 px-4 text-base text-white placeholder:text-zinc-500 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 disabled:cursor-not-allowed disabled:opacity-60";
+  "h-12 w-full rounded-xl border border-border bg-input px-4 text-base text-foreground placeholder:text-muted-foreground outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 disabled:cursor-not-allowed disabled:opacity-60";
 
 export const authButtonClassName =
   "h-12 w-full rounded-xl bg-linear-to-r from-violet-600 to-fuchsia-600 px-6 text-sm font-semibold text-white transition hover:from-violet-500 hover:to-fuchsia-500 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 sm:text-base";
 
-export const authLabelClassName = "mb-2 block text-sm font-medium text-zinc-300";
+export const authLabelClassName = "mb-2 block text-sm font-medium text-foreground";

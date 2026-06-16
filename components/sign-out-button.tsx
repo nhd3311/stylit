@@ -1,11 +1,13 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { authButtonClassName } from "@/components/auth-shell";
 import { createClient } from "@/lib/supabase-client";
 
 export function SignOutButton({ className }: { className?: string }) {
+  const t = useTranslations("header");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -26,7 +28,7 @@ export function SignOutButton({ className }: { className?: string }) {
       disabled={loading}
       className={className ?? `${authButtonClassName} max-w-xs`}
     >
-      {loading ? "Signing out..." : "Sign out"}
+      {loading ? t("signingOut") : t("signOut")}
     </button>
   );
 }

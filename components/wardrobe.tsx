@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ChangeEvent, FormEvent, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase-client";
 import {
@@ -26,6 +27,8 @@ export function Wardrobe({
   initialItems: WardrobeItem[];
   needsSetup: boolean;
 }) {
+  const t = useTranslations("wardrobe");
+  const tc = useTranslations("categories");
   const supabase = useMemo(() => createClient(), []);
   const [items, setItems] = useState<WardrobeItem[]>(initialItems);
   const [filter, setFilter] = useState<Category | "All">("All");
@@ -93,18 +96,17 @@ export function Wardrobe({
     <div className="flex flex-col gap-8">
       {needsSetup && (
         <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-200">
-          Wardrobe table not found. Run <code>supabase/wardrobe.sql</code> in
-          your Supabase SQL editor, then refresh this page.
+          {t("setupNeeded")}
         </div>
       )}
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            Your wardrobe
+            {t("title")}
           </h1>
-          <p className="mt-1 text-sm text-zinc-400">
-            {items.length} {items.length === 1 ? "item" : "items"} in your closet
+          <p className="mt-1 text-sm text-muted-foreground">
+            {t("itemCount", { count: items.length })}
           </p>
         </div>
         <button
@@ -112,7 +114,7 @@ export function Wardrobe({
           onClick={() => setShowAdd(true)}
           className="inline-flex h-11 items-center justify-center gap-1 rounded-xl bg-linear-to-r from-violet-600 to-fuchsia-600 px-5 text-sm font-semibold text-white transition hover:from-violet-500 hover:to-fuchsia-500 active:scale-[0.98]"
         >
-          <span className="text-lg leading-none">+</span> Add item
+          <span className="text-lg leading-none">+</span> {t("addItem")}
         </button>
       </div>
 
@@ -125,23 +127,23 @@ export function Wardrobe({
             className={
               filter === cat
                 ? "rounded-full bg-violet-500/20 px-4 py-1.5 text-sm font-medium text-violet-200 ring-1 ring-violet-500/40"
-                : "rounded-full bg-zinc-900/60 px-4 py-1.5 text-sm font-medium text-zinc-400 ring-1 ring-zinc-800 transition hover:text-zinc-200"
+                : "rounded-full bg-card px-4 py-1.5 text-sm font-medium text-muted-foreground ring-1 ring-border transition hover:text-foreground"
             }
           >
-            {cat}
+            {tc(cat)}
           </button>
         ))}
       </div>
 
       {visibleItems.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-800 py-20 text-center">
-          <p className="text-zinc-400">No items here yet.</p>
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border py-20 text-center">
+          <p className="text-muted-foreground">{t("empty")}</p>
           <button
             type="button"
             onClick={() => setShowAdd(true)}
             className="mt-4 text-sm font-medium text-violet-400 transition hover:text-violet-300"
           >
-            Add your first piece
+            {t("addFirst")}
           </button>
         </div>
       ) : (
@@ -166,8 +168,11 @@ function WardrobeCard({
   item: WardrobeItem;
   onDelete: (item: WardrobeItem) => void;
 }) {
+  const t = useTranslations("wardrobe");
+  const tc = useTranslations("categories");
+
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/40">
+    <div className="group relative overflow-hidden rounded-2xl border border-border bg-card">
       <div className="aspect-square w-full">
         {item.imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -177,7 +182,7 @@ function WardrobeCard({
             className="h-full w-full object-cover"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-zinc-800 to-zinc-900 text-zinc-600">
+          <div className="flex h-full w-full items-center justify-center bg-muted text-muted-foreground">
             <ShirtIcon />
           </div>
         )}
@@ -185,14 +190,18 @@ function WardrobeCard({
       <button
         type="button"
         onClick={() => onDelete(item)}
-        aria-label={`Delete ${item.name}`}
-        className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-zinc-950/70 text-zinc-300 opacity-0 backdrop-blur transition group-hover:opacity-100 hover:bg-red-500/80 hover:text-white"
+        aria-label={t("delete", { name: item.name })}
+        className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-zinc-950/70 text-white opacity-0 backdrop-blur transition group-hover:opacity-100 hover:bg-red-500/80"
       >
         ✕
       </button>
       <div className="p-3">
-        <p className="truncate text-sm font-medium text-white">{item.name}</p>
-        <p className="mt-0.5 text-xs text-zinc-500">{item.category}</p>
+        <p className="truncate text-sm font-medium text-foreground">
+          {item.name}
+        </p>
+        <p className="mt-0.5 text-xs text-muted-foreground">
+          {tc(item.category)}
+        </p>
       </div>
     </div>
   );
@@ -205,6 +214,8 @@ function AddItemModal({
   onClose: () => void;
   onAdd: (item: NewItem) => Promise<void>;
 }) {
+  const t = useTranslations("wardrobe");
+  const tc = useTranslations("categories");
   const [name, setName] = useState("");
   const [category, setCategory] = useState<Category>("Tops");
   const [file, setFile] = useState<File | null>(null);
@@ -229,17 +240,19 @@ function AddItemModal({
     try {
       await onAdd({ name: trimmed, category, file });
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError(t("saveError"));
       setSubmitting(false);
     }
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-      <div className="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
-        <h2 className="text-lg font-semibold text-white">Add an item</h2>
+      <div className="w-full max-w-md rounded-2xl border border-border bg-background p-6">
+        <h2 className="text-lg font-semibold text-foreground">
+          {t("modalTitle")}
+        </h2>
         <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-4">
-          <label className="flex aspect-video cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-dashed border-zinc-700 bg-zinc-900/60 text-sm text-zinc-500 transition hover:border-violet-500">
+          <label className="flex aspect-video cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-dashed border-border bg-card text-sm text-muted-foreground transition hover:border-violet-500">
             {preview ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -248,7 +261,7 @@ function AddItemModal({
                 className="h-full w-full object-cover"
               />
             ) : (
-              <span>Click to upload a photo</span>
+              <span>{t("uploadHint")}</span>
             )}
             <input
               type="file"
@@ -261,36 +274,36 @@ function AddItemModal({
           <div>
             <label
               htmlFor="item-name"
-              className="mb-2 block text-sm font-medium text-zinc-300"
+              className="mb-2 block text-sm font-medium text-foreground"
             >
-              Name
+              {t("name")}
             </label>
             <input
               id="item-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. White linen shirt"
-              className="h-11 w-full rounded-xl border border-zinc-800 bg-zinc-900/80 px-4 text-sm text-white placeholder:text-zinc-500 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
+              placeholder={t("namePlaceholder")}
+              className="h-11 w-full rounded-xl border border-border bg-input px-4 text-sm text-foreground placeholder:text-muted-foreground outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
             />
           </div>
 
           <div>
             <label
               htmlFor="item-category"
-              className="mb-2 block text-sm font-medium text-zinc-300"
+              className="mb-2 block text-sm font-medium text-foreground"
             >
-              Category
+              {t("category")}
             </label>
             <select
               id="item-category"
               value={category}
               onChange={(e) => setCategory(e.target.value as Category)}
-              className="h-11 w-full rounded-xl border border-zinc-800 bg-zinc-900/80 px-4 text-sm text-white outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
+              className="h-11 w-full rounded-xl border border-border bg-input px-4 text-sm text-foreground outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
             >
               {CATEGORIES.map((c) => (
                 <option key={c} value={c}>
-                  {c}
+                  {tc(c)}
                 </option>
               ))}
             </select>
@@ -307,16 +320,16 @@ function AddItemModal({
               type="button"
               onClick={onClose}
               disabled={submitting}
-              className="h-11 flex-1 rounded-xl border border-zinc-800 text-sm font-medium text-zinc-300 transition hover:text-white disabled:opacity-50"
+              className="h-11 flex-1 rounded-xl border border-border text-sm font-medium text-muted-foreground transition hover:text-foreground disabled:opacity-50"
             >
-              Cancel
+              {t("cancel")}
             </button>
             <button
               type="submit"
               disabled={!name.trim() || submitting}
               className="h-11 flex-1 rounded-xl bg-linear-to-r from-violet-600 to-fuchsia-600 text-sm font-semibold text-white transition hover:from-violet-500 hover:to-fuchsia-500 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {submitting ? "Saving..." : "Add to wardrobe"}
+              {submitting ? t("saving") : t("save")}
             </button>
           </div>
         </form>

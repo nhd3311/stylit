@@ -1,0 +1,116 @@
+{
+  "nav": {
+    "login": "Login",
+    "signup": "Sign up"
+  },
+  "home": {
+    "comingSoon": "Coming soon",
+    "headlineAccent": "Your smart wardrobe",
+    "tagline": "Smart outfit suggestions from your wardrobe, perfect for any occasion.",
+    "ctaSignup": "Sign up for free",
+    "ctaLogin": "Login",
+    "freeNote": "Free · No spam · For Gen Z",
+    "featuresTitle": "Everything you need to outfit yourself",
+    "featuresSubtitle": "From wardrobe management to virtual try-on and outfit suggestions — all in one app.",
+    "waitlistTitle": "Not ready to sign up?",
+    "waitlistSubtitle": "Leave your email to get notified when Fitcheck launches new features."
+  },
+  "features": {
+    "wardrobeTitle": "Online Wardrobe",
+    "wardrobeDesc": "Capture and store all your clothes in one place, clean and always in your pocket.",
+    "tryonTitle": "AI Virtual Try-On",
+    "tryonDesc": "Try on any outfit on your body using AI — no need to try on clothes in real life.",
+    "suggestTitle": "Outfit Suggestion",
+    "suggestDesc": "AI outfit suggestions based on weather, occasion and your style in seconds."
+  },
+  "header": {
+    "signOut": "Sign out",
+    "signingOut": "Signing out...",
+    "settings": "Settings"
+  },
+  "auth": {
+    "loginTitle": "Log in",
+    "loginSubtitle": "Welcome back to Fitcheck",
+    "signupTitle": "Sign up",
+    "signupSubtitle": "Create an account to start styling smarter",
+    "email": "Email",
+    "emailPlaceholder": "you@email.com",
+    "password": "Password",
+    "passwordPlaceholder": "••••••••",
+    "newPasswordPlaceholder": "At least 6 characters",
+    "confirmPassword": "Confirm password",
+    "confirmPlaceholder": "Re-enter password",
+    "logIn": "Log in",
+    "loggingIn": "Logging in...",
+    "loginSuccess": "Logged in successfully!",
+    "signUp": "Sign up",
+    "creatingAccount": "Creating account...",
+    "accountCreated": "Account created!",
+    "accountCreatedConfirm": "Account created! Please check your email to confirm your account.",
+    "noAccount": "No account yet?",
+    "haveAccount": "Already have an account?",
+    "passwordsNoMatch": "Passwords don't match.",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
+  },
+  "validation": {
+    "emailRequired": "Please enter your email.",
+    "emailInvalid": "Please enter a valid email (with @ and a domain).",
+    "passwordRequired": "Please enter your password.",
+    "passwordTooShort": "Password must be at least 6 characters.",
+    "invalidCredentials": "Incorrect email or password.",
+    "emailRegistered": "This email is already registered.",
+    "emailNotConfirmed": "Please confirm your email before logging in.",
+    "generic": "Something went wrong. Please try again."
+  },
+  "waitlist": {
+    "placeholder": "Your email",
+    "submit": "Get early access",
+    "sending": "Sending...",
+    "success": "You're on the list!",
+    "invalidEmail": "Please enter a valid email (with @ and a domain).",
+    "alreadyOnList": "This email is already on the list.",
+    "genericError": "Couldn't sign you up right now. Please try again later."
+  },
+  "wardrobe": {
+    "title": "Your wardrobe",
+    "itemCount": "{count, plural, one {# item} other {# items}} in your closet",
+    "addItem": "Add item",
+    "empty": "No items here yet.",
+    "addFirst": "Add your first piece",
+    "setupNeeded": "Wardrobe table not found. Run supabase/wardrobe.sql in your Supabase SQL editor, then refresh this page.",
+    "delete": "Delete {name}",
+    "modalTitle": "Add an item",
+    "uploadHint": "Click to upload a photo",
+    "name": "Name",
+    "namePlaceholder": "e.g. White linen shirt",
+    "category": "Category",
+    "cancel": "Cancel",
+    "save": "Add to wardrobe",
+    "saving": "Saving...",
+    "saveError": "Something went wrong. Please try again."
+  },
+  "categories": {
+    "All": "All",
+    "Tops": "Tops",
+    "Bottoms": "Bottoms",
+    "Outerwear": "Outerwear",
+    "Shoes": "Shoes",
+    "Accessories": "Accessories"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account and preferences",
+    "account": "Account",
+    "email": "Email",
+    "memberSince": "Member since",
+    "appearance": "Appearance",
+    "appearanceDesc": "Choose how Fitcheck looks.",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "language": "Language",
+    "languageDesc": "Choose your preferred language."
+  }
+}

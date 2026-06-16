@@ -1,0 +1,116 @@
+{
+  "nav": {
+    "login": "Đăng nhập",
+    "signup": "Đăng ký"
+  },
+  "home": {
+    "comingSoon": "Sắp ra mắt",
+    "headlineAccent": "Tủ đồ thông minh của bạn",
+    "tagline": "Gợi ý outfit thông minh từ tủ đồ của bạn, hợp cho mọi dịp.",
+    "ctaSignup": "Đăng ký miễn phí",
+    "ctaLogin": "Đăng nhập",
+    "freeNote": "Miễn phí · Không spam · Cho Gen Z",
+    "featuresTitle": "Mọi thứ bạn cần để phối đồ",
+    "featuresSubtitle": "Từ quản lý tủ đồ đến thử đồ ảo và gợi ý outfit — tất cả trong một app.",
+    "waitlistTitle": "Chưa sẵn sàng tạo tài khoản?",
+    "waitlistSubtitle": "Để lại email để nhận thông báo khi Fitcheck ra mắt tính năng mới."
+  },
+  "features": {
+    "wardrobeTitle": "Tủ đồ số",
+    "wardrobeDesc": "Chụp và lưu toàn bộ quần áo của bạn vào một nơi, gọn gàng và luôn trong túi.",
+    "tryonTitle": "Thử đồ AI",
+    "tryonDesc": "Mặc thử mọi outfit lên chính bạn bằng AI — không cần thử đồ thật.",
+    "suggestTitle": "Gợi ý outfit",
+    "suggestDesc": "AI gợi ý phối đồ theo thời tiết, dịp và phong cách của bạn trong vài giây."
+  },
+  "header": {
+    "signOut": "Đăng xuất",
+    "signingOut": "Đang đăng xuất...",
+    "settings": "Cài đặt"
+  },
+  "auth": {
+    "loginTitle": "Đăng nhập",
+    "loginSubtitle": "Chào mừng trở lại Fitcheck",
+    "signupTitle": "Đăng ký",
+    "signupSubtitle": "Tạo tài khoản để bắt đầu phối đồ thông minh",
+    "email": "Email",
+    "emailPlaceholder": "ban@email.com",
+    "password": "Mật khẩu",
+    "passwordPlaceholder": "••••••••",
+    "newPasswordPlaceholder": "Ít nhất 6 ký tự",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "confirmPlaceholder": "Nhập lại mật khẩu",
+    "logIn": "Đăng nhập",
+    "loggingIn": "Đang đăng nhập...",
+    "loginSuccess": "Đăng nhập thành công!",
+    "signUp": "Đăng ký",
+    "creatingAccount": "Đang tạo tài khoản...",
+    "accountCreated": "Tạo tài khoản thành công!",
+    "accountCreatedConfirm": "Tạo tài khoản thành công! Vui lòng kiểm tra email để xác nhận.",
+    "noAccount": "Chưa có tài khoản?",
+    "haveAccount": "Đã có tài khoản?",
+    "passwordsNoMatch": "Mật khẩu xác nhận không khớp.",
+    "showPassword": "Hiện mật khẩu",
+    "hidePassword": "Ẩn mật khẩu"
+  },
+  "validation": {
+    "emailRequired": "Vui lòng nhập email.",
+    "emailInvalid": "Vui lòng nhập email hợp lệ (có @ và tên miền).",
+    "passwordRequired": "Vui lòng nhập mật khẩu.",
+    "passwordTooShort": "Mật khẩu phải có ít nhất 6 ký tự.",
+    "invalidCredentials": "Email hoặc mật khẩu không đúng.",
+    "emailRegistered": "Email này đã được đăng ký.",
+    "emailNotConfirmed": "Vui lòng xác nhận email trước khi đăng nhập.",
+    "generic": "Có lỗi xảy ra. Vui lòng thử lại."
+  },
+  "waitlist": {
+    "placeholder": "Email của bạn",
+    "submit": "Đăng ký trải nghiệm sớm",
+    "sending": "Đang gửi...",
+    "success": "Đã đăng ký thành công!",
+    "invalidEmail": "Vui lòng nhập email hợp lệ (có @ và tên miền).",
+    "alreadyOnList": "Email này đã đăng ký trước đó.",
+    "genericError": "Chưa đăng ký được lúc này. Vui lòng thử lại sau."
+  },
+  "wardrobe": {
+    "title": "Tủ đồ của bạn",
+    "itemCount": "{count} món trong tủ đồ",
+    "addItem": "Thêm món",
+    "empty": "Chưa có món nào ở đây.",
+    "addFirst": "Thêm món đầu tiên",
+    "setupNeeded": "Không tìm thấy bảng wardrobe. Chạy supabase/wardrobe.sql trong SQL editor của Supabase rồi tải lại trang.",
+    "delete": "Xoá {name}",
+    "modalTitle": "Thêm một món",
+    "uploadHint": "Bấm để tải ảnh lên",
+    "name": "Tên",
+    "namePlaceholder": "vd. Áo sơ mi linen trắng",
+    "category": "Loại",
+    "cancel": "Huỷ",
+    "save": "Thêm vào tủ đồ",
+    "saving": "Đang lưu...",
+    "saveError": "Có lỗi xảy ra. Vui lòng thử lại."
+  },
+  "categories": {
+    "All": "Tất cả",
+    "Tops": "Áo",
+    "Bottoms": "Quần",
+    "Outerwear": "Áo khoác",
+    "Shoes": "Giày",
+    "Accessories": "Phụ kiện"
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "subtitle": "Quản lý tài khoản và tuỳ chọn",
+    "account": "Tài khoản",
+    "email": "Email",
+    "memberSince": "Thành viên từ",
+    "appearance": "Giao diện",
+    "appearanceDesc": "Chọn cách Fitcheck hiển thị.",
+    "theme": "Chủ đề",
+    "themeLight": "Sáng",
+    "themeDark": "Tối",
+    "themeSystem": "Hệ thống",
+    "language": "Ngôn ngữ",
+    "languageDesc": "Chọn ngôn ngữ bạn muốn."
+  }
+}

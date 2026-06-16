@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { useTranslations } from "next-intl";
 import { AuthShell } from "@/components/auth-shell";
 import { LoginForm } from "@/components/login-form";
 
@@ -8,8 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function LoginPage() {
+  const t = useTranslations("auth");
   return (
-    <AuthShell title="Log in" subtitle="Welcome back to Fitcheck">
+    <AuthShell title={t("loginTitle")} subtitle={t("loginSubtitle")}>
       <LoginForm />
     </AuthShell>
   );

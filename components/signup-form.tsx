@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
@@ -8,14 +9,17 @@ import {
   authInputClassName,
   authLabelClassName,
 } from "@/components/auth-shell";
+import { PasswordInput } from "@/components/password-input";
 import {
-  getAuthErrorMessage,
+  getAuthErrorKey,
   validateEmail,
   validatePassword,
 } from "@/lib/auth-validation";
 import { createClient } from "@/lib/supabase-client";
 
 export function SignupForm() {
+  const t = useTranslations("auth");
+  const tv = useTranslations("validation");
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,18 +35,18 @@ export function SignupForm() {
 
     const emailError = validateEmail(email);
     if (emailError) {
-      setError(emailError);
+      setError(tv(emailError));
       return;
     }
 
     const passwordError = validatePassword(password);
     if (passwordError) {
-      setError(passwordError);
+      setError(tv(passwordError));
       return;
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords don't match.");
+      setError(t("passwordsNoMatch"));
       return;
     }
 
@@ -60,27 +64,25 @@ export function SignupForm() {
     setLoading(false);
 
     if (signUpError) {
-      setError(getAuthErrorMessage(signUpError.message));
+      setError(tv(getAuthErrorKey(signUpError.message)));
       return;
     }
 
     if (data.session) {
-      setSuccess("Account created!");
+      setSuccess(t("accountCreated"));
       router.push("/dashboard");
       router.refresh();
       return;
     }
 
-    setSuccess(
-      "Account created! Please check your email to confirm your account.",
-    );
+    setSuccess(t("accountCreatedConfirm"));
   }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div>
         <label htmlFor="signup-email" className={authLabelClassName}>
-          Email
+          {t("email")}
         </label>
         <input
           id="signup-email"
@@ -88,7 +90,7 @@ export function SignupForm() {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@email.com"
+          placeholder={t("emailPlaceholder")}
           disabled={loading || !!success}
           className={authInputClassName}
         />
@@ -96,33 +98,29 @@ export function SignupForm() {
 
       <div>
         <label htmlFor="signup-password" className={authLabelClassName}>
-          Password
+          {t("password")}
         </label>
-        <input
+        <PasswordInput
           id="signup-password"
-          type="password"
           autoComplete="new-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="At least 6 characters"
+          placeholder={t("newPasswordPlaceholder")}
           disabled={loading || !!success}
-          className={authInputClassName}
         />
       </div>
 
       <div>
         <label htmlFor="signup-confirm-password" className={authLabelClassName}>
-          Confirm password
+          {t("confirmPassword")}
         </label>
-        <input
+        <PasswordInput
           id="signup-confirm-password"
-          type="password"
           autoComplete="new-password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          placeholder="Re-enter password"
+          placeholder={t("confirmPlaceholder")}
           disabled={loading || !!success}
-          className={authInputClassName}
         />
       </div>
 
@@ -143,16 +141,16 @@ export function SignupForm() {
         disabled={loading || !!success}
         className={authButtonClassName}
       >
-        {loading ? "Creating account..." : "Sign up"}
+        {loading ? t("creatingAccount") : t("signUp")}
       </button>
 
-      <p className="text-center text-sm text-zinc-500">
-        Already have an account?{" "}
+      <p className="text-center text-sm text-muted-foreground">
+        {t("haveAccount")}{" "}
         <Link
           href="/login"
           className="font-medium text-violet-400 transition hover:text-violet-300"
         >
-          Log in
+          {t("logIn")}
         </Link>
       </p>
     </form>

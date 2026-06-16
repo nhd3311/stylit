@@ -1,42 +1,45 @@
+// These helpers return translation KEYS (under the "validation" namespace).
+// Components translate them with next-intl.
+
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 }
 
-export function getAuthErrorMessage(message: string): string {
+export function getAuthErrorKey(message: string): string {
   const lower = message.toLowerCase();
 
   if (lower.includes("invalid login credentials")) {
-    return "Incorrect email or password.";
+    return "invalidCredentials";
   }
   if (lower.includes("user already registered")) {
-    return "This email is already registered.";
+    return "emailRegistered";
   }
   if (lower.includes("email not confirmed")) {
-    return "Please confirm your email before logging in.";
+    return "emailNotConfirmed";
   }
   if (lower.includes("password")) {
-    return "Password must be at least 6 characters.";
+    return "passwordTooShort";
   }
 
-  return "Something went wrong. Please try again.";
+  return "generic";
 }
 
 export function validateEmail(email: string): string | null {
   if (!email.trim()) {
-    return "Please enter your email.";
+    return "emailRequired";
   }
   if (!isValidEmail(email)) {
-    return "Please enter a valid email (with @ and a domain).";
+    return "emailInvalid";
   }
   return null;
 }
 
 export function validatePassword(password: string): string | null {
   if (!password) {
-    return "Please enter your password.";
+    return "passwordRequired";
   }
   if (password.length < 6) {
-    return "Password must be at least 6 characters.";
+    return "passwordTooShort";
   }
   return null;
 }

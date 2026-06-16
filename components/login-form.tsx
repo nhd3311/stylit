@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
@@ -8,14 +9,17 @@ import {
   authInputClassName,
   authLabelClassName,
 } from "@/components/auth-shell";
+import { PasswordInput } from "@/components/password-input";
 import {
-  getAuthErrorMessage,
+  getAuthErrorKey,
   validateEmail,
   validatePassword,
 } from "@/lib/auth-validation";
 import { createClient } from "@/lib/supabase-client";
 
 export function LoginForm() {
+  const t = useTranslations("auth");
+  const tv = useTranslations("validation");
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,13 +34,13 @@ export function LoginForm() {
 
     const emailError = validateEmail(email);
     if (emailError) {
-      setError(emailError);
+      setError(tv(emailError));
       return;
     }
 
     const passwordError = validatePassword(password);
     if (passwordError) {
-      setError(passwordError);
+      setError(tv(passwordError));
       return;
     }
 
@@ -51,11 +55,11 @@ export function LoginForm() {
     setLoading(false);
 
     if (signInError) {
-      setError(getAuthErrorMessage(signInError.message));
+      setError(tv(getAuthErrorKey(signInError.message)));
       return;
     }
 
-    setSuccess("Logged in successfully!");
+    setSuccess(t("loginSuccess"));
     router.push("/dashboard");
     router.refresh();
   }
@@ -64,7 +68,7 @@ export function LoginForm() {
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div>
         <label htmlFor="login-email" className={authLabelClassName}>
-          Email
+          {t("email")}
         </label>
         <input
           id="login-email"
@@ -72,7 +76,7 @@ export function LoginForm() {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@email.com"
+          placeholder={t("emailPlaceholder")}
           disabled={loading}
           className={authInputClassName}
         />
@@ -80,17 +84,15 @@ export function LoginForm() {
 
       <div>
         <label htmlFor="login-password" className={authLabelClassName}>
-          Password
+          {t("password")}
         </label>
-        <input
+        <PasswordInput
           id="login-password"
-          type="password"
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="••••••••"
+          placeholder={t("passwordPlaceholder")}
           disabled={loading}
-          className={authInputClassName}
         />
       </div>
 
@@ -107,16 +109,16 @@ export function LoginForm() {
       )}
 
       <button type="submit" disabled={loading} className={authButtonClassName}>
-        {loading ? "Logging in..." : "Log in"}
+        {loading ? t("loggingIn") : t("logIn")}
       </button>
 
-      <p className="text-center text-sm text-zinc-500">
-        No account yet?{" "}
+      <p className="text-center text-sm text-muted-foreground">
+        {t("noAccount")}{" "}
         <Link
           href="/signup"
           className="font-medium text-violet-400 transition hover:text-violet-300"
         >
-          Sign up
+          {t("signUp")}
         </Link>
       </p>
     </form>

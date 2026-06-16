@@ -5,7 +5,7 @@ import { useState } from "react";
 import { authButtonClassName } from "@/components/auth-shell";
 import { createClient } from "@/lib/supabase-client";
 
-export function SignOutButton() {
+export function SignOutButton({ className }: { className?: string }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -24,7 +24,7 @@ export function SignOutButton() {
       type="button"
       onClick={handleSignOut}
       disabled={loading}
-      className={`${authButtonClassName} max-w-xs`}
+      className={className ?? `${authButtonClassName} max-w-xs`}
     >
       {loading ? "Signing out..." : "Sign out"}
     </button>

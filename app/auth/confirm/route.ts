@@ -2,8 +2,8 @@ import { type EmailOtpType } from "@supabase/supabase-js";
 import { type NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 
-// Xử lý link xác nhận email từ Supabase.
-// Hỗ trợ cả 2 luồng: token_hash (email template tùy chỉnh) và code (PKCE mặc định).
+// Handles the email confirmation link from Supabase.
+// Supports both flows: token_hash (custom email template) and code (default PKCE).
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = request.nextUrl;
   const tokenHash = searchParams.get("token_hash");
@@ -28,6 +28,6 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Xác nhận thất bại hoặc link hết hạn → về trang đăng nhập.
+  // Confirmation failed or the link expired -> back to login.
   return NextResponse.redirect(new URL("/login?error=auth", origin));
 }

@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase-server";
 
 export const metadata: Metadata = {
   title: "Dashboard — Fitcheck",
-  description: "Trang cá nhân Fitcheck",
+  description: "Your Fitcheck dashboard",
 };
 
 export default async function DashboardPage() {
@@ -23,8 +23,7 @@ export default async function DashboardPage() {
     <AuthShell title="Dashboard">
       <div className="flex flex-col gap-6">
         <p className="text-lg text-zinc-300 sm:text-xl">
-          Xin chào{" "}
-          <span className="font-semibold text-white">{user.email}</span>
+          Hi, <span className="font-semibold text-white">{user.email}</span>
         </p>
         <SignOutButton />
       </div>

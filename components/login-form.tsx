@@ -55,7 +55,7 @@ export function LoginForm() {
       return;
     }
 
-    setSuccess("Đăng nhập thành công!");
+    setSuccess("Logged in successfully!");
     router.push("/dashboard");
     router.refresh();
   }
@@ -72,7 +72,7 @@ export function LoginForm() {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="ten@email.com"
+          placeholder="you@email.com"
           disabled={loading}
           className={authInputClassName}
         />
@@ -80,7 +80,7 @@ export function LoginForm() {
 
       <div>
         <label htmlFor="login-password" className={authLabelClassName}>
-          Mật khẩu
+          Password
         </label>
         <input
           id="login-password"
@@ -106,21 +106,17 @@ export function LoginForm() {
         </p>
       )}
 
-      <button
-        type="submit"
-        disabled={loading}
-        className={authButtonClassName}
-      >
-        {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+      <button type="submit" disabled={loading} className={authButtonClassName}>
+        {loading ? "Logging in..." : "Log in"}
       </button>
 
       <p className="text-center text-sm text-zinc-500">
-        Chưa có tài khoản?{" "}
+        No account yet?{" "}
         <Link
           href="/signup"
           className="font-medium text-violet-400 transition hover:text-violet-300"
         >
-          Đăng ký
+          Sign up
         </Link>
       </p>
     </form>

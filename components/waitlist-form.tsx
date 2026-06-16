@@ -19,7 +19,7 @@ export function WaitlistForm() {
 
     const trimmed = email.trim();
     if (!isValidEmail(trimmed)) {
-      setError("Vui lòng nhập email hợp lệ (có @ và tên miền).");
+      setError("Please enter a valid email (with @ and a domain).");
       return;
     }
 
@@ -33,9 +33,9 @@ export function WaitlistForm() {
 
     if (insertError) {
       if (insertError.code === "23505") {
-        setError("Email này đã được đăng ký trước đó.");
+        setError("This email is already on the list.");
       } else {
-        setError("Không thể đăng ký lúc này. Vui lòng thử lại sau.");
+        setError("Couldn't sign you up right now. Please try again later.");
       }
       return;
     }
@@ -46,17 +46,14 @@ export function WaitlistForm() {
   if (success) {
     return (
       <p className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4 text-center text-sm text-emerald-200 sm:text-base">
-        Đã đăng ký thành công!
+        {"You're on the list!"}
       </p>
     );
   }
 
   return (
     <div className="flex flex-col gap-3">
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-3 sm:flex-row"
-      >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row">
         <label htmlFor="email" className="sr-only">
           Email
         </label>
@@ -65,7 +62,7 @@ export function WaitlistForm() {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email của bạn"
+          placeholder="Your email"
           disabled={loading}
           className="h-12 flex-1 rounded-xl border border-zinc-800 bg-zinc-900/80 px-4 text-base text-white placeholder:text-zinc-500 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 disabled:cursor-not-allowed disabled:opacity-60"
         />
@@ -74,7 +71,7 @@ export function WaitlistForm() {
           disabled={loading}
           className="h-12 shrink-0 rounded-xl bg-linear-to-r from-violet-600 to-fuchsia-600 px-6 text-sm font-semibold text-white transition hover:from-violet-500 hover:to-fuchsia-500 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 sm:text-base"
         >
-          {loading ? "Đang gửi..." : "Đăng ký trải nghiệm sớm"}
+          {loading ? "Sending..." : "Get early access"}
         </button>
       </form>
       {error && (

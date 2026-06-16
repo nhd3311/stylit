@@ -42,7 +42,7 @@ export function SignupForm() {
     }
 
     if (password !== confirmPassword) {
-      setError("Mật khẩu xác nhận không khớp.");
+      setError("Passwords don't match.");
       return;
     }
 
@@ -65,14 +65,14 @@ export function SignupForm() {
     }
 
     if (data.session) {
-      setSuccess("Đăng ký thành công!");
+      setSuccess("Account created!");
       router.push("/dashboard");
       router.refresh();
       return;
     }
 
     setSuccess(
-      "Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản.",
+      "Account created! Please check your email to confirm your account.",
     );
   }
 
@@ -88,7 +88,7 @@ export function SignupForm() {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="ten@email.com"
+          placeholder="you@email.com"
           disabled={loading || !!success}
           className={authInputClassName}
         />
@@ -96,7 +96,7 @@ export function SignupForm() {
 
       <div>
         <label htmlFor="signup-password" className={authLabelClassName}>
-          Mật khẩu
+          Password
         </label>
         <input
           id="signup-password"
@@ -104,7 +104,7 @@ export function SignupForm() {
           autoComplete="new-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Ít nhất 6 ký tự"
+          placeholder="At least 6 characters"
           disabled={loading || !!success}
           className={authInputClassName}
         />
@@ -112,7 +112,7 @@ export function SignupForm() {
 
       <div>
         <label htmlFor="signup-confirm-password" className={authLabelClassName}>
-          Xác nhận mật khẩu
+          Confirm password
         </label>
         <input
           id="signup-confirm-password"
@@ -120,7 +120,7 @@ export function SignupForm() {
           autoComplete="new-password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          placeholder="Nhập lại mật khẩu"
+          placeholder="Re-enter password"
           disabled={loading || !!success}
           className={authInputClassName}
         />
@@ -143,16 +143,16 @@ export function SignupForm() {
         disabled={loading || !!success}
         className={authButtonClassName}
       >
-        {loading ? "Đang đăng ký..." : "Đăng ký"}
+        {loading ? "Creating account..." : "Sign up"}
       </button>
 
       <p className="text-center text-sm text-zinc-500">
-        Đã có tài khoản?{" "}
+        Already have an account?{" "}
         <Link
           href="/login"
           className="font-medium text-violet-400 transition hover:text-violet-300"
         >
-          Đăng nhập
+          Log in
         </Link>
       </p>
     </form>

@@ -26,7 +26,7 @@ export function SignOutButton() {
       disabled={loading}
       className={`${authButtonClassName} max-w-xs`}
     >
-      {loading ? "Đang đăng xuất..." : "Đăng xuất"}
+      {loading ? "Signing out..." : "Sign out"}
     </button>
   );
 }

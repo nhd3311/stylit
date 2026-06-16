@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Fitcheck — Tủ đồ thông minh của bạn",
+  title: "Fitcheck — Your smart wardrobe",
   description:
-    "Phối đồ thông minh từ tủ đồ của bạn, gợi ý outfit phù hợp cho mọi tình huống",
+    "Smart outfit suggestions from your wardrobe, perfect for any occasion.",
 };
 
 export default function RootLayout({
@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="vi"
+      lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>

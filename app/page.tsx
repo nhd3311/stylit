@@ -3,23 +3,23 @@ import { WaitlistForm } from "@/components/waitlist-form";
 
 const features = [
   {
-    title: "Tủ đồ số",
+    title: "Online Wardrobe",
     description:
-      "Chụp và lưu toàn bộ quần áo của bạn vào một nơi, gọn gàng và luôn trong túi.",
+      "Capture and store all your clothes in one place, clean and always in your pocket.",
     icon: <path d="M3 7l9-4 9 4-9 4-9-4zm0 5l9 4 9-4M3 17l9 4 9-4" />,
   },
   {
-    title: "Thử đồ AI",
+    title: "AI Virtual Try-On",
     description:
-      "Mặc thử mọi outfit lên chính bạn bằng AI — không cần phải thử đồ thật.",
+      "Try on any outfit on your body using AI - no need to try on clothes in real life.",
     icon: (
       <path d="M12 3l1.9 4.6L18.5 9l-3.5 3 1 5-4-2.6L8 17l1-5L5.5 9l4.6-1.4L12 3z" />
     ),
   },
   {
-    title: "Gợi ý outfit",
+    title: "Outfit Suggestion",
     description:
-      "AI phối đồ theo thời tiết, dịp và phong cách của bạn chỉ trong vài giây.",
+      "AI outfit suggestion based on weather, occasion and your style in seconds.",
     icon: (
       <path d="M5 3v4M3 5h4M6 17v4M4 19h4M13 3l3 7 5 2-5 2-3 7-3-7-5-2 5-2 3-7z" />
     ),
@@ -42,13 +42,13 @@ export default function Home() {
               href="/login"
               className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-300 transition hover:text-white sm:px-4"
             >
-              Đăng nhập
+              Login
             </Link>
             <Link
               href="/signup"
               className="rounded-lg bg-linear-to-r from-violet-600 to-fuchsia-600 px-4 py-2 text-sm font-semibold text-white transition hover:from-violet-500 hover:to-fuchsia-500"
             >
-              Tạo tài khoản
+              Sign up
             </Link>
           </div>
         </nav>
@@ -71,19 +71,18 @@ export default function Home() {
 
           <div className="relative mx-auto flex w-full max-w-2xl flex-col items-start px-6 py-20 sm:px-8 sm:py-28">
             <p className="mb-6 text-sm font-medium tracking-widest text-violet-400 uppercase">
-              Sắp ra mắt
+              Coming soon
             </p>
 
             <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl sm:leading-tight lg:text-6xl">
               Fitcheck —{" "}
               <span className="bg-linear-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
-                Tủ đồ thông minh của bạn
+                Your smart wardrobe
               </span>
             </h1>
 
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-zinc-400 sm:text-xl">
-              Phối đồ thông minh từ tủ đồ của bạn, gợi ý outfit phù hợp cho mọi
-              tình huống.
+              Smart outfit suggestion from your wardrobe, perfect for any occasion.
             </p>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -91,28 +90,28 @@ export default function Home() {
                 href="/signup"
                 className="flex h-12 items-center justify-center rounded-xl bg-linear-to-r from-violet-600 to-fuchsia-600 px-7 text-base font-semibold text-white transition hover:from-violet-500 hover:to-fuchsia-500 active:scale-[0.98]"
               >
-                Tạo tài khoản miễn phí
+                Sign up for free
               </Link>
               <Link
                 href="/login"
                 className="flex h-12 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900/60 px-7 text-base font-semibold text-zinc-200 transition hover:border-zinc-700 hover:text-white"
               >
-                Đăng nhập
+                Login
               </Link>
             </div>
 
             <p className="mt-6 text-xs text-zinc-600 sm:text-sm">
-              Miễn phí · Không spam · Dành cho Gen Z Việt Nam
+              Free · No spam · For Gen Z
             </p>
           </div>
         </section>
 
         <section className="mx-auto w-full max-w-6xl px-6 py-16 sm:px-8 sm:py-20">
           <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            Mọi thứ bạn cần để phối đồ
+            Everything you need to outfit yourself
           </h2>
           <p className="mt-3 max-w-lg text-zinc-400">
-            Từ quản lý tủ đồ đến thử đồ ảo và gợi ý outfit — tất cả trong một app.
+            From wardrobe management to virtual try-on and outfit suggestion - all in one app.
           </p>
 
           <div className="mt-10 grid gap-5 sm:grid-cols-3">
@@ -147,10 +146,10 @@ export default function Home() {
         <section className="mx-auto w-full max-w-6xl px-6 pb-20 sm:px-8">
           <div className="rounded-3xl border border-zinc-800 bg-zinc-900/40 p-8 sm:p-12">
             <h2 className="text-xl font-bold tracking-tight sm:text-2xl">
-              Chưa sẵn sàng tạo tài khoản?
+              Not ready to sign up?
             </h2>
             <p className="mt-2 max-w-lg text-sm text-zinc-400 sm:text-base">
-              Để lại email để nhận thông báo khi Fitcheck ra mắt tính năng mới.
+            Leave your email to get notified when Fitcheck launches new features.            
             </p>
             <div className="mt-6 w-full max-w-md">
               <WaitlistForm />

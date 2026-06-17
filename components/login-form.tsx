@@ -83,9 +83,17 @@ export function LoginForm() {
       </div>
 
       <div>
-        <label htmlFor="login-password" className={authLabelClassName}>
-          {t("password")}
-        </label>
+        <div className="mb-2 flex items-center justify-between">
+          <label htmlFor="login-password" className="text-sm font-medium text-foreground">
+            {t("password")}
+          </label>
+          <Link
+            href="/forgot-password"
+            className="text-sm font-medium text-violet-400 transition hover:text-violet-300"
+          >
+            {t("forgotPassword")}
+          </Link>
+        </div>
         <PasswordInput
           id="login-password"
           autoComplete="current-password"

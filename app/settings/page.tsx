@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { AccountActions } from "@/components/account-actions";
 import { AppHeader } from "@/components/app-header";
 import { AppearanceSetting } from "@/components/appearance-setting";
+import { ChangePasswordForm } from "@/components/change-password-form";
 import { LanguageSetting } from "@/components/language-setting";
 import { SignOutButton } from "@/components/sign-out-button";
 import { createClient } from "@/lib/supabase-server";
@@ -74,6 +76,22 @@ export default async function SettingsPage() {
             </p>
             <div className="mt-4">
               <LanguageSetting />
+            </div>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card p-6">
+            <h2 className="text-lg font-semibold">{t("security")}</h2>
+            <div className="mt-5 flex flex-col gap-8">
+              <div>
+                <h3 className="text-sm font-medium">{t("changePassword")}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {t("changePasswordDesc")}
+                </p>
+                <div className="mt-4">
+                  <ChangePasswordForm />
+                </div>
+              </div>
+              <AccountActions />
             </div>
           </section>
         </div>

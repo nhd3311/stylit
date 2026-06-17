@@ -7,6 +7,8 @@ import { AppearanceSetting } from "@/components/appearance-setting";
 import { ChangePasswordForm } from "@/components/change-password-form";
 import { LanguageSetting } from "@/components/language-setting";
 import { SignOutButton } from "@/components/sign-out-button";
+import { StyleProfileForm } from "@/components/style-profile-form";
+import { type Profile } from "@/lib/profile";
 import { createClient } from "@/lib/supabase-server";
 
 export const metadata: Metadata = {
@@ -28,6 +30,22 @@ export default async function SettingsPage() {
   const memberSince = user.created_at
     ? new Date(user.created_at).toLocaleDateString()
     : null;
+
+  const { data: profileRow } = await supabase
+    .from("profiles")
+    .select("height_cm, weight_kg, body_type, styles, colors, occasions, onboarded")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  const profile: Profile = {
+    heightCm: (profileRow?.height_cm as number | null) ?? null,
+    weightKg: (profileRow?.weight_kg as number | null) ?? null,
+    bodyType: (profileRow?.body_type as string | null) ?? null,
+    styles: (profileRow?.styles as string[] | null) ?? [],
+    colors: (profileRow?.colors as string[] | null) ?? [],
+    occasions: (profileRow?.occasions as string[] | null) ?? [],
+    onboarded: (profileRow?.onboarded as boolean | null) ?? false,
+  };
 
   return (
     <div className="flex min-h-full flex-1 flex-col bg-background text-foreground">
@@ -77,6 +95,14 @@ export default async function SettingsPage() {
             <div className="mt-4">
               <LanguageSetting />
             </div>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-card p-6">
+            <h2 className="text-lg font-semibold">{t("styleProfile")}</h2>
+            <p className="mt-1 mb-5 text-sm text-muted-foreground">
+              {t("styleProfileDesc")}
+            </p>
+            <StyleProfileForm userId={user.id} initial={profile} />
           </section>
 
           <section className="rounded-2xl border border-border bg-card p-6">

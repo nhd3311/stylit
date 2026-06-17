@@ -24,6 +24,16 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
+  // Send new users through onboarding (skip the check if the table isn't set up yet).
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("onboarded")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (!profileError && !profile?.onboarded) {
+    redirect("/onboarding");
+  }
+
   const { data, error } = await supabase
     .from("wardrobe_items")
     .select("id, name, category, image_path")

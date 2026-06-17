@@ -26,7 +26,8 @@
   "header": {
     "signOut": "Đăng xuất",
     "signingOut": "Đang đăng xuất...",
-    "settings": "Cài đặt"
+    "settings": "Cài đặt",
+    "scan": "Quét"
   },
   "auth": {
     "loginTitle": "Đăng nhập",
@@ -215,5 +216,25 @@
     "occasionDate": "Hẹn hò",
     "occasionTravel": "Du lịch",
     "occasionSchool": "Đi học"
+  },
+  "detect": {
+    "title": "Quét quần áo",
+    "subtitle": "Chụp hoặc tải ảnh — AI sẽ nhận diện các món.",
+    "useCamera": "Dùng camera",
+    "upload": "Tải ảnh lên",
+    "capture": "Chụp",
+    "retake": "Chụp lại",
+    "cameraError": "Không mở được camera. Kiểm tra quyền hoặc dùng tải ảnh.",
+    "detecting": "Đang nhận diện...",
+    "detectError": "Nhận diện thất bại. Server đã đặt GEMINI_API_KEY chưa? Thử lại nhé.",
+    "noItems": "Không thấy món đồ nào. Thử ảnh khác xem.",
+    "found": "Tìm thấy {count} món — chọn món muốn thêm.",
+    "name": "Tên",
+    "category": "Loại",
+    "addSelected": "Thêm {count} vào tủ đồ",
+    "adding": "Đang thêm...",
+    "addError": "Không thêm được. Vui lòng thử lại.",
+    "back": "Về tủ đồ",
+    "scan": "Quét"
   }
 }

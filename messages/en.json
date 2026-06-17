@@ -26,7 +26,8 @@
   "header": {
     "signOut": "Sign out",
     "signingOut": "Signing out...",
-    "settings": "Settings"
+    "settings": "Settings",
+    "scan": "Scan"
   },
   "auth": {
     "loginTitle": "Log in",
@@ -215,5 +216,25 @@
     "occasionDate": "Date",
     "occasionTravel": "Travel",
     "occasionSchool": "School"
+  },
+  "detect": {
+    "title": "Scan your clothes",
+    "subtitle": "Snap or upload a photo — AI will detect the items.",
+    "useCamera": "Use camera",
+    "upload": "Upload photo",
+    "capture": "Capture",
+    "retake": "Retake",
+    "cameraError": "Couldn't access the camera. Check permissions or use upload instead.",
+    "detecting": "Detecting items...",
+    "detectError": "Detection failed. Is GEMINI_API_KEY set on the server? Please try again.",
+    "noItems": "No clothing items found. Try another photo.",
+    "found": "Found {count} item(s) — pick which to add.",
+    "name": "Name",
+    "category": "Category",
+    "addSelected": "Add {count} to wardrobe",
+    "adding": "Adding...",
+    "addError": "Couldn't add items. Please try again.",
+    "back": "Back to wardrobe",
+    "scan": "Scan"
   }
 }

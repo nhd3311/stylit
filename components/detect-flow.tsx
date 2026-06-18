@@ -75,8 +75,9 @@ async function dataUrlToBlob(dataUrl: string): Promise<Blob> {
   return res.blob();
 }
 
-function attachStream(video: HTMLVideoElement, stream: MediaStream) {
+async function attachStream(video: HTMLVideoElement, stream: MediaStream) {
   video.srcObject = stream;
+  await video.play().catch(() => undefined);
 }
 
 function stopStream(stream: MediaStream | null) {
@@ -95,7 +96,6 @@ export function DetectFlow({ userId }: { userId: string }) {
     "capture",
   );
   const [cameraOn, setCameraOn] = useState(false);
-  const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [items, setItems] = useState<DetItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
@@ -107,13 +107,14 @@ export function DetectFlow({ userId }: { userId: string }) {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "environment" },
+        audio: false,
       });
       streamRef.current = stream;
-      if (videoRef.current) {
-        attachStream(videoRef.current, stream);
-        await videoRef.current.play();
-      }
       setCameraOn(true);
+      // The <video> is always mounted, so attach right away.
+      if (videoRef.current) {
+        await attachStream(videoRef.current, stream);
+      }
     } catch {
       setError(t("cameraError"));
     }
@@ -126,7 +127,6 @@ export function DetectFlow({ userId }: { userId: string }) {
   }
 
   async function runDetect(base64: string, img: HTMLImageElement) {
-    setImage(img);
     setStep("detecting");
     setError(null);
     try {
@@ -178,7 +178,6 @@ export function DetectFlow({ userId }: { userId: string }) {
 
   function reset() {
     setItems([]);
-    setImage(null);
     setError(null);
     setStep("capture");
   }
@@ -219,37 +218,38 @@ export function DetectFlow({ userId }: { userId: string }) {
   }
 
   const selectedCount = items.filter((it) => it.include).length;
-  void image;
 
   return (
     <div className="flex flex-col gap-6">
       {step === "capture" && (
         <div className="flex flex-col gap-4">
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            className={
+              cameraOn
+                ? "aspect-[3/4] w-full rounded-2xl border border-border bg-black object-cover"
+                : "hidden"
+            }
+          />
           {cameraOn ? (
-            <div className="flex flex-col gap-3">
-              <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                muted
-                className="aspect-video w-full rounded-2xl border border-border bg-black object-cover"
-              />
-              <div className="flex gap-3">
-                <button
-                  type="button"
-                  onClick={stopCamera}
-                  className="h-12 flex-1 rounded-xl border border-border text-sm font-semibold text-foreground transition hover:bg-muted"
-                >
-                  {t("back")}
-                </button>
-                <button
-                  type="button"
-                  onClick={captureFromCamera}
-                  className="h-12 flex-1 rounded-xl bg-linear-to-r from-violet-600 to-fuchsia-600 text-sm font-semibold text-white transition hover:from-violet-500 hover:to-fuchsia-500"
-                >
-                  {t("capture")}
-                </button>
-              </div>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={stopCamera}
+                className="h-12 flex-1 rounded-xl border border-border text-sm font-semibold text-foreground transition hover:bg-muted"
+              >
+                {t("back")}
+              </button>
+              <button
+                type="button"
+                onClick={captureFromCamera}
+                className="h-12 flex-1 rounded-xl bg-linear-to-r from-violet-600 to-fuchsia-600 text-sm font-semibold text-white transition hover:from-violet-500 hover:to-fuchsia-500"
+              >
+                {t("capture")}
+              </button>
             </div>
           ) : (
             <div className="flex flex-col gap-3 sm:flex-row">
@@ -305,22 +305,20 @@ export function DetectFlow({ userId }: { userId: string }) {
                     key={item.id}
                     className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3"
                   >
-                    <label className="flex shrink-0 items-center">
-                      <input
-                        type="checkbox"
-                        checked={item.include}
-                        onChange={(e) =>
-                          setItems((prev) =>
-                            prev.map((entry, i) =>
-                              i === index
-                                ? { ...entry, include: e.target.checked }
-                                : entry,
-                            ),
-                          )
-                        }
-                        className="h-5 w-5 accent-violet-500"
-                      />
-                    </label>
+                    <input
+                      type="checkbox"
+                      checked={item.include}
+                      onChange={(e) =>
+                        setItems((prev) =>
+                          prev.map((entry, i) =>
+                            i === index
+                              ? { ...entry, include: e.target.checked }
+                              : entry,
+                          ),
+                        )
+                      }
+                      className="h-5 w-5 shrink-0 accent-violet-500"
+                    />
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={item.thumb}

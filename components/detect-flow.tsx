@@ -136,7 +136,10 @@ export function DetectFlow({ userId }: { userId: string }) {
         body: JSON.stringify({ imageBase64: base64, mimeType: "image/jpeg" }),
       });
       if (!res.ok) {
-        throw new Error("detect failed");
+        const info = (await res.json().catch(() => null)) as {
+          error?: string;
+        } | null;
+        throw new Error(info?.error ?? "detect failed");
       }
       const data = (await res.json()) as {
         items: { name: string; category: string; color: string; box2d: number[] }[];
@@ -152,8 +155,13 @@ export function DetectFlow({ userId }: { userId: string }) {
         })),
       );
       setStep("results");
-    } catch {
-      setError(t("detectError"));
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "";
+      setError(
+        message && message !== "detect failed"
+          ? `${t("detectError")} — ${message}`
+          : t("detectError"),
+      );
       setStep("capture");
     }
   }

@@ -4,9 +4,9 @@ import { CATEGORIES } from "@/lib/wardrobe";
 
 const MODEL = process.env.GEMINI_MODEL ?? "gemini-3.5-flash";
 
-const PROMPT = `Detect each distinct wearable fashion item (clothing, footwear, or accessory) in this image.
+const PROMPT = `Detect each distinct wearable fashion item (clothing, footwear, or accessory) in this image, and segment each one.
 Return ONLY a JSON array. Each element must be exactly:
-{"name": a short English product name, "category": one of ["Tops","Bottoms","Outerwear","Shoes","Accessories"], "color": the main color in English, "box_2d": [ymin, xmin, ymax, xmax] normalized to 0-1000}.
+{"name": a short English product name, "category": one of ["Tops","Bottoms","Outerwear","Shoes","Accessories"], "color": the main color in English, "box_2d": [ymin, xmin, ymax, xmax] normalized to 0-1000, "mask": the segmentation mask of the item as a base64-encoded PNG data URL that covers its bounding box}.
 Only include wearable items. Maximum 20 items. If there are none, return [].`;
 
 export async function POST(request: Request) {
@@ -101,6 +101,7 @@ export async function POST(request: Request) {
       category,
       color: typeof r.color === "string" ? r.color.slice(0, 30) : "",
       box2d,
+      mask: typeof r.mask === "string" ? r.mask : null,
     };
   });
 

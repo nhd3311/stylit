@@ -70,6 +70,61 @@ function cropToDataUrl(img: HTMLImageElement, box2d: number[]): string {
   return canvas.toDataURL("image/jpeg", 0.85);
 }
 
+async function cutoutToDataUrl(
+  img: HTMLImageElement,
+  box2d: number[],
+  maskSrc: string,
+): Promise<string> {
+  const [ymin, xmin, ymax, xmax] = box2d;
+  const sx = (xmin / 1000) * img.width;
+  const sy = (ymin / 1000) * img.height;
+  const sw = Math.max(1, ((xmax - xmin) / 1000) * img.width);
+  const sh = Math.max(1, ((ymax - ymin) / 1000) * img.height);
+  const w = Math.round(sw);
+  const h = Math.round(sh);
+
+  const itemCanvas = document.createElement("canvas");
+  itemCanvas.width = w;
+  itemCanvas.height = h;
+  const itemCtx = itemCanvas.getContext("2d");
+  if (!itemCtx) {
+    return cropToDataUrl(img, box2d);
+  }
+  itemCtx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
+
+  const maskImg = await loadImage(
+    maskSrc.startsWith("data:") ? maskSrc : `data:image/png;base64,${maskSrc}`,
+  );
+  const maskCanvas = document.createElement("canvas");
+  maskCanvas.width = w;
+  maskCanvas.height = h;
+  const maskCtx = maskCanvas.getContext("2d");
+  if (!maskCtx) {
+    return cropToDataUrl(img, box2d);
+  }
+  maskCtx.drawImage(maskImg, 0, 0, w, h);
+
+  const itemData = itemCtx.getImageData(0, 0, w, h);
+  const maskData = maskCtx.getImageData(0, 0, w, h);
+  for (let i = 0; i < itemData.data.length; i += 4) {
+    itemData.data[i + 3] = maskData.data[i];
+  }
+  itemCtx.putImageData(itemData, 0, 0);
+
+  // Composite the cut-out item onto a clean white background.
+  const out = document.createElement("canvas");
+  out.width = w;
+  out.height = h;
+  const outCtx = out.getContext("2d");
+  if (!outCtx) {
+    return cropToDataUrl(img, box2d);
+  }
+  outCtx.fillStyle = "#ffffff";
+  outCtx.fillRect(0, 0, w, h);
+  outCtx.drawImage(itemCanvas, 0, 0);
+  return out.toDataURL("image/jpeg", 0.9);
+}
+
 async function dataUrlToBlob(dataUrl: string): Promise<Blob> {
   const res = await fetch(dataUrl);
   return res.blob();
@@ -142,18 +197,27 @@ export function DetectFlow({ userId }: { userId: string }) {
         throw new Error(info?.error ?? "detect failed");
       }
       const data = (await res.json()) as {
-        items: { name: string; category: string; color: string; box2d: number[] }[];
+        items: {
+          name: string;
+          category: string;
+          color: string;
+          box2d: number[];
+          mask: string | null;
+        }[];
       };
-      setItems(
-        data.items.map((it, index) => ({
+      const mapped = await Promise.all(
+        data.items.map(async (it, index) => ({
           id: String(index),
           name: it.name,
           category: it.category,
           color: it.color,
-          thumb: cropToDataUrl(img, it.box2d),
+          thumb: it.mask
+            ? await cutoutToDataUrl(img, it.box2d, it.mask)
+            : cropToDataUrl(img, it.box2d),
           include: true,
         })),
       );
+      setItems(mapped);
       setStep("results");
     } catch (err) {
       const message = err instanceof Error ? err.message : "";

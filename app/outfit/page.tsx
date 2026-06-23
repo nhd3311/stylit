@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { BottomNav } from "@/components/bottom-nav";
 import { OutfitFlow } from "@/components/outfit-flow";
 import { TopBar } from "@/components/top-bar";
+import { type SavedLook } from "@/lib/outfit";
 import { createClient } from "@/lib/supabase-server";
 import {
   WARDROBE_BUCKET,
@@ -46,6 +47,18 @@ export default async function OutfitPage() {
     };
   });
 
+  const { data: looksData } = await supabase
+    .from("saved_looks")
+    .select("id, title, reason, item_ids")
+    .order("created_at", { ascending: false });
+
+  const initialLooks: SavedLook[] = (looksData ?? []).map((row) => ({
+    id: row.id as string,
+    title: (row.title as string | null) ?? "Outfit",
+    reason: (row.reason as string | null) ?? "",
+    itemIds: (row.item_ids as string[] | null) ?? [],
+  }));
+
   return (
     <div className="flex min-h-full flex-1 flex-col bg-background pb-24 text-foreground">
       <TopBar />
@@ -53,7 +66,11 @@ export default async function OutfitPage() {
         <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
         <p className="mt-0.5 text-sm text-muted-foreground">{t("subtitle")}</p>
         <div className="mt-6">
-          <OutfitFlow items={items} />
+          <OutfitFlow
+            items={items}
+            userId={user.id}
+            initialLooks={initialLooks}
+          />
         </div>
       </main>
       <BottomNav />

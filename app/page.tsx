@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { LanguageToggle } from "@/components/language-toggle";
+import { FitcheckLogo, FitcheckMark } from "@/components/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { WaitlistForm } from "@/components/waitlist-form";
 
@@ -33,11 +34,8 @@ export default function Home() {
     <div className="relative flex min-h-full flex-1 flex-col bg-background text-foreground">
       <header className="sticky top-0 z-30 border-b border-border bg-background/70 backdrop-blur">
         <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4 sm:px-8">
-          <Link
-            href="/"
-            className="bg-linear-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-lg font-bold tracking-tight text-transparent"
-          >
-            Fitcheck
+          <Link href="/" aria-label="Fitcheck">
+            <FitcheckLogo />
           </Link>
           <div className="flex items-center gap-2 sm:gap-3">
             <LanguageToggle />
@@ -50,7 +48,7 @@ export default function Home() {
             </Link>
             <Link
               href="/signup"
-              className="rounded-lg bg-linear-to-r from-violet-600 to-fuchsia-600 px-4 py-2 text-sm font-semibold text-white transition hover:from-violet-500 hover:to-fuchsia-500"
+              className="fc-gradient rounded-lg px-4 py-2 text-sm font-semibold text-white transition active:scale-[0.98]"
             >
               {t("nav.signup")}
             </Link>
@@ -62,7 +60,7 @@ export default function Home() {
         <section className="relative overflow-hidden">
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(168,85,247,0.25),transparent)]"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(124,58,237,0.22),transparent)]"
           />
           <div
             aria-hidden
@@ -74,15 +72,14 @@ export default function Home() {
           />
 
           <div className="relative mx-auto flex w-full max-w-2xl flex-col items-start px-6 py-20 sm:px-8 sm:py-28">
-            <p className="mb-6 text-sm font-medium tracking-widest text-violet-400 uppercase">
+            <FitcheckMark className="mb-6 h-14 w-14" />
+            <p className="mb-5 text-sm font-medium tracking-widest text-primary uppercase">
               {t("home.comingSoon")}
             </p>
 
             <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl sm:leading-tight lg:text-6xl">
               Fitcheck —{" "}
-              <span className="bg-linear-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
-                {t("home.headlineAccent")}
-              </span>
+              <span className="fc-gradient-text">{t("home.headlineAccent")}</span>
             </h1>
 
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground sm:text-xl">
@@ -92,7 +89,7 @@ export default function Home() {
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/signup"
-                className="flex h-12 items-center justify-center rounded-xl bg-linear-to-r from-violet-600 to-fuchsia-600 px-7 text-base font-semibold text-white transition hover:from-violet-500 hover:to-fuchsia-500 active:scale-[0.98]"
+                className="fc-gradient flex h-12 items-center justify-center rounded-xl px-7 text-base font-semibold text-white transition active:scale-[0.98]"
               >
                 {t("home.ctaSignup")}
               </Link>
@@ -122,9 +119,9 @@ export default function Home() {
             {features.map((feature) => (
               <div
                 key={feature.title}
-                className="rounded-2xl border border-border bg-card p-6 transition hover:border-violet-500/40"
+                className="rounded-2xl border border-border bg-card p-6 transition hover:border-primary/40"
               >
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-500/10 text-violet-400">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <svg
                     aria-hidden
                     viewBox="0 0 24 24"

@@ -3,3 +3,10 @@ export type SuggestedOutfit = {
   itemIds: string[];
   reason: string;
 };
+
+export type SavedLook = {
+  id: string;
+  title: string;
+  reason: string;
+  itemIds: string[];
+};

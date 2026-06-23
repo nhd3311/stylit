@@ -268,7 +268,11 @@
     "noResults": "Chưa phối được bộ nào từ tủ đồ hiện tại. Thử thêm vài món nữa nhé.",
     "needItems": "Thêm ít nhất 2 món vào tủ đồ để nhận gợi ý phối đồ.",
     "goScan": "Quét quần áo",
-    "goWardrobe": "Đến tủ đồ"
+    "goWardrobe": "Đến tủ đồ",
+    "savedTitle": "Looks đã lưu",
+    "save": "Lưu",
+    "saved": "Đã lưu",
+    "deleteLook": "Xoá look"
   },
   "tabs": {
     "wardrobe": "Tủ đồ",

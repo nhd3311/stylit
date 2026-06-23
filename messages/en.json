@@ -268,7 +268,11 @@
     "noResults": "Couldn't build an outfit from your current wardrobe. Try adding a few more pieces.",
     "needItems": "Add at least 2 items to your wardrobe to get outfit suggestions.",
     "goScan": "Scan clothes",
-    "goWardrobe": "Go to wardrobe"
+    "goWardrobe": "Go to wardrobe",
+    "savedTitle": "Saved looks",
+    "save": "Save",
+    "saved": "Saved",
+    "deleteLook": "Delete look"
   },
   "tabs": {
     "wardrobe": "Wardrobe",

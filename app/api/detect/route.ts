@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase-server";
 import { CATEGORIES } from "@/lib/wardrobe";
 
+export const maxDuration = 60;
+
 const MODEL = process.env.GEMINI_MODEL ?? "gemini-3.5-flash";
 
 const PROMPT = `Detect each distinct wearable fashion item (clothing, footwear, or accessory) in this image, and segment each one.

@@ -25,6 +25,13 @@ export function AppHeader({ email }: { email?: string | null }) {
           <LanguageToggle />
           <ThemeToggle />
           <Link
+            href="/outfit"
+            aria-label={t("outfit")}
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:text-foreground"
+          >
+            <SparklesIcon />
+          </Link>
+          <Link
             href="/detect"
             aria-label={t("scan")}
             className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:text-foreground"
@@ -42,6 +49,23 @@ export function AppHeader({ email }: { email?: string | null }) {
         </div>
       </div>
     </header>
+  );
+}
+
+function SparklesIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.7}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4"
+      aria-hidden
+    >
+      <path d="M5 3v4M3 5h4M6 17v4M4 19h4M13 3l3 7 5 2-5 2-3 7-3-7-5-2 5-2 3-7z" />
+    </svg>
   );
 }
 

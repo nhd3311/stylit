@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fitcheck — Bộ nhận diện thương hiệu</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
+:root{--tim:#7C3AED;--tim-dam:#5B21B6;--hong:#D946EF;--muc:#1A1626;--kem:#FBF7F2;--vien:#ECE3F5;--xam:#6B5E52}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Be Vietnam Pro',system-ui,sans-serif;background:var(--kem);color:var(--muc);line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:0 24px}
+.sec{padding:52px 0;border-top:1px solid var(--vien)}
+.kicker{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tim)}
+h1{font-size:46px;font-weight:800;letter-spacing:-1.5px;margin:.25em 0 .15em}
+h2{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tim);margin-bottom:22px}
+h3{font-size:18px;font-weight:700;margin-bottom:6px}
+p{color:var(--xam);max-width:62ch}
+.muted{color:var(--xam);font-size:14px}
+.wm{font-weight:800;letter-spacing:-1px;line-height:1;display:inline-flex;align-items:baseline}
+.wm.grad{background:linear-gradient(95deg,#6D28D9,#D946EF);-webkit-background-clip:text;background-clip:text;color:transparent}
+.wm.ink{color:var(--muc)}.wm.white{color:#fff}
+.kc{height:.78em;width:auto;margin-left:-1px;position:relative;top:.05em}
+.kc rect{fill:currentColor}.kc path{stroke:currentColor}
+.wm.grad .kc rect{fill:#cf3fe8}.wm.grad .kc path{stroke:#D946EF}
+.ic{display:block}
+.hero{display:flex;align-items:center;gap:26px;flex-wrap:wrap;margin-top:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card{background:#fff;border:1px solid var(--vien);border-radius:16px;padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:150px}
+.card.dark{background:var(--muc);border-color:#2a2435}
+.clab{font-size:12px;color:var(--xam)}.card.dark .clab{color:#9a8fa6}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+.col{border:1px solid var(--vien);border-radius:14px;overflow:hidden;background:#fff}
+.col .chip{height:84px}
+.col .meta{padding:11px 14px}
+.col .nm{font-weight:700;font-size:14px}
+.col .hx{font-size:13px;color:var(--xam)}
+.col .ro{font-size:12px;color:var(--xam);margin-top:2px}
+.spec{display:flex;flex-direction:column;gap:10px}
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.box{border-radius:14px;padding:18px 20px}.box .t{font-weight:700;margin-bottom:6px;display:block}
+.do{background:#EAF7EF;border:1px solid #BFE6CE}.dont{background:#FBEAEA;border:1px solid #F2C7C7}
+.do .t{color:#1E7A4B}.dont .t{color:#B23A3A}.box ul{margin-left:18px;font-size:14px;color:var(--muc)}
+.detail{display:flex;align-items:center;gap:30px;flex-wrap:wrap;background:#fff;border:1px solid var(--vien);border-radius:16px;padding:26px}
+.favs{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+footer{padding:38px 0;border-top:1px solid var(--vien);color:var(--xam);font-size:13px;text-align:center}
+@media(max-width:560px){h1{font-size:34px}.dd{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<linearGradient id="fcg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6D28D9"/><stop offset="1" stop-color="#D946EF"/></linearGradient>
+<symbol id="icSym" viewBox="0 0 120 120"><rect x="4" y="4" width="112" height="112" rx="30" fill="url(#fcg)"/><g fill="#fff"><polygon points="50,84 31,57 41,55 52,76"/><polygon points="50,84 82,36 90,43 56,76"/></g></symbol>
+<symbol id="icInk" viewBox="0 0 120 120"><g fill="#1A1626"><polygon points="50,84 31,57 41,55 52,76"/><polygon points="50,84 82,36 90,43 56,76"/></g></symbol>
+</defs></svg>
+
+<header class="wrap" style="padding-top:64px">
+  <div class="kicker">Bộ nhận diện thương hiệu</div>
+  <h1>Fitcheck</h1>
+  <p>Tủ đồ thông minh &amp; phối đồ bằng AI cho Gen Z. Logo kết hợp <b>chiếc áo</b> và <b>dấu check</b> — duyệt outfit của bạn mỗi ngày.</p>
+  <div class="hero">
+    <svg class="ic" width="98" height="98" viewBox="0 0 120 120"><use href="#icSym"/></svg>
+    <span class="wm grad" style="font-size:66px">Fitchec<svg class="kc" viewBox="0 0 58 92" aria-hidden="true"><rect x="6" y="8" width="12" height="76" rx="6"/><path d="M21 50 L34 70 L54 24" fill="none" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+  </div>
+</header>
+
+<section class="sec"><div class="wrap">
+<h2>Hệ thống logo</h2>
+<div class="grid">
+  <div class="card"><svg width="62" height="62" viewBox="0 0 120 120"><use href="#icSym"/></svg><span class="clab">Biểu tượng · app icon</span></div>
+  <div class="card"><span class="wm grad" style="font-size:32px">Fitchec<svg class="kc" viewBox="0 0 58 92"><rect x="6" y="8" width="12" height="76" rx="6"/><path d="M21 50 L34 70 L54 24" fill="none" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="clab">Chữ · wordmark</span></div>
+  <div class="card"><div style="display:flex;align-items:center;gap:12px"><svg width="44" height="44" viewBox="0 0 120 120"><use href="#icSym"/></svg><span class="wm grad" style="font-size:28px">Fitchec<svg class="kc" viewBox="0 0 58 92"><rect x="6" y="8" width="12" height="76" rx="6"/><path d="M21 50 L34 70 L54 24" fill="none" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><span class="clab">Logo ngang</span></div>
+  <div class="card"><svg width="40" height="40" viewBox="0 0 120 120"><use href="#icInk"/></svg><span class="wm ink" style="font-size:25px">Fitchec<svg class="kc" viewBox="0 0 58 92"><rect x="6" y="8" width="12" height="76" rx="6"/><path d="M21 50 L34 70 L54 24" fill="none" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="clab">Đơn sắc mực</span></div>
+  <div class="card dark"><svg width="44" height="44" viewBox="0 0 120 120"><use href="#icSym"/></svg><span class="wm white" style="font-size:26px">Fitchec<svg class="kc" viewBox="0 0 58 92"><rect x="6" y="8" width="12" height="76" rx="6"/><path d="M21 50 L34 70 L54 24" fill="none" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="clab">Trên nền tối</span></div>
+  <div class="card"><div style="display:flex;flex-direction:column;align-items:center;gap:10px"><svg width="54" height="54" viewBox="0 0 120 120"><use href="#icSym"/></svg><span class="wm grad" style="font-size:22px">Fitchec<svg class="kc" viewBox="0 0 58 92"><rect x="6" y="8" width="12" height="76" rx="6"/><path d="M21 50 L34 70 L54 24" fill="none" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><span class="clab">Logo dọc · stacked</span></div>
+</div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+<h2>Ý tưởng</h2>
+<div class="detail">
+<svg width="116" height="116" viewBox="0 0 120 120"><use href="#icSym"/></svg>
+<div style="flex:1;min-width:240px">
+<h3>Chiếc áo + dấu check</h3>
+<p>Biểu tượng là cổ áo cách điệu tạo thành <b>dấu check</b> — duyệt outfit. Ở phần chữ, <b>nét chữ "k" được vẽ thành dấu check</b>, nối liền thông điệp "Fit-check".</p>
+</div>
+</div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+<h2>Bảng màu</h2>
+<div class="cols">
+  <div class="col"><div class="chip" style="background:#7C3AED"></div><div class="meta"><div class="nm">Tím Fitcheck</div><div class="hx">#7C3AED</div><div class="ro">Màu chính</div></div></div>
+  <div class="col"><div class="chip" style="background:#5B21B6"></div><div class="meta"><div class="nm">Tím đậm</div><div class="hx">#5B21B6</div><div class="ro">Nhấn · hover</div></div></div>
+  <div class="col"><div class="chip" style="background:#A78BFA"></div><div class="meta"><div class="nm">Tím nhạt</div><div class="hx">#A78BFA</div><div class="ro">Phụ · nền nhạt</div></div></div>
+  <div class="col"><div class="chip" style="background:#D946EF"></div><div class="meta"><div class="nm">Hồng điện</div><div class="hx">#D946EF</div><div class="ro">Điểm nhấn</div></div></div>
+  <div class="col"><div class="chip" style="background:#1A1626"></div><div class="meta"><div class="nm">Mực</div><div class="hx">#1A1626</div><div class="ro">Chữ · nền tối</div></div></div>
+  <div class="col"><div class="chip" style="background:#FBF7F2;border-bottom:1px solid var(--vien)"></div><div class="meta"><div class="nm">Kem</div><div class="hx">#FBF7F2</div><div class="ro">Nền sáng</div></div></div>
+</div>
+<div style="margin-top:14px;border:1px solid var(--vien);border-radius:14px;overflow:hidden;background:#fff">
+  <div style="height:58px;background:linear-gradient(95deg,#6D28D9,#D946EF)"></div>
+  <div class="meta" style="padding:11px 14px"><span class="nm">Gradient Fitcheck</span> &nbsp;<span class="hx">#6D28D9 → #D946EF</span></div>
+</div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+<h2>Phối màu</h2>
+<div class="cols">
+  <div class="col"><div class="chip" style="background:linear-gradient(135deg,#6D28D9,#D946EF);display:flex;align-items:center;justify-content:center"><span style="color:#fff;font-weight:800;font-size:22px">Aa</span></div><div class="meta"><div class="nm">Trắng / gradient</div><div class="ro">Nút chính · hero</div></div></div>
+  <div class="col"><div class="chip" style="background:#7C3AED;display:flex;align-items:center;justify-content:center"><span style="color:#fff;font-weight:800;font-size:22px">Aa</span></div><div class="meta"><div class="nm">Trắng / tím</div><div class="ro">Nút · nhãn</div></div></div>
+  <div class="col"><div class="chip" style="background:#FBF7F2;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--vien)"><span style="color:#5B21B6;font-weight:800;font-size:22px">Aa</span></div><div class="meta"><div class="nm">Tím / kem</div><div class="ro">Chữ trên nền sáng</div></div></div>
+  <div class="col"><div class="chip" style="background:#1A1626;display:flex;align-items:center;justify-content:center"><span style="color:#D946EF;font-weight:800;font-size:22px">Aa</span></div><div class="meta"><div class="nm">Hồng / mực</div><div class="ro">Điểm nhấn nền tối</div></div></div>
+  <div class="col"><div class="chip" style="background:#1A1626;display:flex;align-items:center;justify-content:center"><span style="color:#fff;font-weight:800;font-size:22px">Aa</span></div><div class="meta"><div class="nm">Trắng / mực</div><div class="ro">Nền tối</div></div></div>
+  <div class="col"><div class="chip" style="background:#EDE9FE;display:flex;align-items:center;justify-content:center"><span style="color:#5B21B6;font-weight:800;font-size:22px">Aa</span></div><div class="meta"><div class="nm">Tím / tím nhạt</div><div class="ro">Tag · chip</div></div></div>
+</div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+<h2>Hoạ tiết</h2>
+<div class="cols">
+  <div class="col"><div class="chip" style="height:104px;background:#EDE9FE;position:relative;overflow:hidden"><svg width="100%" height="100%" style="position:absolute;inset:0"><defs><pattern id="pchk" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M8 16 l3.6 3.9 l9.2 -11.2" fill="none" stroke="#7C3AED" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></pattern></defs><rect width="100%" height="100%" fill="url(#pchk)"/></svg></div><div class="meta"><div class="nm">Lưới dấu check</div><div class="ro">Hoạ tiết thương hiệu</div></div></div>
+  <div class="col"><div class="chip" style="height:104px;background:radial-gradient(70% 90% at 20% 15%,#7C3AED,transparent 60%),radial-gradient(70% 90% at 85% 75%,#D946EF,transparent 60%),#2E1065"></div><div class="meta"><div class="nm">Gradient mesh</div><div class="ro">Nền hero · thẻ</div></div></div>
+  <div class="col"><div class="chip" style="height:104px;background:#1A1626;position:relative;overflow:hidden"><svg width="100%" height="100%" style="position:absolute;inset:0"><defs><pattern id="pdot" width="44" height="44" patternUnits="userSpaceOnUse"><circle cx="10" cy="12" r="3" fill="#7C3AED"/><circle cx="32" cy="28" r="3" fill="#D946EF"/><circle cx="24" cy="6" r="2" fill="#A78BFA"/><circle cx="6" cy="34" r="2" fill="#D946EF"/></pattern></defs><rect width="100%" height="100%" fill="url(#pdot)"/></svg></div><div class="meta"><div class="nm">Confetti</div><div class="ro">Nền vui · sự kiện</div></div></div>
+</div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+<h2>Kiểu chữ — Be Vietnam Pro</h2>
+<div class="spec">
+  <span style="font-weight:800;font-size:40px;letter-spacing:-1px">Ăn mặc đẹp mỗi ngày</span>
+  <span style="font-weight:700;font-size:24px;color:#5B21B6">Tự tin tỏa sáng — ầ ẫ ạ ơ ư đ ễ ộ</span>
+  <span style="font-weight:400;font-size:16px">Font do người Việt thiết kế, hiện đại và hỗ trợ trọn vẹn dấu tiếng Việt.</span>
+  <span class="muted">Display 800 · Tiêu đề 700 · Giao diện 600/500 · Nội dung 400</span>
+</div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+<h2>Nên &amp; không nên</h2>
+<div class="dd">
+  <div class="box do"><span class="t">Nên</span><ul><li>Chừa khoảng trống quanh logo</li><li>Dùng trên nền tương phản, dễ đọc</li><li>Dùng đúng màu thương hiệu</li><li>Giữ nguyên tỉ lệ</li></ul></div>
+  <div class="box dont"><span class="t">Không nên</span><ul><li>Bóp méo, nghiêng, kéo dãn</li><li>Đổi màu tùy tiện</li><li>Thêm viền/đổ bóng nặng</li><li>Đặt trên nền rối làm khó đọc</li></ul></div>
+</div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+<h2>App icon &amp; favicon</h2>
+<div class="favs">
+  <svg width="88" height="88" viewBox="0 0 120 120"><use href="#icSym"/></svg>
+  <svg width="56" height="56" viewBox="0 0 120 120"><use href="#icSym"/></svg>
+  <svg width="32" height="32" viewBox="0 0 120 120"><use href="#icSym"/></svg>
+  <svg width="20" height="20" viewBox="0 0 120 120"><use href="#icSym"/></svg>
+  <span class="muted">Biểu tượng giữ rõ nét trên mọi kích thước.</span>
+</div>
+</div></section>
+
+<footer>Fitcheck · Bộ nhận diện thương hiệu</footer>
+</body>
+</html>

@@ -27,7 +27,8 @@
     "signOut": "Sign out",
     "signingOut": "Signing out...",
     "settings": "Settings",
-    "scan": "Scan"
+    "scan": "Scan",
+    "outfit": "Outfit"
   },
   "auth": {
     "loginTitle": "Log in",
@@ -225,7 +226,7 @@
     "capture": "Capture",
     "retake": "Retake",
     "cameraError": "Couldn't access the camera. Check permissions or use upload instead.",
-    "detecting": "Detecting items...",
+    "detecting": "Detecting & cutting out items… (can take 15–40s)",
     "detectError": "Detection failed. Is GEMINI_API_KEY set on the server? Please try again.",
     "noItems": "No clothing items found. Try another photo.",
     "found": "Found {count} item(s) — pick which to add.",
@@ -236,5 +237,22 @@
     "addError": "Couldn't add items. Please try again.",
     "back": "Back to wardrobe",
     "scan": "Scan"
+  },
+  "outfit": {
+    "title": "Outfit ideas",
+    "subtitle": "Let AI style complete looks from the clothes you own.",
+    "back": "Back to wardrobe",
+    "occasionLabel": "What's the occasion?",
+    "anyOccasion": "Any",
+    "noteLabel": "Anything specific? (optional)",
+    "notePlaceholder": "e.g. it's chilly, I want something cozy",
+    "suggest": "Suggest outfits",
+    "regenerate": "Suggest again",
+    "suggesting": "Styling your looks… (can take 10–30s)",
+    "error": "Couldn't get suggestions. Is GEMINI_API_KEY set on the server? Please try again.",
+    "noResults": "Couldn't build an outfit from your current wardrobe. Try adding a few more pieces.",
+    "needItems": "Add at least 2 items to your wardrobe to get outfit suggestions.",
+    "goScan": "Scan clothes",
+    "goWardrobe": "Go to wardrobe"
   }
 }

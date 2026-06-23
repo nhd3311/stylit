@@ -27,7 +27,8 @@
     "signOut": "Đăng xuất",
     "signingOut": "Đang đăng xuất...",
     "settings": "Cài đặt",
-    "scan": "Quét"
+    "scan": "Quét",
+    "outfit": "Phối đồ"
   },
   "auth": {
     "loginTitle": "Đăng nhập",
@@ -225,7 +226,7 @@
     "capture": "Chụp",
     "retake": "Chụp lại",
     "cameraError": "Không mở được camera. Kiểm tra quyền hoặc dùng tải ảnh.",
-    "detecting": "Đang nhận diện...",
+    "detecting": "Đang nhận diện & tách nền… (có thể mất 15–40 giây)",
     "detectError": "Nhận diện thất bại. Server đã đặt GEMINI_API_KEY chưa? Thử lại nhé.",
     "noItems": "Không thấy món đồ nào. Thử ảnh khác xem.",
     "found": "Tìm thấy {count} món — chọn món muốn thêm.",
@@ -236,5 +237,22 @@
     "addError": "Không thêm được. Vui lòng thử lại.",
     "back": "Về tủ đồ",
     "scan": "Quét"
+  },
+  "outfit": {
+    "title": "Gợi ý phối đồ",
+    "subtitle": "Để AI phối nguyên bộ từ quần áo bạn đang có.",
+    "back": "Về tủ đồ",
+    "occasionLabel": "Dịp gì nè?",
+    "anyOccasion": "Bất kỳ",
+    "noteLabel": "Có yêu cầu gì thêm không? (không bắt buộc)",
+    "notePlaceholder": "vd. trời lạnh, muốn đồ ấm áp",
+    "suggest": "Gợi ý outfit",
+    "regenerate": "Gợi ý lại",
+    "suggesting": "Đang phối đồ cho bạn… (có thể mất 10–30 giây)",
+    "error": "Chưa lấy được gợi ý. Server đã đặt GEMINI_API_KEY chưa? Thử lại nhé.",
+    "noResults": "Chưa phối được bộ nào từ tủ đồ hiện tại. Thử thêm vài món nữa nhé.",
+    "needItems": "Thêm ít nhất 2 món vào tủ đồ để nhận gợi ý phối đồ.",
+    "goScan": "Quét quần áo",
+    "goWardrobe": "Đến tủ đồ"
   }
 }

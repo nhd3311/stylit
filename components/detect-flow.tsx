@@ -15,7 +15,7 @@ type DetItem = {
   include: boolean;
 };
 
-const MAX_DIM = 1024;
+const MAX_DIM = 768;
 
 function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -184,11 +184,14 @@ export function DetectFlow({ userId }: { userId: string }) {
   async function runDetect(base64: string, img: HTMLImageElement) {
     setStep("detecting");
     setError(null);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 70000);
     try {
       const res = await fetch("/api/detect", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ imageBase64: base64, mimeType: "image/jpeg" }),
+        signal: controller.signal,
       });
       if (!res.ok) {
         const info = (await res.json().catch(() => null)) as {
@@ -227,6 +230,8 @@ export function DetectFlow({ userId }: { userId: string }) {
           : t("detectError"),
       );
       setStep("capture");
+    } finally {
+      clearTimeout(timeout);
     }
   }
 

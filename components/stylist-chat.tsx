@@ -81,11 +81,8 @@ export function StylistChat() {
         <div ref={endRef} />
       </div>
 
-      <div
-        className="fixed inset-x-0 z-30 px-5"
-        style={{ bottom: "calc(env(safe-area-inset-bottom) + 62px)" }}
-      >
-        <div className="mx-auto flex w-full max-w-xl items-center gap-2 rounded-2xl border border-border bg-card p-2 shadow-lg shadow-violet-500/10">
+      <div className="fixed inset-x-0 z-30 px-5 bottom-[calc(env(safe-area-inset-bottom)+62px)] md:bottom-5">
+        <div className="mx-auto flex w-full max-w-3xl items-center gap-2 rounded-2xl border border-border bg-card p-2 shadow-lg shadow-violet-500/10">
           <input
             type="text"
             value={input}

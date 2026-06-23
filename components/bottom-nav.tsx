@@ -16,7 +16,7 @@ export function BottomNav() {
   const t = useTranslations("tabs");
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/90 backdrop-blur">
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/90 backdrop-blur md:hidden">
       <div
         className="mx-auto flex max-w-xl items-stretch justify-around px-2"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}

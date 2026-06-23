@@ -54,9 +54,9 @@ export default async function DashboardPage() {
   });
 
   return (
-    <div className="flex min-h-full flex-1 flex-col bg-background pb-40 text-foreground">
+    <div className="flex min-h-full flex-1 flex-col bg-background pb-24 text-foreground md:pb-10">
       <TopBar />
-      <main className="mx-auto w-full max-w-xl flex-1 px-5 py-6">
+      <main className="mx-auto w-full max-w-6xl flex-1 px-5 py-6 md:px-8 md:py-8">
         <Wardrobe
           initialItems={initialItems}
           needsSetup={Boolean(error)}

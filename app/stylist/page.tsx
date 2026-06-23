@@ -21,9 +21,9 @@ export default async function StylistPage() {
   const t = await getTranslations("stylist");
 
   return (
-    <div className="flex min-h-full flex-1 flex-col bg-background pb-44 text-foreground">
+    <div className="flex min-h-full flex-1 flex-col bg-background pb-44 text-foreground md:pb-28">
       <TopBar />
-      <main className="mx-auto w-full max-w-xl flex-1 px-5 py-5">
+      <main className="mx-auto w-full max-w-3xl flex-1 px-5 py-5 md:py-8">
         <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
         <p className="mt-0.5 mb-5 text-sm text-muted-foreground">
           {t("subtitle")}

@@ -25,9 +25,9 @@ export default async function DetectPage() {
   const t = await getTranslations("detect");
 
   return (
-    <div className="flex min-h-full flex-1 flex-col bg-background pb-24 text-foreground">
+    <div className="flex min-h-full flex-1 flex-col bg-background pb-24 text-foreground md:pb-10">
       <TopBar />
-      <main className="mx-auto w-full max-w-xl flex-1 px-5 py-6">
+      <main className="mx-auto w-full max-w-2xl flex-1 px-5 py-6 md:py-8">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>

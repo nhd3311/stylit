@@ -69,14 +69,26 @@ export function Wardrobe({
         </div>
       )}
 
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
-        <p className="mt-0.5 text-sm text-muted-foreground">
-          {t("itemCount", { count: items.length })}
-        </p>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            {t("title")}
+          </h1>
+          <p className="mt-0.5 text-sm text-muted-foreground">
+            {t("itemCount", { count: items.length })}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => router.push("/detect")}
+          className="fc-gradient inline-flex h-11 shrink-0 items-center gap-1.5 rounded-xl px-4 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition active:scale-[0.98]"
+        >
+          <PlusIcon />
+          <span className="hidden sm:inline">{t("addItem")}</span>
+        </button>
       </div>
 
-      <div className="no-scrollbar -mx-5 flex gap-2 overflow-x-auto px-5">
+      <div className="no-scrollbar -mx-5 flex gap-2 overflow-x-auto px-5 md:mx-0 md:px-0">
         {FILTERS.map((cat) => {
           const active = filter === cat;
           return (
@@ -144,26 +156,12 @@ export function Wardrobe({
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
           {visibleItems.map((item) => (
             <WardrobeCard key={item.id} item={item} onDelete={handleDelete} />
           ))}
         </div>
       )}
-
-      <div
-        className="fixed inset-x-0 z-30 px-5"
-        style={{ bottom: "calc(env(safe-area-inset-bottom) + 64px)" }}
-      >
-        <button
-          type="button"
-          onClick={() => router.push("/detect")}
-          className="fc-gradient mx-auto flex h-12 w-full max-w-xl items-center justify-center gap-2 rounded-2xl text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition active:scale-[0.99]"
-        >
-          <PlusIcon />
-          {t("addItem")}
-        </button>
-      </div>
     </div>
   );
 }
@@ -216,16 +214,7 @@ function WardrobeCard({
 
 function SearchIcon() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-      aria-hidden="true"
-    >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true">
       <circle cx="11" cy="11" r="7" />
       <path d="M21 21l-4.3-4.3" />
     </svg>

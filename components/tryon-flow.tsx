@@ -12,10 +12,6 @@ import { type WardrobeItem } from "@/lib/wardrobe";
 
 const MAX_DIM = 1024;
 
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -78,6 +74,8 @@ export function TryonFlow({ items }: { items: WardrobeItem[] }) {
     setStatus("running");
     setError(null);
     setResult(null);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 90000);
     try {
       const res = await fetch("/api/tryon", {
         method: "POST",
@@ -88,37 +86,23 @@ export function TryonFlow({ items }: { items: WardrobeItem[] }) {
           modelImageUrl: modelMode === "default" ? modelUrl : undefined,
           category,
         }),
+        signal: controller.signal,
       });
       const info = (await res.json().catch(() => null)) as {
-        id?: string;
+        image?: string;
         error?: string;
       } | null;
-      if (!res.ok || !info?.id) {
+      if (!res.ok || !info?.image) {
         throw new Error(info?.error ?? "tryon failed");
       }
-      const id = info.id;
-      for (let i = 0; i < 28; i += 1) {
-        await sleep(2500);
-        const s = await fetch(`/api/tryon/status?id=${encodeURIComponent(id)}`);
-        const sj = (await s.json().catch(() => null)) as {
-          status?: string;
-          output?: string[] | null;
-          error?: string | null;
-        } | null;
-        if (sj?.status === "completed" && sj.output?.[0]) {
-          setResult(sj.output[0]);
-          setStatus("done");
-          return;
-        }
-        if (sj?.status === "failed" || sj?.status === "canceled") {
-          throw new Error(sj.error ?? "tryon failed");
-        }
-      }
-      throw new Error(t("timeout"));
+      setResult(info.image);
+      setStatus("done");
     } catch (err) {
       const m = err instanceof Error ? err.message : "";
       setError(m && m !== "tryon failed" ? `${t("error")} — ${m}` : t("error"));
       setStatus("error");
+    } finally {
+      clearTimeout(timeout);
     }
   }
 
@@ -157,8 +141,7 @@ export function TryonFlow({ items }: { items: WardrobeItem[] }) {
           </button>
           <a
             href={result}
-            target="_blank"
-            rel="noreferrer"
+            download="fitcheck-tryon.png"
             className="fc-gradient flex h-11 items-center rounded-xl px-5 text-sm font-semibold text-white"
           >
             {t("download")}

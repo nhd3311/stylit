@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { AppHeader } from "@/components/app-header";
+import { BottomNav } from "@/components/bottom-nav";
+import { TopBar } from "@/components/top-bar";
 import { Wardrobe } from "@/components/wardrobe";
 import { createClient } from "@/lib/supabase-server";
 import {
@@ -10,7 +11,7 @@ import {
 } from "@/lib/wardrobe";
 
 export const metadata: Metadata = {
-  title: "Wardrobe — Fitcheck",
+  title: "Tủ đồ — Fitcheck",
   description: "Your Fitcheck wardrobe",
 };
 
@@ -24,7 +25,6 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  // Send new users through onboarding (skip the check if the table isn't set up yet).
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("onboarded")
@@ -54,15 +54,15 @@ export default async function DashboardPage() {
   });
 
   return (
-    <div className="flex min-h-full flex-1 flex-col bg-background text-foreground">
-      <AppHeader email={user.email} />
-      <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10 sm:px-8">
+    <div className="flex min-h-full flex-1 flex-col bg-background pb-40 text-foreground">
+      <TopBar />
+      <main className="mx-auto w-full max-w-xl flex-1 px-5 py-6">
         <Wardrobe
-          userId={user.id}
           initialItems={initialItems}
           needsSetup={Boolean(error)}
         />
       </main>
+      <BottomNav />
     </div>
   );
 }

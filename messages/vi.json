@@ -70,7 +70,8 @@
     "resetLinkInvalid": "Link đặt lại không hợp lệ hoặc đã hết hạn.",
     "requestNewLink": "Yêu cầu link mới",
     "continueWith": "Tiếp tục với {provider}",
-    "or": "hoặc"
+    "or": "hoặc",
+    "rememberMe": "Ghi nhớ đăng nhập"
   },
   "validation": {
     "emailRequired": "Vui lòng nhập email.",
@@ -107,7 +108,8 @@
     "cancel": "Huỷ",
     "save": "Thêm vào tủ đồ",
     "saving": "Đang lưu...",
-    "saveError": "Có lỗi xảy ra. Vui lòng thử lại."
+    "saveError": "Có lỗi xảy ra. Vui lòng thử lại.",
+    "searchPlaceholder": "Tìm trong tủ đồ"
   },
   "categories": {
     "All": "Tất cả",
@@ -164,7 +166,8 @@
     "saveProfile": "Lưu hồ sơ",
     "savingProfile": "Đang lưu...",
     "profileSaved": "Đã lưu hồ sơ.",
-    "profileSaveError": "Không lưu được. Bạn đã chạy SQL profiles chưa?"
+    "profileSaveError": "Không lưu được. Bạn đã chạy SQL profiles chưa?",
+    "skinTone": "Tone da"
   },
   "onboarding": {
     "title": "Thiết lập hồ sơ phong cách",
@@ -216,7 +219,18 @@
     "occasionParty": "Tiệc",
     "occasionDate": "Hẹn hò",
     "occasionTravel": "Du lịch",
-    "occasionSchool": "Đi học"
+    "occasionSchool": "Đi học",
+    "bodyRectangle": "Chữ nhật",
+    "bodyTriangle": "Quả lê",
+    "bodyInverted": "Tam giác ngược",
+    "bodyHourglass": "Đồng hồ cát",
+    "bodyOval": "Tròn",
+    "skinFair": "Sáng",
+    "skinLight": "Trung bình sáng",
+    "skinMedium": "Trung bình",
+    "skinOlive": "Ngăm ô liu",
+    "skinTan": "Nâu",
+    "skinDeep": "Đậm"
   },
   "detect": {
     "title": "Quét quần áo",
@@ -236,7 +250,8 @@
     "adding": "Đang thêm...",
     "addError": "Không thêm được. Vui lòng thử lại.",
     "back": "Về tủ đồ",
-    "scan": "Quét"
+    "scan": "Quét",
+    "dropHint": "Hoặc kéo-thả / dán ảnh vào đây"
   },
   "outfit": {
     "title": "Gợi ý phối đồ",
@@ -254,5 +269,24 @@
     "needItems": "Thêm ít nhất 2 món vào tủ đồ để nhận gợi ý phối đồ.",
     "goScan": "Quét quần áo",
     "goWardrobe": "Đến tủ đồ"
+  },
+  "tabs": {
+    "wardrobe": "Tủ đồ",
+    "outfit": "Phối đồ",
+    "stylist": "AI Stylist",
+    "profile": "Hồ sơ"
+  },
+  "profilePage": {
+    "title": "Chỉ số của tôi",
+    "subtitle": "Dùng để cá nhân hoá gợi ý phối đồ cho bạn."
+  },
+  "stylist": {
+    "title": "AI Stylist",
+    "subtitle": "Trò chuyện để được gợi ý phối đồ riêng cho bạn.",
+    "greeting": "Chào bạn! Mình là stylist AI của Fitcheck 💜 Bạn định đi đâu hoặc muốn mặc kiểu gì? Mình sẽ gợi ý outfit từ tủ đồ của bạn nhé!",
+    "placeholder": "Nhập điều bạn muốn mặc...",
+    "send": "Gửi",
+    "thinking": "Đang nghĩ...",
+    "error": "Mình chưa trả lời được lúc này. Thử lại nhé!"
   }
 }

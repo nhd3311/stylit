@@ -2,6 +2,7 @@ export type Profile = {
   heightCm: number | null;
   weightKg: number | null;
   bodyType: string | null;
+  skinTone?: string | null;
   styles: string[];
   colors: string[];
   occasions: string[];
@@ -20,6 +21,20 @@ export const BODY_TYPES: Option[] = [
   { value: "athletic", labelKey: "bodyAthletic" },
   { value: "curvy", labelKey: "bodyCurvy" },
   { value: "plus", labelKey: "bodyPlus" },
+  { value: "rectangle", labelKey: "bodyRectangle" },
+  { value: "triangle", labelKey: "bodyTriangle" },
+  { value: "invertedTriangle", labelKey: "bodyInverted" },
+  { value: "hourglass", labelKey: "bodyHourglass" },
+  { value: "oval", labelKey: "bodyOval" },
+];
+
+export const SKIN_TONES: ColorOption[] = [
+  { value: "fair", labelKey: "skinFair", swatch: "#F6DAC2" },
+  { value: "light", labelKey: "skinLight", swatch: "#EAC1A0" },
+  { value: "medium", labelKey: "skinMedium", swatch: "#D29E78" },
+  { value: "olive", labelKey: "skinOlive", swatch: "#B98A5E" },
+  { value: "tan", labelKey: "skinTan", swatch: "#9A6A43" },
+  { value: "deep", labelKey: "skinDeep", swatch: "#6B4630" },
 ];
 
 export const STYLES: Option[] = [

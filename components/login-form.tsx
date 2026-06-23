@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import {
   authButtonClassName,
   authInputClassName,
@@ -17,15 +17,30 @@ import {
 } from "@/lib/auth-validation";
 import { createClient } from "@/lib/supabase-client";
 
+const REMEMBER_KEY = "fc_remember_email";
+
 export function LoginForm() {
   const t = useTranslations("auth");
   const tv = useTranslations("validation");
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem(REMEMBER_KEY);
+      if (saved) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setEmail(saved);
+      }
+    } catch {
+      // localStorage may be unavailable; ignore.
+    }
+  }, []);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -52,11 +67,20 @@ export function LoginForm() {
       password,
     });
 
-    setLoading(false);
-
     if (signInError) {
+      setLoading(false);
       setError(tv(getAuthErrorKey(signInError.message)));
       return;
+    }
+
+    try {
+      if (remember) {
+        window.localStorage.setItem(REMEMBER_KEY, email.trim().toLowerCase());
+      } else {
+        window.localStorage.removeItem(REMEMBER_KEY);
+      }
+    } catch {
+      // ignore storage errors
     }
 
     setSuccess(t("loginSuccess"));
@@ -84,12 +108,15 @@ export function LoginForm() {
 
       <div>
         <div className="mb-2 flex items-center justify-between">
-          <label htmlFor="login-password" className="text-sm font-medium text-foreground">
+          <label
+            htmlFor="login-password"
+            className="text-sm font-medium text-foreground"
+          >
             {t("password")}
           </label>
           <Link
             href="/forgot-password"
-            className="text-sm font-medium text-violet-400 transition hover:text-violet-300"
+            className="text-sm font-medium text-primary transition hover:opacity-80"
           >
             {t("forgotPassword")}
           </Link>
@@ -103,6 +130,17 @@ export function LoginForm() {
           disabled={loading}
         />
       </div>
+
+      <label className="flex cursor-pointer items-center gap-2 text-sm text-muted-foreground">
+        <input
+          type="checkbox"
+          checked={remember}
+          onChange={(e) => setRemember(e.target.checked)}
+          disabled={loading}
+          className="h-4 w-4 accent-violet-500"
+        />
+        {t("rememberMe")}
+      </label>
 
       {error && (
         <p className="text-sm text-red-400" role="alert">
@@ -124,7 +162,7 @@ export function LoginForm() {
         {t("noAccount")}{" "}
         <Link
           href="/signup"
-          className="font-medium text-violet-400 transition hover:text-violet-300"
+          className="font-medium text-primary transition hover:opacity-80"
         >
           {t("signUp")}
         </Link>

@@ -1,23 +1,33 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #18181b;
-  --card: #fafafa;
-  --muted: #f4f4f5;
-  --muted-foreground: #71717a;
-  --border: #e4e4e7;
-  --input: #ffffff;
+  --background: #FBF9F7;
+  --foreground: #1A1626;
+  --card: #FFFFFF;
+  --muted: #F1EEF6;
+  --muted-foreground: #6B6478;
+  --border: #ECE7F1;
+  --input: #FFFFFF;
+  --primary: #7C3AED;
+  --primary-strong: #6D28D9;
+  --primary-foreground: #FFFFFF;
+  --accent: #D946EF;
+  --ring: #7C3AED;
 }
 
 .dark {
-  --background: #09090b;
-  --foreground: #fafafa;
-  --card: #18181b;
-  --muted: #27272a;
-  --muted-foreground: #a1a1aa;
-  --border: #27272a;
-  --input: #18181b;
+  --background: #0F0D15;
+  --foreground: #F6F4FA;
+  --card: #1A1626;
+  --muted: #241F30;
+  --muted-foreground: #A79FB5;
+  --border: #2A2435;
+  --input: #1A1626;
+  --primary: #9D4EDD;
+  --primary-strong: #7C3AED;
+  --primary-foreground: #FFFFFF;
+  --accent: #E879F9;
+  --ring: #9D4EDD;
 }
 
 @theme inline {
@@ -28,12 +38,34 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
-  --font-sans: var(--font-geist-sans);
+  --color-primary: var(--primary);
+  --color-primary-strong: var(--primary-strong);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-be-vietnam);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-be-vietnam), system-ui, -apple-system, sans-serif;
+}
+
+.fc-gradient {
+  background-image: linear-gradient(135deg, #6D28D9, #D946EF);
+}
+.fc-gradient-text {
+  background-image: linear-gradient(95deg, #6D28D9, #D946EF);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

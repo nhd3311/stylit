@@ -70,7 +70,8 @@
     "resetLinkInvalid": "This reset link is invalid or has expired.",
     "requestNewLink": "Request a new link",
     "continueWith": "Continue with {provider}",
-    "or": "or"
+    "or": "or",
+    "rememberMe": "Remember me"
   },
   "validation": {
     "emailRequired": "Please enter your email.",
@@ -107,7 +108,8 @@
     "cancel": "Cancel",
     "save": "Add to wardrobe",
     "saving": "Saving...",
-    "saveError": "Something went wrong. Please try again."
+    "saveError": "Something went wrong. Please try again.",
+    "searchPlaceholder": "Search your closet"
   },
   "categories": {
     "All": "All",
@@ -164,7 +166,8 @@
     "saveProfile": "Save profile",
     "savingProfile": "Saving...",
     "profileSaved": "Profile saved.",
-    "profileSaveError": "Couldn't save. Did you run the profiles SQL?"
+    "profileSaveError": "Couldn't save. Did you run the profiles SQL?",
+    "skinTone": "Skin tone"
   },
   "onboarding": {
     "title": "Set up your style profile",
@@ -216,7 +219,18 @@
     "occasionParty": "Party",
     "occasionDate": "Date",
     "occasionTravel": "Travel",
-    "occasionSchool": "School"
+    "occasionSchool": "School",
+    "bodyRectangle": "Rectangle",
+    "bodyTriangle": "Pear",
+    "bodyInverted": "Inverted triangle",
+    "bodyHourglass": "Hourglass",
+    "bodyOval": "Round",
+    "skinFair": "Fair",
+    "skinLight": "Light",
+    "skinMedium": "Medium",
+    "skinOlive": "Olive",
+    "skinTan": "Tan",
+    "skinDeep": "Deep"
   },
   "detect": {
     "title": "Scan your clothes",
@@ -236,7 +250,8 @@
     "adding": "Adding...",
     "addError": "Couldn't add items. Please try again.",
     "back": "Back to wardrobe",
-    "scan": "Scan"
+    "scan": "Scan",
+    "dropHint": "Or drag, drop or paste an image here"
   },
   "outfit": {
     "title": "Outfit ideas",
@@ -254,5 +269,24 @@
     "needItems": "Add at least 2 items to your wardrobe to get outfit suggestions.",
     "goScan": "Scan clothes",
     "goWardrobe": "Go to wardrobe"
+  },
+  "tabs": {
+    "wardrobe": "Wardrobe",
+    "outfit": "Outfits",
+    "stylist": "AI Stylist",
+    "profile": "Profile"
+  },
+  "profilePage": {
+    "title": "My measurements",
+    "subtitle": "Used to personalize your outfit suggestions."
+  },
+  "stylist": {
+    "title": "AI Stylist",
+    "subtitle": "Chat for personalized outfit ideas.",
+    "greeting": "Hi! I'm Fitcheck's AI stylist 💜 Where are you headed, or what do you feel like wearing? I'll suggest outfits from your wardrobe!",
+    "placeholder": "Tell me what you want to wear...",
+    "send": "Send",
+    "thinking": "Thinking...",
+    "error": "I couldn't reply right now. Please try again!"
   }
 }

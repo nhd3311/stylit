@@ -1,7 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { ChangeEvent, FormEvent, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase-client";
 import {
   CATEGORIES,
@@ -10,79 +11,47 @@ import {
   type WardrobeItem,
 } from "@/lib/wardrobe";
 
-type NewItem = {
-  name: string;
-  category: Category;
-  file: File | null;
-};
-
 const FILTERS: (Category | "All")[] = ["All", ...CATEGORIES];
 
 export function Wardrobe({
-  userId,
   initialItems,
   needsSetup,
 }: {
-  userId: string;
   initialItems: WardrobeItem[];
   needsSetup: boolean;
 }) {
   const t = useTranslations("wardrobe");
   const tc = useTranslations("categories");
+  const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
   const [items, setItems] = useState<WardrobeItem[]>(initialItems);
   const [filter, setFilter] = useState<Category | "All">("All");
-  const [showAdd, setShowAdd] = useState(false);
+  const [query, setQuery] = useState("");
+  const [byName, setByName] = useState(false);
 
-  const visibleItems = useMemo(
-    () =>
-      filter === "All"
-        ? items
-        : items.filter((item) => item.category === filter),
-    [items, filter],
-  );
-
-  async function addItem({ name, category, file }: NewItem) {
-    let imagePath: string | null = null;
-
-    if (file) {
-      const ext = file.name.split(".").pop() ?? "jpg";
-      const path = `${userId}/${crypto.randomUUID()}.${ext}`;
-      const { error: uploadError } = await supabase.storage
-        .from(WARDROBE_BUCKET)
-        .upload(path, file);
-      if (uploadError) {
-        throw new Error("Image upload failed.");
-      }
-      imagePath = path;
+  const counts = useMemo(() => {
+    const map: Record<string, number> = { All: items.length };
+    for (const c of CATEGORIES) {
+      map[c] = 0;
     }
-
-    const { data, error: insertError } = await supabase
-      .from("wardrobe_items")
-      .insert({ name, category, image_path: imagePath })
-      .select("id, name, category, image_path")
-      .single();
-
-    if (insertError || !data) {
-      throw new Error("Couldn't save the item.");
+    for (const item of items) {
+      map[item.category] = (map[item.category] ?? 0) + 1;
     }
+    return map;
+  }, [items]);
 
-    const savedPath = (data.image_path as string | null) ?? null;
-    setItems((prev) => [
-      {
-        id: data.id as string,
-        name: data.name as string,
-        category: data.category as Category,
-        imagePath: savedPath,
-        imageUrl: savedPath
-          ? supabase.storage.from(WARDROBE_BUCKET).getPublicUrl(savedPath).data
-              .publicUrl
-          : undefined,
-      },
-      ...prev,
-    ]);
-    setShowAdd(false);
-  }
+  const visibleItems = useMemo(() => {
+    let list =
+      filter === "All" ? items : items.filter((i) => i.category === filter);
+    const q = query.trim().toLowerCase();
+    if (q) {
+      list = list.filter((i) => i.name.toLowerCase().includes(q));
+    }
+    if (byName) {
+      list = [...list].sort((a, b) => a.name.localeCompare(b.name));
+    }
+    return list;
+  }, [items, filter, query, byName]);
 
   async function handleDelete(item: WardrobeItem) {
     setItems((prev) => prev.filter((entry) => entry.id !== item.id));
@@ -93,46 +62,74 @@ export function Wardrobe({
   }
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-5">
       {needsSetup && (
-        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-200">
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-700 dark:text-amber-200">
           {t("setupNeeded")}
         </div>
       )}
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            {t("title")}
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {t("itemCount", { count: items.length })}
-          </p>
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="mt-0.5 text-sm text-muted-foreground">
+          {t("itemCount", { count: items.length })}
+        </p>
+      </div>
+
+      <div className="no-scrollbar -mx-5 flex gap-2 overflow-x-auto px-5">
+        {FILTERS.map((cat) => {
+          const active = filter === cat;
+          return (
+            <button
+              key={cat}
+              type="button"
+              onClick={() => setFilter(cat)}
+              className={
+                active
+                  ? "flex min-w-[64px] shrink-0 flex-col items-center gap-0.5 rounded-2xl border border-primary bg-primary/10 px-3 py-2"
+                  : "flex min-w-[64px] shrink-0 flex-col items-center gap-0.5 rounded-2xl border border-border bg-card px-3 py-2 transition hover:border-primary/40"
+              }
+            >
+              <span
+                className={
+                  active
+                    ? "text-lg font-bold text-primary"
+                    : "text-lg font-bold text-foreground"
+                }
+              >
+                {counts[cat] ?? 0}
+              </span>
+              <span className="text-[11px] font-medium text-muted-foreground">
+                {tc(cat)}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="flex items-center gap-2">
+        <div className="relative flex-1">
+          <SearchIcon />
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={t("searchPlaceholder")}
+            className="h-11 w-full rounded-xl border border-border bg-input pl-10 pr-3 text-sm text-foreground placeholder:text-muted-foreground outline-none transition focus:border-primary"
+          />
         </div>
         <button
           type="button"
-          onClick={() => setShowAdd(true)}
-          className="inline-flex h-11 items-center justify-center gap-1 rounded-xl bg-linear-to-r from-violet-600 to-fuchsia-600 px-5 text-sm font-semibold text-white transition hover:from-violet-500 hover:to-fuchsia-500 active:scale-[0.98]"
+          onClick={() => setByName((v) => !v)}
+          aria-label="Sort"
+          className={
+            byName
+              ? "flex h-11 w-11 items-center justify-center rounded-xl border border-primary bg-primary/10 text-primary"
+              : "flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground transition hover:text-foreground"
+          }
         >
-          <span className="text-lg leading-none">+</span> {t("addItem")}
+          <SortIcon />
         </button>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        {FILTERS.map((cat) => (
-          <button
-            key={cat}
-            type="button"
-            onClick={() => setFilter(cat)}
-            className={
-              filter === cat
-                ? "rounded-full bg-violet-500/20 px-4 py-1.5 text-sm font-medium text-violet-200 ring-1 ring-violet-500/40"
-                : "rounded-full bg-card px-4 py-1.5 text-sm font-medium text-muted-foreground ring-1 ring-border transition hover:text-foreground"
-            }
-          >
-            {tc(cat)}
-          </button>
-        ))}
       </div>
 
       {visibleItems.length === 0 ? (
@@ -140,23 +137,33 @@ export function Wardrobe({
           <p className="text-muted-foreground">{t("empty")}</p>
           <button
             type="button"
-            onClick={() => setShowAdd(true)}
-            className="mt-4 text-sm font-medium text-violet-400 transition hover:text-violet-300"
+            onClick={() => router.push("/detect")}
+            className="mt-4 text-sm font-medium text-primary transition hover:opacity-80"
           >
             {t("addFirst")}
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {visibleItems.map((item) => (
             <WardrobeCard key={item.id} item={item} onDelete={handleDelete} />
           ))}
         </div>
       )}
 
-      {showAdd && (
-        <AddItemModal onClose={() => setShowAdd(false)} onAdd={addItem} />
-      )}
+      <div
+        className="fixed inset-x-0 z-30 px-5"
+        style={{ bottom: "calc(env(safe-area-inset-bottom) + 64px)" }}
+      >
+        <button
+          type="button"
+          onClick={() => router.push("/detect")}
+          className="fc-gradient mx-auto flex h-12 w-full max-w-xl items-center justify-center gap-2 rounded-2xl text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition active:scale-[0.99]"
+        >
+          <PlusIcon />
+          {t("addItem")}
+        </button>
+      </div>
     </div>
   );
 }
@@ -173,7 +180,7 @@ function WardrobeCard({
 
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-border bg-card">
-      <div className="aspect-square w-full">
+      <div className="aspect-square w-full bg-muted">
         {item.imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -182,7 +189,7 @@ function WardrobeCard({
             className="h-full w-full object-cover"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-muted text-muted-foreground">
+          <div className="flex h-full w-full items-center justify-center text-muted-foreground">
             <ShirtIcon />
           </div>
         )}
@@ -191,11 +198,11 @@ function WardrobeCard({
         type="button"
         onClick={() => onDelete(item)}
         aria-label={t("delete", { name: item.name })}
-        className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-zinc-950/70 text-white opacity-0 backdrop-blur transition group-hover:opacity-100 hover:bg-red-500/80"
+        className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-zinc-950/55 text-white opacity-80 backdrop-blur transition hover:bg-red-500/80"
       >
         ✕
       </button>
-      <div className="p-3">
+      <div className="p-2.5">
         <p className="truncate text-sm font-medium text-foreground">
           {item.name}
         </p>
@@ -207,148 +214,43 @@ function WardrobeCard({
   );
 }
 
-function AddItemModal({
-  onClose,
-  onAdd,
-}: {
-  onClose: () => void;
-  onAdd: (item: NewItem) => Promise<void>;
-}) {
-  const t = useTranslations("wardrobe");
-  const tc = useTranslations("categories");
-  const [name, setName] = useState("");
-  const [category, setCategory] = useState<Category>("Tops");
-  const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  function handleFile(e: ChangeEvent<HTMLInputElement>) {
-    const selected = e.target.files?.[0] ?? null;
-    setFile(selected);
-    setPreview(selected ? URL.createObjectURL(selected) : null);
-  }
-
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const trimmed = name.trim();
-    if (!trimmed || submitting) {
-      return;
-    }
-    setSubmitting(true);
-    setError(null);
-    try {
-      await onAdd({ name: trimmed, category, file });
-    } catch {
-      setError(t("saveError"));
-      setSubmitting(false);
-    }
-  }
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-      <div className="w-full max-w-md rounded-2xl border border-border bg-background p-6">
-        <h2 className="text-lg font-semibold text-foreground">
-          {t("modalTitle")}
-        </h2>
-        <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-4">
-          <label className="flex aspect-video cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-dashed border-border bg-card text-sm text-muted-foreground transition hover:border-violet-500">
-            {preview ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={preview}
-                alt="Preview"
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <span>{t("uploadHint")}</span>
-            )}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFile}
-              className="hidden"
-            />
-          </label>
-
-          <div>
-            <label
-              htmlFor="item-name"
-              className="mb-2 block text-sm font-medium text-foreground"
-            >
-              {t("name")}
-            </label>
-            <input
-              id="item-name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder={t("namePlaceholder")}
-              className="h-11 w-full rounded-xl border border-border bg-input px-4 text-sm text-foreground placeholder:text-muted-foreground outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="item-category"
-              className="mb-2 block text-sm font-medium text-foreground"
-            >
-              {t("category")}
-            </label>
-            <select
-              id="item-category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value as Category)}
-              className="h-11 w-full rounded-xl border border-border bg-input px-4 text-sm text-foreground outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
-            >
-              {CATEGORIES.map((c) => (
-                <option key={c} value={c}>
-                  {tc(c)}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {error && (
-            <p className="text-sm text-red-400" role="alert">
-              {error}
-            </p>
-          )}
-
-          <div className="mt-2 flex gap-3">
-            <button
-              type="button"
-              onClick={onClose}
-              disabled={submitting}
-              className="h-11 flex-1 rounded-xl border border-border text-sm font-medium text-muted-foreground transition hover:text-foreground disabled:opacity-50"
-            >
-              {t("cancel")}
-            </button>
-            <button
-              type="submit"
-              disabled={!name.trim() || submitting}
-              className="h-11 flex-1 rounded-xl bg-linear-to-r from-violet-600 to-fuchsia-600 text-sm font-semibold text-white transition hover:from-violet-500 hover:to-fuchsia-500 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {submitting ? t("saving") : t("save")}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-function ShirtIcon() {
+function SearchIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.4}
+      strokeWidth={1.8}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-10 w-10"
+      className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+      aria-hidden="true"
     >
+      <circle cx="11" cy="11" r="7" />
+      <path d="M21 21l-4.3-4.3" />
+    </svg>
+  );
+}
+
+function SortIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
+      <path d="M4 6h10M4 12h7M4 18h4M17 5v14M17 19l3-3M17 19l-3-3" />
+    </svg>
+  );
+}
+
+function PlusIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
+      <path d="M12 5v14M5 12h14" />
+    </svg>
+  );
+}
+
+function ShirtIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round" className="h-10 w-10" aria-hidden="true">
       <path d="M8 3l4 3 4-3 5 4-3 3-2-1v9H8v-9l-2 1-3-3 5-4z" />
     </svg>
   );

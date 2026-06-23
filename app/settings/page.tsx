@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { AccountActions } from "@/components/account-actions";
-import { AppHeader } from "@/components/app-header";
 import { AppearanceSetting } from "@/components/appearance-setting";
+import { BottomNav } from "@/components/bottom-nav";
 import { ChangePasswordForm } from "@/components/change-password-form";
 import { LanguageSetting } from "@/components/language-setting";
 import { SignOutButton } from "@/components/sign-out-button";
-import { StyleProfileForm } from "@/components/style-profile-form";
-import { type Profile } from "@/lib/profile";
+import { TopBar } from "@/components/top-bar";
 import { createClient } from "@/lib/supabase-server";
 
 export const metadata: Metadata = {
-  title: "Settings — Fitcheck",
+  title: "Cài đặt — Fitcheck",
   description: "Manage your Fitcheck account and preferences",
 };
 
@@ -31,33 +31,15 @@ export default async function SettingsPage() {
     ? new Date(user.created_at).toLocaleDateString()
     : null;
 
-  const { data: profileRow } = await supabase
-    .from("profiles")
-    .select("height_cm, weight_kg, body_type, styles, colors, occasions, onboarded")
-    .eq("user_id", user.id)
-    .maybeSingle();
-
-  const profile: Profile = {
-    heightCm: (profileRow?.height_cm as number | null) ?? null,
-    weightKg: (profileRow?.weight_kg as number | null) ?? null,
-    bodyType: (profileRow?.body_type as string | null) ?? null,
-    styles: (profileRow?.styles as string[] | null) ?? [],
-    colors: (profileRow?.colors as string[] | null) ?? [],
-    occasions: (profileRow?.occasions as string[] | null) ?? [],
-    onboarded: (profileRow?.onboarded as boolean | null) ?? false,
-  };
-
   return (
-    <div className="flex min-h-full flex-1 flex-col bg-background text-foreground">
-      <AppHeader email={user.email} />
-      <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10 sm:px-8">
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-          {t("title")}
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
+    <div className="flex min-h-full flex-1 flex-col bg-background pb-24 text-foreground">
+      <TopBar />
+      <main className="mx-auto w-full max-w-xl flex-1 px-5 py-6">
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="mt-0.5 text-sm text-muted-foreground">{t("subtitle")}</p>
 
-        <div className="mt-8 flex flex-col gap-5">
-          <section className="rounded-2xl border border-border bg-card p-6">
+        <div className="mt-6 flex flex-col gap-5">
+          <section className="rounded-2xl border border-border bg-card p-5">
             <h2 className="text-lg font-semibold">{t("account")}</h2>
             <dl className="mt-4 flex flex-col gap-3 text-sm">
               <div className="flex items-center justify-between gap-4">
@@ -76,7 +58,22 @@ export default async function SettingsPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-border bg-card p-6">
+          <Link
+            href="/profile"
+            className="flex items-center justify-between rounded-2xl border border-border bg-card p-5 transition hover:border-primary/40"
+          >
+            <div>
+              <h2 className="text-lg font-semibold">{t("styleProfile")}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {t("styleProfileDesc")}
+              </p>
+            </div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 shrink-0 text-muted-foreground" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" />
+            </svg>
+          </Link>
+
+          <section className="rounded-2xl border border-border bg-card p-5">
             <h2 className="text-lg font-semibold">{t("appearance")}</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               {t("appearanceDesc")}
@@ -87,7 +84,7 @@ export default async function SettingsPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-border bg-card p-6">
+          <section className="rounded-2xl border border-border bg-card p-5">
             <h2 className="text-lg font-semibold">{t("language")}</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               {t("languageDesc")}
@@ -97,15 +94,7 @@ export default async function SettingsPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-border bg-card p-6">
-            <h2 className="text-lg font-semibold">{t("styleProfile")}</h2>
-            <p className="mt-1 mb-5 text-sm text-muted-foreground">
-              {t("styleProfileDesc")}
-            </p>
-            <StyleProfileForm userId={user.id} initial={profile} />
-          </section>
-
-          <section className="rounded-2xl border border-border bg-card p-6">
+          <section className="rounded-2xl border border-border bg-card p-5">
             <h2 className="text-lg font-semibold">{t("security")}</h2>
             <div className="mt-5 flex flex-col gap-8">
               <div>
@@ -122,6 +111,7 @@ export default async function SettingsPage() {
           </section>
         </div>
       </main>
+      <BottomNav />
     </div>
   );
 }

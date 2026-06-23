@@ -2,7 +2,14 @@
 
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  DragEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { createClient } from "@/lib/supabase-client";
 import { CATEGORIES, WARDROBE_BUCKET } from "@/lib/wardrobe";
 
@@ -111,7 +118,6 @@ async function cutoutToDataUrl(
   }
   itemCtx.putImageData(itemData, 0, 0);
 
-  // Composite the cut-out item onto a clean white background.
   const out = document.createElement("canvas");
   out.width = w;
   out.height = h;
@@ -151,35 +157,12 @@ export function DetectFlow({ userId }: { userId: string }) {
     "capture",
   );
   const [cameraOn, setCameraOn] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const [items, setItems] = useState<DetItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
 
   useEffect(() => () => stopStream(streamRef.current), []);
-
-  async function startCamera() {
-    setError(null);
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" },
-        audio: false,
-      });
-      streamRef.current = stream;
-      setCameraOn(true);
-      // The <video> is always mounted, so attach right away.
-      if (videoRef.current) {
-        await attachStream(videoRef.current, stream);
-      }
-    } catch {
-      setError(t("cameraError"));
-    }
-  }
-
-  function stopCamera() {
-    stopStream(streamRef.current);
-    streamRef.current = null;
-    setCameraOn(false);
-  }
 
   async function runDetect(base64: string, img: HTMLImageElement) {
     setStep("detecting");
@@ -235,6 +218,70 @@ export function DetectFlow({ userId }: { userId: string }) {
     }
   }
 
+  async function processImageFile(file: File) {
+    if (!file.type.startsWith("image/")) {
+      return;
+    }
+    const { img, base64 } = await fileToImage(file);
+    await runDetect(base64, img);
+  }
+
+  // Keep the latest processor in a ref so the paste listener stays stable.
+  const processRef = useRef<(file: File) => void>(() => undefined);
+  useEffect(() => {
+    processRef.current = (file: File) => {
+      void processImageFile(file);
+    };
+  });
+
+  useEffect(() => {
+    if (step !== "capture") {
+      return undefined;
+    }
+    const onPaste = (e: ClipboardEvent) => {
+      const list = e.clipboardData?.items;
+      if (!list) {
+        return;
+      }
+      for (let i = 0; i < list.length; i += 1) {
+        const entry = list[i];
+        if (entry.type.startsWith("image/")) {
+          const file = entry.getAsFile();
+          if (file) {
+            e.preventDefault();
+            processRef.current(file);
+            break;
+          }
+        }
+      }
+    };
+    window.addEventListener("paste", onPaste);
+    return () => window.removeEventListener("paste", onPaste);
+  }, [step]);
+
+  async function startCamera() {
+    setError(null);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" },
+        audio: false,
+      });
+      streamRef.current = stream;
+      setCameraOn(true);
+      if (videoRef.current) {
+        await attachStream(videoRef.current, stream);
+      }
+    } catch {
+      setError(t("cameraError"));
+    }
+  }
+
+  function stopCamera() {
+    stopStream(streamRef.current);
+    streamRef.current = null;
+    setCameraOn(false);
+  }
+
   async function captureFromCamera() {
     if (!videoRef.current) {
       return;
@@ -246,11 +293,18 @@ export function DetectFlow({ userId }: { userId: string }) {
 
   async function handleFile(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    if (!file) {
-      return;
+    if (file) {
+      await processImageFile(file);
     }
-    const { img, base64 } = await fileToImage(file);
-    await runDetect(base64, img);
+  }
+
+  function handleDrop(e: DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    setDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      void processImageFile(file);
+    }
   }
 
   function reset() {
@@ -323,31 +377,48 @@ export function DetectFlow({ userId }: { userId: string }) {
               <button
                 type="button"
                 onClick={captureFromCamera}
-                className="h-12 flex-1 rounded-xl bg-linear-to-r from-violet-600 to-fuchsia-600 text-sm font-semibold text-white transition hover:from-violet-500 hover:to-fuchsia-500"
+                className="fc-gradient h-12 flex-1 rounded-xl text-sm font-semibold text-white transition active:scale-[0.99]"
               >
                 {t("capture")}
               </button>
             </div>
           ) : (
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <button
-                type="button"
-                onClick={startCamera}
-                className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-violet-600 to-fuchsia-600 text-sm font-semibold text-white transition hover:from-violet-500 hover:to-fuchsia-500"
-              >
-                <CameraIcon />
-                {t("useCamera")}
-              </button>
-              <label className="flex h-12 flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border border-border bg-card text-sm font-semibold text-foreground transition hover:bg-muted">
-                <UploadIcon />
-                {t("upload")}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFile}
-                  className="hidden"
-                />
-              </label>
+            <div
+              onDragOver={(e) => {
+                e.preventDefault();
+                setDragging(true);
+              }}
+              onDragLeave={() => setDragging(false)}
+              onDrop={handleDrop}
+              className={
+                dragging
+                  ? "flex flex-col gap-3 rounded-2xl border-2 border-dashed border-primary bg-primary/5 p-3"
+                  : "flex flex-col gap-3 rounded-2xl border-2 border-dashed border-transparent p-0"
+              }
+            >
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <button
+                  type="button"
+                  onClick={startCamera}
+                  className="fc-gradient flex h-12 flex-1 items-center justify-center gap-2 rounded-xl text-sm font-semibold text-white transition active:scale-[0.99]"
+                >
+                  <CameraIcon />
+                  {t("useCamera")}
+                </button>
+                <label className="flex h-12 flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border border-border bg-card text-sm font-semibold text-foreground transition hover:bg-muted">
+                  <UploadIcon />
+                  {t("upload")}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFile}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+              <p className="text-center text-xs text-muted-foreground">
+                {t("dropHint")}
+              </p>
             </div>
           )}
           {error && (
@@ -360,7 +431,7 @@ export function DetectFlow({ userId }: { userId: string }) {
 
       {step === "detecting" && (
         <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-border bg-card py-20">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-violet-500 border-t-transparent" />
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           <p className="text-sm text-muted-foreground">{t("detecting")}</p>
         </div>
       )}
@@ -400,7 +471,7 @@ export function DetectFlow({ userId }: { userId: string }) {
                     <img
                       src={item.thumb}
                       alt={item.name}
-                      className="h-16 w-16 shrink-0 rounded-lg border border-border object-cover"
+                      className="h-16 w-16 shrink-0 rounded-lg border border-border bg-white object-cover"
                     />
                     <div className="flex flex-1 flex-col gap-2">
                       <input
@@ -415,7 +486,7 @@ export function DetectFlow({ userId }: { userId: string }) {
                             ),
                           )
                         }
-                        className="h-9 w-full rounded-lg border border-border bg-input px-3 text-sm text-foreground outline-none transition focus:border-violet-500"
+                        className="h-9 w-full rounded-lg border border-border bg-input px-3 text-sm text-foreground outline-none transition focus:border-primary"
                       />
                       <select
                         value={item.category}
@@ -428,7 +499,7 @@ export function DetectFlow({ userId }: { userId: string }) {
                             ),
                           )
                         }
-                        className="h-9 w-full rounded-lg border border-border bg-input px-3 text-sm text-foreground outline-none transition focus:border-violet-500"
+                        className="h-9 w-full rounded-lg border border-border bg-input px-3 text-sm text-foreground outline-none transition focus:border-primary"
                       >
                         {CATEGORIES.map((c) => (
                           <option key={c} value={c}>
@@ -463,7 +534,7 @@ export function DetectFlow({ userId }: { userId: string }) {
                 type="button"
                 onClick={addSelected}
                 disabled={adding || selectedCount === 0}
-                className="h-12 flex-1 rounded-xl bg-linear-to-r from-violet-600 to-fuchsia-600 text-sm font-semibold text-white transition hover:from-violet-500 hover:to-fuchsia-500 disabled:cursor-not-allowed disabled:opacity-50"
+                className="fc-gradient h-12 flex-1 rounded-xl text-sm font-semibold text-white transition active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {adding ? t("adding") : t("addSelected", { count: selectedCount })}
               </button>
@@ -477,7 +548,7 @@ export function DetectFlow({ userId }: { userId: string }) {
 
 function CameraIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
       <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
       <circle cx="12" cy="13" r="4" />
     </svg>
@@ -486,7 +557,7 @@ function CameraIcon() {
 
 function UploadIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
     </svg>
   );

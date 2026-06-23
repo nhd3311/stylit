@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const TABS = [
+  { href: "/home", key: "home" },
   { href: "/dashboard", key: "wardrobe" },
   { href: "/outfit", key: "outfit" },
   { href: "/stylist", key: "stylist" },
@@ -18,7 +19,7 @@ export function BottomNav() {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/90 backdrop-blur md:hidden">
       <div
-        className="mx-auto flex max-w-xl items-stretch justify-around px-2"
+        className="mx-auto flex max-w-xl items-stretch justify-around px-1"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         {TABS.map((tab) => {
@@ -29,7 +30,7 @@ export function BottomNav() {
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] font-medium transition ${cls}`}
+              className={`flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-medium transition ${cls}`}
             >
               <TabIcon name={tab.key} active={active} />
               <span>{t(tab.key)}</span>
@@ -42,18 +43,23 @@ export function BottomNav() {
 }
 
 function TabIcon({ name, active }: { name: string; active: boolean }) {
-  const cls = "h-6 w-6";
-  const sw = active ? 2.1 : 1.7;
   const common = {
     viewBox: "0 0 24 24",
     fill: "none",
     stroke: "currentColor",
-    strokeWidth: sw,
+    strokeWidth: active ? 2.1 : 1.7,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
-    className: cls,
+    className: "h-6 w-6",
     "aria-hidden": true,
   };
+  if (name === "home") {
+    return (
+      <svg {...common}>
+        <path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10" />
+      </svg>
+    );
+  }
   if (name === "wardrobe") {
     return (
       <svg {...common}>

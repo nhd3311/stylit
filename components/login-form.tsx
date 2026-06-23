@@ -84,7 +84,7 @@ export function LoginForm() {
     }
 
     setSuccess(t("loginSuccess"));
-    router.push("/dashboard");
+    router.push("/home");
     router.refresh();
   }
 

@@ -8,6 +8,7 @@ import { FitcheckLogo } from "@/components/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const NAV = [
+  { href: "/home", key: "home" },
   { href: "/dashboard", key: "wardrobe" },
   { href: "/outfit", key: "outfit" },
   { href: "/stylist", key: "stylist" },

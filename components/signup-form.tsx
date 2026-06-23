@@ -70,7 +70,7 @@ export function SignupForm() {
 
     if (data.session) {
       setSuccess(t("accountCreated"));
-      router.push("/dashboard");
+      router.push("/home");
       router.refresh();
       return;
     }

@@ -27,6 +27,7 @@ export default async function HomePage() {
     { href: "/dashboard", title: tt("wardrobe"), desc: t("fWardrobe") },
     { href: "/detect", title: t("fDetectTitle"), desc: t("fDetect") },
     { href: "/outfit", title: tt("outfit"), desc: t("fOutfit") },
+    { href: "/tryon", title: t("fTryonTitle"), desc: t("fTryon") },
     { href: "/stylist", title: tt("stylist"), desc: t("fStylist") },
     { href: "/profile", title: tt("profile"), desc: t("fProfile") },
   ];

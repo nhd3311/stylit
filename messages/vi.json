@@ -332,6 +332,32 @@
     "d3d": "Nói bạn định đi đâu hoặc muốn mặc gì — stylist gợi ý từ chính tủ đồ của bạn.",
     "brandTitle": "Bộ nhận diện thương hiệu",
     "brandDesc": "Xem logo, bảng màu, kiểu chữ và hoạ tiết của Fitcheck.",
-    "brandLink": "Mở bộ nhận diện"
+    "brandLink": "Mở bộ nhận diện",
+    "fTryonTitle": "Thử đồ ảo",
+    "fTryon": "Mặc thử quần áo lên ảnh của bạn hay người mẫu bằng AI."
+  },
+  "tryon": {
+    "title": "Thử đồ ảo",
+    "subtitle": "Mặc thử món đồ trong tủ lên ảnh của bạn hoặc người mẫu.",
+    "pickGarment": "1. Chọn món đồ",
+    "noItems": "Tủ đồ trống — thêm vài món trước nhé.",
+    "goAdd": "Thêm đồ",
+    "modelOn": "2. Mặc lên ai?",
+    "tabUpload": "Ảnh của bạn",
+    "tabDefault": "Người mẫu mẫu",
+    "uploadHint": "Tải ảnh toàn thân, rõ nét, chính diện.",
+    "change": "Đổi ảnh",
+    "defaultNote": "Ảnh người mẫu mẫu — bạn có thể thay trong lib/tryon.ts.",
+    "category": "3. Loại đồ",
+    "catTops": "Áo / áo khoác",
+    "catBottoms": "Quần",
+    "catOnepiece": "Nguyên bộ / đầm",
+    "run": "Thử đồ ngay",
+    "running": "Đang mặc thử… (có thể mất ~30–60 giây)",
+    "error": "Thử đồ thất bại. Server đã đặt FASHN_API_KEY chưa? Thử lại nhé.",
+    "timeout": "Quá thời gian chờ. Thử lại nhé.",
+    "result": "Kết quả",
+    "tryAnother": "Thử món khác",
+    "download": "Tải ảnh về"
   }
 }

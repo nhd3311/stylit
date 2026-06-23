@@ -332,6 +332,32 @@
     "d3d": "Tell it where you're going or what you want to wear — it styles from your wardrobe.",
     "brandTitle": "Brand identity",
     "brandDesc": "See Fitcheck's logo, palette, type and patterns.",
-    "brandLink": "Open brand board"
+    "brandLink": "Open brand board",
+    "fTryonTitle": "Virtual try-on",
+    "fTryon": "Try clothes on your photo or a model with AI."
+  },
+  "tryon": {
+    "title": "Virtual try-on",
+    "subtitle": "Try a wardrobe item on your photo or a model.",
+    "pickGarment": "1. Pick an item",
+    "noItems": "Your wardrobe is empty — add a few items first.",
+    "goAdd": "Add items",
+    "modelOn": "2. Try it on whom?",
+    "tabUpload": "Your photo",
+    "tabDefault": "Sample model",
+    "uploadHint": "Upload a clear, front-facing, full-body photo.",
+    "change": "Change photo",
+    "defaultNote": "Sample model photos — replace them in lib/tryon.ts.",
+    "category": "3. Garment type",
+    "catTops": "Top / outerwear",
+    "catBottoms": "Bottom",
+    "catOnepiece": "One-piece / dress",
+    "run": "Try it on",
+    "running": "Trying it on… (may take ~30–60s)",
+    "error": "Try-on failed. Is FASHN_API_KEY set on the server? Please try again.",
+    "timeout": "Timed out. Please try again.",
+    "result": "Result",
+    "tryAnother": "Try another",
+    "download": "Download image"
   }
 }

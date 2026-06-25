@@ -3,7 +3,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { BottomNav } from "@/components/bottom-nav";
+import { AuroraBackground } from "@/components/effects";
 import { FitcheckMark } from "@/components/logo";
+import { TiltCard } from "@/components/tilt-card";
 import { TopBar } from "@/components/top-bar";
 import { createClient } from "@/lib/supabase-server";
 
@@ -51,13 +53,10 @@ export default async function HomePage() {
       <TopBar />
       <main className="mx-auto w-full max-w-5xl flex-1 px-5 py-8 md:px-8">
         <section className="relative overflow-hidden rounded-3xl border border-border bg-card px-6 py-12 text-center sm:px-10 sm:py-16">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_-10%,rgba(124,58,237,0.18),transparent)]"
-          />
+          <AuroraBackground />
           <div className="relative flex flex-col items-center">
             <FitcheckMark className="mb-5 h-16 w-16" />
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <h1 className="fc-shine-text text-3xl font-bold tracking-tight sm:text-4xl">
               {t("heroTitle")}
             </h1>
             <p className="mt-3 max-w-xl text-base text-muted-foreground sm:text-lg">
@@ -85,10 +84,10 @@ export default async function HomePage() {
           </h2>
           <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((f) => (
+              <TiltCard key={f.href}>
               <Link
-                key={f.href}
                 href={f.href}
-                className="group rounded-2xl border border-border bg-card p-5 transition hover:border-primary/40"
+                className="group block h-full rounded-2xl border border-border bg-card p-5 transition hover:border-primary/40"
               >
                 <h3 className="text-base font-semibold transition group-hover:text-primary">
                   {f.title}
@@ -103,6 +102,7 @@ export default async function HomePage() {
                   </svg>
                 </span>
               </Link>
+              </TiltCard>
             ))}
           </div>
         </section>

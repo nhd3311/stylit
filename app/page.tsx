@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { AuroraBackground, Marquee } from "@/components/effects";
 import { LanguageToggle } from "@/components/language-toggle";
 import { FitcheckLogo, FitcheckMark } from "@/components/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { TiltCard } from "@/components/tilt-card";
 import { WaitlistForm } from "@/components/waitlist-form";
 
 export default function Home() {
@@ -58,18 +60,7 @@ export default function Home() {
 
       <main className="relative z-10 flex-1">
         <section className="relative overflow-hidden">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(124,58,237,0.22),transparent)]"
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -right-32 top-1/3 h-64 w-64 rounded-full bg-fuchsia-500/10 blur-3xl sm:h-96 sm:w-96"
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -left-32 bottom-0 h-64 w-64 rounded-full bg-violet-500/10 blur-3xl sm:h-96 sm:w-96"
-          />
+          <AuroraBackground />
 
           <div className="relative mx-auto flex w-full max-w-2xl flex-col items-start px-6 py-20 sm:px-8 sm:py-28">
             <FitcheckMark className="mb-6 h-14 w-14" />
@@ -79,7 +70,7 @@ export default function Home() {
 
             <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl sm:leading-tight lg:text-6xl">
               Fitcheck —{" "}
-              <span className="fc-gradient-text">{t("home.headlineAccent")}</span>
+              <span className="fc-shine-text">{t("home.headlineAccent")}</span>
             </h1>
 
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground sm:text-xl">
@@ -107,6 +98,8 @@ export default function Home() {
           </div>
         </section>
 
+        <Marquee />
+
         <section className="mx-auto w-full max-w-6xl px-6 py-16 sm:px-8 sm:py-20">
           <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
             {t("home.featuresTitle")}
@@ -117,10 +110,8 @@ export default function Home() {
 
           <div className="mt-10 grid gap-5 sm:grid-cols-3">
             {features.map((feature) => (
-              <div
-                key={feature.title}
-                className="rounded-2xl border border-border bg-card p-6 transition hover:border-primary/40"
-              >
+              <TiltCard key={feature.title}>
+                <div className="h-full rounded-2xl border border-border bg-card p-6 transition hover:border-primary/40">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <svg
                     aria-hidden
@@ -139,7 +130,8 @@ export default function Home() {
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {feature.description}
                 </p>
-              </div>
+                </div>
+              </TiltCard>
             ))}
           </div>
         </section>

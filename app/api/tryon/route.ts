@@ -5,10 +5,12 @@ export const maxDuration = 60;
 
 const IMAGE_MODEL = process.env.GEMINI_IMAGE_MODEL ?? "gemini-2.5-flash-image";
 
-const CAT_TEXT: Record<string, string> = {
-  tops: "top / upper-body garment",
-  bottoms: "bottoms / lower-body garment",
-  "one-pieces": "one-piece outfit (dress or jumpsuit)",
+const ANGLE_PROMPTS: Record<string, string> = {
+  right:
+    "now viewed from the person's right side, with the camera rotated about 90 degrees to the right",
+  back: "now viewed from directly behind — a full back view",
+  left:
+    "now viewed from the person's left side, with the camera rotated about 90 degrees to the left",
 };
 
 type Inline = { mime: string; data: string };
@@ -53,10 +55,11 @@ export async function POST(request: Request) {
   }
 
   let body: {
-    garmentImageUrl?: string;
+    garmentImageUrls?: string[];
     modelImageUrl?: string;
     modelImageBase64?: string;
-    category?: string;
+    referenceImageBase64?: string;
+    angle?: string;
   };
   try {
     body = await request.json();
@@ -64,30 +67,49 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Bad request" }, { status: 400 });
   }
 
-  const category =
-    body.category && CAT_TEXT[body.category] ? body.category : "tops";
+  const angle = typeof body.angle === "string" ? body.angle : "front";
 
-  const garment =
-    typeof body.garmentImageUrl === "string"
-      ? await urlToInline(body.garmentImageUrl)
-      : null;
-
-  let model: Inline | null = null;
-  if (typeof body.modelImageBase64 === "string" && body.modelImageBase64) {
-    model = dataUrlToInline(body.modelImageBase64);
+  let subject: Inline | null = null;
+  let isReference = false;
+  if (typeof body.referenceImageBase64 === "string" && body.referenceImageBase64) {
+    subject = dataUrlToInline(body.referenceImageBase64);
+    isReference = true;
+  } else if (typeof body.modelImageBase64 === "string" && body.modelImageBase64) {
+    subject = dataUrlToInline(body.modelImageBase64);
   } else if (typeof body.modelImageUrl === "string" && body.modelImageUrl) {
-    model = await urlToInline(body.modelImageUrl);
+    subject = await urlToInline(body.modelImageUrl);
+  }
+  if (!subject) {
+    return NextResponse.json({ error: "Couldn't read the photo." }, { status: 400 });
   }
 
-  if (!garment || !model) {
-    return NextResponse.json(
-      { error: "Couldn't read the images." },
-      { status: 400 },
+  let parts: { text?: string; inline_data?: { mime_type: string; data: string } }[];
+
+  if (isReference && ANGLE_PROMPTS[angle]) {
+    const prompt = `The image shows a person wearing an outfit. Generate ONE photorealistic, full-body image of the EXACT SAME person in the EXACT SAME outfit, ${ANGLE_PROMPTS[angle]}. Keep identical clothing, colors, hairstyle, body shape and the clean studio background; change only the camera viewpoint. Output only the image.`;
+    parts = [
+      { text: prompt },
+      { inline_data: { mime_type: subject.mime, data: subject.data } },
+    ];
+  } else {
+    const urls = Array.isArray(body.garmentImageUrls)
+      ? body.garmentImageUrls.slice(0, 6)
+      : [];
+    const garments = (await Promise.all(urls.map(urlToInline))).filter(
+      (g): g is Inline => Boolean(g),
     );
+    if (garments.length === 0) {
+      return NextResponse.json({ error: "No garment image." }, { status: 400 });
+    }
+    const prompt = `The FIRST image is a photo of a person. The following ${garments.length} image(s) are clothing items. Generate ONE photorealistic, full-body image of the SAME person wearing ALL of these items together as one complete outfit, viewed from the front, standing on a clean light studio background. Keep the person's face, hairstyle, body shape and skin tone. Render a realistic fit with natural fabric folds and lighting, matching each garment's colors and patterns. Output only the image.`;
+    parts = [
+      { text: prompt },
+      { inline_data: { mime_type: subject.mime, data: subject.data } },
+      ...garments.map((g) => ({
+        inline_data: { mime_type: g.mime, data: g.data },
+      })),
+    ];
   }
-
-  const cat = CAT_TEXT[category];
-  const prompt = `You are a professional virtual try-on engine. The FIRST image is a photo of a person. The SECOND image is a clothing item (a ${cat}). Generate ONE photorealistic image of the SAME person from the first image now wearing that exact clothing item. Keep the person's face, hairstyle, body shape, skin tone, pose and the original background unchanged. Fit the garment naturally with realistic folds, drape and lighting, matching the garment's colors and patterns. Replace only the ${cat}; keep the rest of their clothing. Output only the image.`;
 
   let res: Response;
   try {
@@ -100,15 +122,7 @@ export async function POST(request: Request) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                { text: prompt },
-                { inline_data: { mime_type: model.mime, data: model.data } },
-                { inline_data: { mime_type: garment.mime, data: garment.data } },
-              ],
-            },
-          ],
+          contents: [{ parts }],
           generationConfig: { responseModalities: ["IMAGE"] },
         }),
       },
@@ -132,10 +146,10 @@ export async function POST(request: Request) {
       };
     }[];
   };
-  const parts = json.candidates?.[0]?.content?.parts ?? [];
-  const imgPart = parts.find((p) => p.inlineData?.data);
+  const outParts = json.candidates?.[0]?.content?.parts ?? [];
+  const imgPart = outParts.find((p) => p.inlineData?.data);
   if (!imgPart?.inlineData?.data) {
-    const txt = parts
+    const txt = outParts
       .map((p) => p.text ?? "")
       .join(" ")
       .trim();

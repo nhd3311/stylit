@@ -338,8 +338,8 @@
   },
   "tryon": {
     "title": "Virtual try-on",
-    "subtitle": "Try a wardrobe item on your photo or a model.",
-    "pickGarment": "1. Pick an item",
+    "subtitle": "Try it on your photo or a model, then spin 360°.",
+    "pickGarment": "1. Pick items (select several for a full outfit)",
     "noItems": "Your wardrobe is empty — add a few items first.",
     "goAdd": "Add items",
     "modelOn": "2. Try it on whom?",
@@ -352,12 +352,15 @@
     "catTops": "Top / outerwear",
     "catBottoms": "Bottom",
     "catOnepiece": "One-piece / dress",
-    "run": "Try it on",
+    "run": "Create 3D try-on",
     "running": "Trying it on… (may take ~10–30s)",
     "error": "Try-on failed. Is GEMINI_API_KEY set on the server? Please try again.",
     "timeout": "Timed out. Please try again.",
     "result": "Result",
     "tryAnother": "Try another",
-    "download": "Download image"
+    "download": "Download image",
+    "selectedCount": "{count} selected",
+    "generating3d": "Rendering angles… {done}/{total}",
+    "dragHint": "Drag to rotate 360°"
   }
 }

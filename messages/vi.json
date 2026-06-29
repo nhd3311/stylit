@@ -338,8 +338,8 @@
   },
   "tryon": {
     "title": "Thử đồ ảo",
-    "subtitle": "Mặc thử món đồ trong tủ lên ảnh của bạn hoặc người mẫu.",
-    "pickGarment": "1. Chọn món đồ",
+    "subtitle": "Mặc thử lên ảnh của bạn/người mẫu rồi xoay 360°.",
+    "pickGarment": "1. Chọn món đồ (chọn nhiều = mặc cả bộ)",
     "noItems": "Tủ đồ trống — thêm vài món trước nhé.",
     "goAdd": "Thêm đồ",
     "modelOn": "2. Mặc lên ai?",
@@ -352,12 +352,15 @@
     "catTops": "Áo / áo khoác",
     "catBottoms": "Quần",
     "catOnepiece": "Nguyên bộ / đầm",
-    "run": "Thử đồ ngay",
+    "run": "Tạo thử đồ 3D",
     "running": "Đang mặc thử… (có thể mất ~10–30 giây)",
     "error": "Thử đồ thất bại. Server đã đặt GEMINI_API_KEY chưa? Thử lại nhé.",
     "timeout": "Quá thời gian chờ. Thử lại nhé.",
     "result": "Kết quả",
     "tryAnother": "Thử món khác",
-    "download": "Tải ảnh về"
+    "download": "Tải ảnh về",
+    "selectedCount": "Đã chọn {count} món",
+    "generating3d": "Đang dựng góc nhìn… {done}/{total}",
+    "dragHint": "Kéo để xoay 360°"
   }
 }

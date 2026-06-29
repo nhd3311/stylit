@@ -33,6 +33,10 @@ function drawToDataUrl(img: HTMLImageElement, maxDim: number): string {
   return canvas.toDataURL("image/jpeg", 0.9);
 }
 
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function fileToDataUrl(file: File): Promise<string> {
   const url = URL.createObjectURL(file);
   const img = await loadImage(url);
@@ -139,6 +143,7 @@ export function TryonFlow({ items }: { items: WardrobeItem[] }) {
   const [progress, setProgress] = useState(0);
   const [frames, setFrames] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [mode, setMode] = useState<"3d" | "single">("3d");
 
   const selectedItems = garmentItems.filter((i) => selected.includes(i.id));
   const modelImage = modelMode === "upload" ? modelData : modelUrl;
@@ -193,25 +198,36 @@ export function TryonFlow({ items }: { items: WardrobeItem[] }) {
         angle: "front",
       });
       setProgress(1);
+      if (mode === "single") {
+        setFrames([front]);
+        setPhase("result");
+        return;
+      }
       const ref = await downscaleDataUrl(front, 768);
-      const others = await Promise.all(
-        (["right", "back", "left"] as const).map(async (angle) => {
-          try {
-            const img = await callTryon({ referenceImageBase64: ref, angle });
-            setProgress((p) => p + 1);
-            return img;
-          } catch {
-            setProgress((p) => p + 1);
-            return null;
-          }
-        }),
-      );
-      const fr = [front, ...others.filter((x): x is string => Boolean(x))];
+      const fr = [front];
+      // Sequential + spaced to respect Gemini's 10 images/min free limit.
+      for (const angle of ["right", "back", "left"] as const) {
+        await sleep(1500);
+        try {
+          const img = await callTryon({ referenceImageBase64: ref, angle });
+          fr.push(img);
+        } catch {
+          // skip a failed angle, keep the ones we have
+        }
+        setProgress((prev) => prev + 1);
+      }
       setFrames(fr);
       setPhase("result");
     } catch (err) {
       const m = err instanceof Error ? err.message : "";
-      setError(m && m !== "tryon failed" ? `${t("error")} — ${m}` : t("error"));
+      const quota = /429|quota|exhaust/i.test(m);
+      setError(
+        quota
+          ? t("quotaError")
+          : m && m !== "tryon failed"
+            ? `${t("error")} — ${m}`
+            : t("error"),
+      );
       setPhase("setup");
     }
   }
@@ -235,7 +251,7 @@ export function TryonFlow({ items }: { items: WardrobeItem[] }) {
       <div className="flex flex-col items-center justify-center gap-5 rounded-2xl border border-border bg-card py-20">
         <div className="h-10 w-10 animate-spin rounded-full border-2 border-primary border-t-transparent" />
         <p className="text-sm font-medium text-foreground">
-          {t("generating3d", { done: progress, total: 4 })}
+          {t("generating3d", { done: progress, total: mode === "single" ? 1 : 4 })}
         </p>
         <div className="h-1.5 w-48 overflow-hidden rounded-full bg-muted">
           <div
@@ -395,6 +411,34 @@ export function TryonFlow({ items }: { items: WardrobeItem[] }) {
           {error}
         </p>
       )}
+
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="text-sm font-semibold">{t("mode")}</span>
+        <div className="inline-flex rounded-xl border border-border bg-card p-1">
+          <button
+            type="button"
+            onClick={() => setMode("3d")}
+            className={
+              mode === "3d"
+                ? "rounded-lg bg-primary/15 px-3 py-1.5 text-sm font-semibold text-primary"
+                : "rounded-lg px-3 py-1.5 text-sm font-medium text-muted-foreground"
+            }
+          >
+            {t("mode3d")}
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode("single")}
+            className={
+              mode === "single"
+                ? "rounded-lg bg-primary/15 px-3 py-1.5 text-sm font-semibold text-primary"
+                : "rounded-lg px-3 py-1.5 text-sm font-medium text-muted-foreground"
+            }
+          >
+            {t("modeSingle")}
+          </button>
+        </div>
+      </div>
 
       <button
         type="button"

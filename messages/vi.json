@@ -361,6 +361,10 @@
     "download": "Tải ảnh về",
     "selectedCount": "Đã chọn {count} món",
     "generating3d": "Đang dựng góc nhìn… {done}/{total}",
-    "dragHint": "Kéo để xoay 360°"
+    "dragHint": "Kéo để xoay 360°",
+    "mode": "Kiểu",
+    "mode3d": "Xoay 3D (4 góc)",
+    "modeSingle": "Ảnh nhanh (1 góc)",
+    "quotaError": "Hết lượt tạo ảnh AI tạm thời (Gemini free: 10 ảnh/phút, 500/ngày). Đợi ~1 phút rồi thử lại, hoặc chọn 'Ảnh nhanh' (1 lượt)."
   }
 }

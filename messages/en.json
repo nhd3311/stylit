@@ -361,6 +361,10 @@
     "download": "Download image",
     "selectedCount": "{count} selected",
     "generating3d": "Rendering angles… {done}/{total}",
-    "dragHint": "Drag to rotate 360°"
+    "dragHint": "Drag to rotate 360°",
+    "mode": "Mode",
+    "mode3d": "3D spin (4 angles)",
+    "modeSingle": "Quick image (1)",
+    "quotaError": "AI image quota reached (Gemini free: 10/min, 500/day). Wait ~1 minute and retry, or use 'Quick image' (1 generation)."
   }
 }

@@ -111,22 +111,27 @@ export async function POST(request: Request) {
     ];
   }
 
-  let res: Response;
-  try {
-    res = await fetch(
+  const reqBody = JSON.stringify({
+    contents: [{ parts }],
+    generationConfig: { responseModalities: ["IMAGE"] },
+  });
+  const callModel = () =>
+    fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${IMAGE_MODEL}:generateContent`,
       {
         method: "POST",
-        headers: {
-          "x-goog-api-key": apiKey,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [{ parts }],
-          generationConfig: { responseModalities: ["IMAGE"] },
-        }),
+        headers: { "x-goog-api-key": apiKey, "Content-Type": "application/json" },
+        body: reqBody,
       },
     );
+  let res: Response;
+  try {
+    res = await callModel();
+    // One retry on rate-limit (free tier = 10 images/min); the window resets quickly.
+    if (res.status === 429) {
+      await new Promise((r) => setTimeout(r, 11000));
+      res = await callModel();
+    }
   } catch {
     return NextResponse.json({ error: "Try-on request failed" }, { status: 502 });
   }

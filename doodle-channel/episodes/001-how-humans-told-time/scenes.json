@@ -1,0 +1,126 @@
+{
+  "title": "How Humans Learned to Tell Time",
+  "next_episode_tease": "how humans went from trading cows to using money",
+  "chapters": [
+    {
+      "name": "Intro",
+      "scenes": [
+        {"mascot": true, "narration": "Right now, the phone in your pocket is quietly syncing its time with atomic clocks — machines so precise they would barely drift a second in millions of years.", "visual": "Doodle holding up a smartphone that glows, thin dotted lines connect the phone to a satellite and to a big boxy machine with an atom symbol on it", "overlay": "ATOMIC CLOCKS"},
+        {"mascot": true, "narration": "But for most of human history, nobody knew exactly what time it was. And honestly? Nobody really cared.", "visual": "Doodle as a caveman with a club, lying in grass and shrugging lazily under a big sun", "overlay": ""},
+        {"mascot": true, "narration": "So how did we go from watching shadows on the ground, to splitting a single second into billions of pieces?", "visual": "split scene: left side a stick planted in the ground casting a shadow, right side a futuristic glowing clock; Doodle in the middle scratching his head with a question mark above him", "overlay": ""},
+        {"mascot": true, "narration": "Let's rewind. Way back.", "visual": "Doodle pulling a giant rewind lever, spiral lines swirling around him", "overlay": "HOW HUMANS LEARNED TO TELL TIME"}
+      ]
+    },
+    {
+      "name": "Chasing Shadows",
+      "scenes": [
+        {"mascot": false, "narration": "For early humans, time was simple. The sun came up — you got up. The sun went down — you went to sleep.", "visual": "two-panel doodle: a stick figure stretching awake at sunrise, then the same stick figure sleeping by a campfire under a moon", "overlay": ""},
+        {"mascot": false, "narration": "Seasons mattered way more than minutes. When will the river flood? When do the animals move? When should we plant?", "visual": "three small circular icons around a thinking stick figure: a river overflowing, a herd of simple animals walking, a sprouting seed", "overlay": ""},
+        {"mascot": false, "narration": "So people watched the sky. Monuments like Stonehenge line up with the sun on the solstices — basically, giant stone calendars.", "visual": "simple doodle of Stonehenge stone circle with the sun rising exactly between two standing stones, tiny stick figures pointing at it", "overlay": "STONEHENGE"},
+        {"mascot": false, "narration": "But to track time within a single day, you needed something simpler: a stick. Plant it in the ground, and its shadow moves as the sun crosses the sky.", "visual": "a single stick in the ground with three shadows fanning out at different angles, a curved arrow showing the sun's path above", "overlay": ""},
+        {"mascot": false, "narration": "The ancient Egyptians turned this idea into real tools. Around three and a half thousand years ago, they were using shadow clocks and sundials to split daylight into parts.", "visual": "Egyptian-style stick figure with a simple headdress kneeling beside a flat stone sundial, small pyramids in the background", "overlay": "~1500 BCE"},
+        {"mascot": false, "narration": "They divided the day into twelve hours, and the night into another twelve. That's where our twenty-four hour day comes from.", "visual": "a circle split into two halves, one half with a sun and 12 tick marks, the other half with a moon and 12 tick marks", "overlay": "12 + 12 = 24"},
+        {"mascot": false, "narration": "But here's the twist: those hours weren't equal. Daylight was always split into twelve parts, so a summer hour was longer than a winter hour.", "visual": "two horizontal bars compared: a long bar with a sun and summer flower, a short bar with a snowflake, both divided into 12 segments", "overlay": "SUMMER HOUR vs WINTER HOUR"},
+        {"mascot": true, "narration": "Imagine your work shift getting longer every single summer. No thanks.", "visual": "Doodle sweating at a desk under a huge sun, looking exhausted, a pile of papers growing taller", "overlay": ""},
+        {"mascot": true, "narration": "And sundials had one huge bug. They don't work at night. Or when it's cloudy.", "visual": "Doodle staring sadly at a sundial under a dark rain cloud, no shadow on the dial", "overlay": ""}
+      ]
+    },
+    {
+      "name": "Water and the Number 60",
+      "scenes": [
+        {"mascot": false, "narration": "So the Egyptians tried something else: water. A water clock, or clepsydra, is basically a stone bowl with a tiny hole near the bottom.", "visual": "cross-section doodle of a stone bowl with a small hole near the bottom, a thin stream of water dripping out", "overlay": "CLEPSYDRA = WATER CLOCK"},
+        {"mascot": false, "narration": "Water drips out at a steady rate, and marks on the inside tell you how much time has passed. One surviving Egyptian water clock is around three thousand four hundred years old.", "visual": "close-up of the bowl's inside wall with horizontal marks, the water level dropping past them, a little old crack on the bowl to show age", "overlay": "~1400 BCE"},
+        {"mascot": false, "narration": "The ancient Greeks even used water clocks in court, to limit how long people could speak. Talk too long? Your water runs out.", "visual": "Greek stick figure in a toga speaking passionately in front of a judge, a water clock next to him almost empty, the judge pointing at it", "overlay": ""},
+        {"mascot": false, "narration": "Meanwhile, in Mesopotamia, the Babylonians were obsessed with the number sixty. They did their math in base sixty.", "visual": "Babylonian stick figure with a beard pressing marks into a clay tablet, a big circled number 60 floating above", "overlay": "BASE 60"},
+        {"mascot": false, "narration": "Why sixty? Because it splits evenly into two, three, four, five, six, ten, twelve, fifteen, twenty, and thirty. Super handy for dividing things up.", "visual": "a big round pizza sliced in many equal pieces, small stick figures happily sharing it", "overlay": "2 · 3 · 4 · 5 · 6 · 10 · 12 · 15 · 20 · 30"},
+        {"mascot": true, "narration": "That ancient habit, passed down through Greek astronomers, is why an hour has sixty minutes and a minute has sixty seconds. Every time you check the clock, you're doing Babylonian math.", "visual": "Doodle looking at a modern wall clock while a tiny ghost of a bearded Babylonian stick figure gives him a thumbs up from behind", "overlay": "60 MIN · 60 SEC"}
+      ]
+    },
+    {
+      "name": "Gears and Bells",
+      "scenes": [
+        {"mascot": false, "narration": "Fast forward to China, in the 1090s. A scholar named Su Song built something incredible: a giant astronomical clock tower, more than ten meters tall.", "visual": "tall wooden Chinese-style tower with a pagoda roof and a big globe on top, a small stick figure scholar with a long robe looking up proudly", "overlay": "SU SONG · 1090s"},
+        {"mascot": false, "narration": "It was powered by a water wheel, and it used a clever mechanism called an escapement, letting the wheel move forward in small, regular steps.", "visual": "cutaway diagram doodle of a water wheel with small buckets, a lever catching the wheel and releasing it one notch at a time, little arrows showing motion", "overlay": "ESCAPEMENT"},
+        {"mascot": true, "narration": "It rang bells, struck gongs, and rotated a model of the stars. A water-powered machine, almost a thousand years ago.", "visual": "Doodle with jaw dropped looking at the tower as small doll figures ring bells and a star globe spins on top", "overlay": ""},
+        {"mascot": false, "narration": "In Europe, the push for better clocks came from monks. Monasteries held prayers at set times of the day and night, and someone had to ring the bell on time.", "visual": "sleepy stick figure monk in a hooded robe pulling a bell rope at night, a crescent moon in the window", "overlay": ""},
+        {"mascot": false, "narration": "In fact, the word clock comes from the medieval Latin word clocca — meaning bell.", "visual": "a large church bell swinging with motion lines, little sound waves coming out", "overlay": "CLOCCA = BELL"},
+        {"mascot": false, "narration": "By the late twelve hundreds, Europeans were building fully mechanical clocks, driven by heavy falling weights and controlled by an escapement.", "visual": "simple diagram of a heavy weight hanging on a rope wrapped around a drum, connected to a few big gears", "overlay": "LATE 1200s"},
+        {"mascot": true, "narration": "These clocks were huge, loud, and honestly, not that accurate. They could drift by many minutes every single day.", "visual": "Doodle covering his ears next to a giant clanking iron clock with crooked gears and smoke puffs", "overlay": ""},
+        {"mascot": false, "narration": "Many didn't even have a minute hand. Just one hand, pointing to the hour. Because why bother?", "visual": "an old clock face with only one single hand, a stick figure shrugging next to it", "overlay": ""},
+        {"mascot": false, "narration": "Still, towns proudly put them in towers. Now the whole town heard the same hours, ringing out from the same tower.", "visual": "a small medieval town with a central clock tower, sound waves spreading over the roofs, tiny stick figures looking up", "overlay": ""}
+      ]
+    },
+    {
+      "name": "The Pendulum",
+      "scenes": [
+        {"mascot": false, "narration": "Then came a bored young man in a church. The story goes that in the 1580s, a student named Galileo Galilei watched a lamp swinging in Pisa Cathedral.", "visual": "young stick figure with curly hair sitting on a church bench, staring up at a hanging lamp swinging, motion arcs drawn", "overlay": "GALILEO · PISA"},
+        {"mascot": false, "narration": "He noticed something weird: big swings and small swings seemed to take the same amount of time.", "visual": "two pendulums side by side, one with a wide arc and one with a small arc, both with the same small stopwatch icon above", "overlay": "SAME TIME?!"},
+        {"mascot": true, "narration": "Historians aren't sure that lamp story really happened. But Galileo really did study pendulums, and realized they could keep time.", "visual": "Doodle holding a magnifying glass over an old book, a small question mark next to the swinging lamp picture in the book", "overlay": "LEGEND?"},
+        {"mascot": false, "narration": "In 1656, the Dutch scientist Christiaan Huygens built the first pendulum clock.", "visual": "stick figure with long curly wig proudly presenting a tall wooden pendulum clock", "overlay": "HUYGENS · 1656"},
+        {"mascot": false, "narration": "The result? Clocks went from losing minutes per day, to losing only seconds. Suddenly, a minute hand was actually worth adding.", "visual": "before and after: left a sad old clock with a big red error arrow, right a happy pendulum clock with a tiny error arrow and a new minute hand", "overlay": "MINUTES → SECONDS"},
+        {"mascot": false, "narration": "For the next two hundred and seventy years, the pendulum ruled the world of timekeeping.", "visual": "a pendulum clock wearing a little crown sitting on a throne", "overlay": ""}
+      ]
+    },
+    {
+      "name": "Lost at Sea",
+      "scenes": [
+        {"mascot": false, "narration": "But pendulums have one big weakness: put one on a rocking ship, and it goes crazy.", "visual": "pendulum clock on a tilted ship deck swinging wildly, dizzy spiral eyes drawn on the clock face", "overlay": ""},
+        {"mascot": false, "narration": "And at sea, that was a deadly problem. Sailors could work out their latitude — how far north or south they were — from the sun and the stars.", "visual": "stick figure sailor on a ship using a simple sighting instrument pointed at the sun, a north-south arrow beside him", "overlay": "LATITUDE ✓"},
+        {"mascot": false, "narration": "But longitude — how far east or west — was a nightmare. Ships got lost, ran out of supplies, or crashed into rocks.", "visual": "sailing ship heading toward sharp rocks in fog, a confused sailor with a blank map", "overlay": "LONGITUDE ✗"},
+        {"mascot": false, "narration": "In 1707, four British warships wrecked off the Isles of Scilly, and well over a thousand sailors died.", "visual": "somber scene: dark waves, broken ship masts sticking out of the water near rocks, a small lighthouse far away, no figures shown", "overlay": "1707"},
+        {"mascot": true, "narration": "Here's the trick. The Earth turns fifteen degrees every hour. So if you know the time back home, and the local time where you are, the difference tells you your longitude.", "visual": "Doodle pointing at a simple globe with longitude lines, two clocks above it showing different times, an arrow between them labeled with a degree sign", "overlay": "1 HOUR = 15°"},
+        {"mascot": false, "narration": "Local time is easy — just watch the sun. But keeping home time on a rocking, freezing, salty ship? That needed a clock no one had built yet.", "visual": "a small clock on a ship being splashed by waves, shivering with ice crystals, a sun shining in the corner", "overlay": ""},
+        {"mascot": false, "narration": "In 1714, the British government offered a prize worth millions in today's money to anyone who could solve it.", "visual": "a stick figure official in a wig holding up a giant bag of money with a pound sign", "overlay": "LONGITUDE PRIZE · 1714"},
+        {"mascot": false, "narration": "A self-taught carpenter named John Harrison spent decades on the problem. His masterpiece, the H4, looked like a big pocket watch.", "visual": "older stick figure in a carpenter's apron at a workbench, proudly holding a large round pocket watch, wood shavings on the floor", "overlay": "JOHN HARRISON · H4"},
+        {"mascot": false, "narration": "On a test voyage to Jamaica in 1761, it lost only about five seconds in eighty-one days at sea.", "visual": "ship sailing across a simple ocean map from England to a small island, the pocket watch floating above with a small sparkle", "overlay": "81 DAYS → ~5 SECONDS"},
+        {"mascot": true, "narration": "Navigation was never the same again.", "visual": "Doodle as a captain at a ship's wheel, confidently looking at the pocket watch, sunset behind him", "overlay": ""}
+      ]
+    },
+    {
+      "name": "Railway Chaos",
+      "scenes": [
+        {"mascot": false, "narration": "Now, even in the 1800s, every town still set its clocks by its own sun. Noon was whenever the sun was highest — right there, locally.", "visual": "two small towns side by side, each with its own sun directly overhead at a slightly different position, each town clock showing a different time", "overlay": "LOCAL TIME"},
+        {"mascot": false, "narration": "So noon in one city might be several minutes different from noon in the next city over. No big deal — until trains showed up.", "visual": "a steam train puffing smoke between two towns, the clocks on each station showing different times, a red exclamation mark", "overlay": ""},
+        {"mascot": true, "narration": "Railways needed schedules. And schedules with dozens of different local times were a total mess.", "visual": "Doodle as a stressed station master buried under a pile of timetables, many different clocks on the wall behind him all showing different times", "overlay": ""},
+        {"mascot": false, "narration": "Britain fixed it first. By the late 1840s, most British railways were running on London time.", "visual": "simple map of Britain with railway lines, all small clock icons along the lines showing the same time, one big clock over London", "overlay": "RAILWAY TIME"},
+        {"mascot": false, "narration": "In North America, on November eighteenth, 1883, the railroads switched to standard time zones. People called it the Day of Two Noons, because many towns saw noon twice as clocks were reset.", "visual": "a stick figure townsperson confused, looking at a clock tower showing twelve o'clock with two suns in the sky", "overlay": "THE DAY OF TWO NOONS"},
+        {"mascot": false, "narration": "A year later, in 1884, delegates from twenty-five countries met in Washington, and chose Greenwich, in London, as the prime meridian: zero degrees longitude.", "visual": "round table with stick figure delegates in suits, a globe in the middle with one line highlighted in red", "overlay": "GREENWICH = 0°"},
+        {"mascot": false, "narration": "Time stopped being local. It became global.", "visual": "a globe wrapped with neat vertical time-zone stripes, small clocks floating around it", "overlay": ""}
+      ]
+    },
+    {
+      "name": "Quartz and Atoms",
+      "scenes": [
+        {"mascot": false, "narration": "In 1927, engineers at Bell Labs built the first quartz clock.", "visual": "two stick figure engineers in lab coats beside a big box machine with wires and a glowing crystal inside", "overlay": "QUARTZ CLOCK · 1927"},
+        {"mascot": false, "narration": "Quartz is a crystal with a superpower. Squeeze it, and it makes electricity. Zap it with electricity, and it vibrates — at a very steady rate.", "visual": "a cute quartz crystal with a cape like a superhero, small lightning bolts and vibration lines around it", "overlay": ""},
+        {"mascot": false, "narration": "Count those vibrations, and you've got a clock. A typical quartz watch crystal vibrates exactly thirty-two thousand, seven hundred and sixty-eight times per second.", "visual": "a tiny tuning-fork shaped crystal inside an opened wristwatch, a counter display above it spinning fast", "overlay": "32,768 / SECOND"},
+        {"mascot": true, "narration": "In 1969, Seiko released the Astron, the world's first quartz wristwatch. Within a couple of decades, cheap and accurate quartz watches were everywhere.", "visual": "Doodle proudly showing a wristwatch on his arm, many small stick figures behind him also showing off watches", "overlay": "1969"},
+        {"mascot": false, "narration": "But scientists wanted even better. So they looked inside the atom.", "visual": "a stick figure scientist holding a huge magnifying glass over a simple atom with orbiting electrons", "overlay": ""},
+        {"mascot": false, "narration": "In 1955, Louis Essen and Jack Parry in Britain built the first accurate atomic clock, using cesium atoms.", "visual": "two stick figure scientists next to a long metal tube machine with dials, an atom symbol on it", "overlay": "CESIUM CLOCK · 1955"},
+        {"mascot": false, "narration": "Atoms of the same type vibrate at exactly the same frequency. Always. Everywhere. They're nature's perfect metronome.", "visual": "a row of identical atoms, each with the same wavy line coming out, a metronome icon at the end", "overlay": ""},
+        {"mascot": false, "narration": "In 1967, the world officially redefined the second. One second is now the time it takes for nine billion, one hundred ninety-two million, six hundred thirty-one thousand, seven hundred and seventy cycles of radiation from a cesium atom.", "visual": "a giant number counter overflowing with digits, a tiny stopwatch showing 1 second next to it", "overlay": "9,192,631,770"},
+        {"mascot": true, "narration": "Yep. The second is no longer based on the Earth's spin. It's based on atoms.", "visual": "Doodle pointing at a spinning Earth and crossing it out with a red X, then pointing to a glowing atom with a check mark", "overlay": ""}
+      ]
+    },
+    {
+      "name": "Time Today",
+      "scenes": [
+        {"mascot": false, "narration": "And you use atomic clocks every single day, without even knowing it. Every GPS satellite carries atomic clocks on board.", "visual": "a GPS satellite in orbit above Earth, a tiny atom symbol glowing inside it", "overlay": "GPS"},
+        {"mascot": true, "narration": "Your phone figures out where you are by measuring how long signals take to arrive from several satellites.", "visual": "Doodle holding a phone, four satellites above him with dotted lines converging on his position, a red location pin over his head", "overlay": ""},
+        {"mascot": false, "narration": "Light travels about thirty centimeters in a billionth of a second. So a timing error of just one millionth of a second could put you around three hundred meters off.", "visual": "a map with a red pin where a stick figure actually stands, and a second pin far away in a lake, a ruler showing the distance", "overlay": "1 µs ≈ 300 m"},
+        {"mascot": false, "narration": "Today, the best experimental optical clocks are so precise, they wouldn't lose a second over the entire age of the universe.", "visual": "a futuristic glowing clock surrounded by laser beams, a tiny Big Bang explosion on the far left and a timeline arrow to the clock", "overlay": "13.8 BILLION YEARS"},
+        {"mascot": false, "narration": "Fun fact: the Earth itself is a sloppy clock. Its spin is slightly irregular, so since 1972, scientists have added leap seconds to keep atomic time in sync with the planet.", "visual": "Earth with a wobbly spin line and sweat drops, a scientist adding a tiny block labeled with a plus sign to a timeline", "overlay": "+1 LEAP SECOND"},
+        {"mascot": false, "narration": "But leap seconds cause headaches for computers. So in 2022, the world voted to scrap them by 2035.", "visual": "a computer with dizzy eyes and smoke, next to a calendar page crossed out with a red X", "overlay": "BYE BY 2035"}
+      ]
+    },
+    {
+      "name": "Outro",
+      "scenes": [
+        {"mascot": true, "narration": "So, from a stick in the ground, to a crystal on your wrist, to atoms vibrating billions of times a second —", "visual": "a timeline across the image: a stick with shadow, a water bowl, a tower clock, a pendulum clock, a pocket watch, a wristwatch, an atom; Doodle walking along it", "overlay": ""},
+        {"mascot": true, "narration": "humans spent thousands of years chasing one simple question: what time is it?", "visual": "Doodle looking up at the sky with a big question mark, sunset behind him", "overlay": "WHAT TIME IS IT?"},
+        {"mascot": true, "narration": "And the funny thing is — now that we can measure time almost perfectly, we still never seem to have enough of it.", "visual": "Doodle running late holding a coffee cup, a huge clock behind him, papers flying", "overlay": ""},
+        {"mascot": true, "narration": "If you enjoyed this trip through time, subscribe. Next time, we'll find out how humans went from trading cows to using money. See you then!", "visual": "Doodle waving goodbye next to a cow on one side and a coin on the other, a red subscribe-style button shape (no text) at the bottom", "overlay": "SUBSCRIBE"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+And you use atomic clocks every single day, without even knowing it. Every GPS satellite carries atomic clocks on board.
+
+Your phone figures out where you are by measuring how long signals take to arrive from several satellites.
+
+Light travels about thirty centimeters in a billionth of a second. So a timing error of just one millionth of a second could put you around three hundred meters off.
+
+Today, the best experimental optical clocks are so precise, they wouldn't lose a second over the entire age of the universe.
+
+Fun fact: the Earth itself is a sloppy clock. Its spin is slightly irregular, so since 1972, scientists have added leap seconds to keep atomic time in sync with the planet.
+
+But leap seconds cause headaches for computers. So in 2022, the world voted to scrap them by 2035.

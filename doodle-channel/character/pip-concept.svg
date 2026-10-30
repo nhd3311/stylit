@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+  <defs>
+    <filter id="wobble"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="2.5"/></filter>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="8"/><feColorMatrix values="0 0 0 0 0.1  0 0 0 0 0.1  0 0 0 0 0.1  0 0 0 0.07 0"/></filter>
+    <pattern id="halftone" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="5" cy="5" r="1.6" fill="#E8B530" opacity=".55"/></pattern>
+
+    <!-- Pip, neutral; origin at feet centre -->
+    <g id="scarf">
+      <path d="M-58 -168 Q0 -140 58 -168 L56 -146 Q0 -120 -56 -146 Z" fill="#E8452C" stroke="#1A1A1A" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M30 -150 L70 -95 L52 -88 L18 -140 Z" fill="#E8452C" stroke="#1A1A1A" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M44 -150 L100 -120 L92 -104 L36 -136 Z" fill="#E8452C" stroke="#1A1A1A" stroke-width="5" stroke-linejoin="round"/>
+    </g>
+    <g id="body">
+      <path d="M0 -150 L0 -70" stroke="#1A1A1A" stroke-width="9" stroke-linecap="round"/>
+      <path d="M0 -70 L-28 -4 M0 -70 L28 -4" stroke="#1A1A1A" stroke-width="9" stroke-linecap="round" fill="none"/>
+      <ellipse cx="-34" cy="-2" rx="20" ry="10" fill="#1A1A1A"/>
+      <ellipse cx="34" cy="-2" rx="20" ry="10" fill="#1A1A1A"/>
+    </g>
+    <g id="head">
+      <circle cx="0" cy="-275" r="118" fill="#F3EDE2" stroke="#1A1A1A" stroke-width="9"/>
+      <path d="M6 -392 C 10 -430, 52 -440, 54 -412 C 56 -390, 26 -388, 22 -404" fill="none" stroke="#1A1A1A" stroke-width="8" stroke-linecap="round"/>
+    </g>
+  </defs>
+
+  <rect width="1600" height="900" fill="#F3EDE2"/>
+  <!-- collage shapes -->
+  <circle cx="1390" cy="170" r="120" fill="url(#halftone)"/>
+  <path d="M0 760 Q 400 690 800 760 T 1600 740 L1600 900 L0 900 Z" fill="#2B4BA8" opacity=".9"/>
+  <rect x="1180" y="560" width="300" height="10" fill="#1A1A1A" opacity=".0"/>
+
+  <g filter="url(#wobble)">
+    <!-- 1 NEUTRAL / CURIOUS -->
+    <g transform="translate(300 720)">
+      <use href="#body"/>
+      <path d="M0 -130 L-62 -80 M0 -130 L62 -86" stroke="#1A1A1A" stroke-width="9" stroke-linecap="round"/>
+      <circle cx="-68" cy="-76" r="15" fill="#1A1A1A"/><circle cx="68" cy="-82" r="15" fill="#1A1A1A"/>
+      <use href="#head"/>
+      <ellipse cx="-42" cy="-248" rx="13" ry="22" fill="#1A1A1A"/><ellipse cx="42" cy="-248" rx="13" ry="22" fill="#1A1A1A"/>
+      <circle cx="-38" cy="-256" r="4" fill="#fff"/><circle cx="46" cy="-256" r="4" fill="#fff"/>
+      <path d="M-60 -292 L-28 -296 M28 -304 L60 -296" stroke="#1A1A1A" stroke-width="8" stroke-linecap="round"/>
+      <path d="M-10 -208 Q0 -202 12 -208" stroke="#1A1A1A" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <use href="#scarf"/>
+    </g>
+
+    <!-- 2 SHOCKED -->
+    <g transform="translate(800 720)">
+      <use href="#body"/>
+      <path d="M0 -130 L-120 -150 M0 -130 L120 -150" stroke="#1A1A1A" stroke-width="9" stroke-linecap="round"/>
+      <circle cx="-126" cy="-154" r="15" fill="#1A1A1A"/><circle cx="126" cy="-154" r="15" fill="#1A1A1A"/>
+      <use href="#head"/>
+      <ellipse cx="-42" cy="-250" rx="16" ry="26" fill="#F3EDE2" stroke="#1A1A1A" stroke-width="6"/><circle cx="-42" cy="-250" r="5" fill="#1A1A1A"/>
+      <ellipse cx="42" cy="-250" rx="16" ry="26" fill="#F3EDE2" stroke="#1A1A1A" stroke-width="6"/><circle cx="42" cy="-250" r="5" fill="#1A1A1A"/>
+      <path d="M-62 -306 L-28 -300 M28 -300 L62 -306" stroke="#1A1A1A" stroke-width="8" stroke-linecap="round"/>
+      <ellipse cx="0" cy="-200" rx="13" ry="17" fill="#1A1A1A"/>
+      <path d="M-150 -330 l-20 -14 M-150 -290 l-26 0 M150 -330 l20 -14 M150 -290 l26 0" stroke="#1A1A1A" stroke-width="6" stroke-linecap="round"/>
+      <use href="#scarf"/>
+    </g>
+
+    <!-- 3 COSTUME: ancient Egypt -->
+    <g transform="translate(1300 720)">
+      <use href="#body"/>
+      <path d="M-40 -110 L40 -110 L52 -50 L-52 -50 Z" fill="#F3EDE2" stroke="#1A1A1A" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M-30 -102 L-36 -54 M-10 -104 L-12 -52 M10 -104 L12 -52 M30 -102 L36 -54" stroke="#1A1A1A" stroke-width="3"/>
+      <path d="M0 -130 L-62 -90 M0 -130 L66 -150" stroke="#1A1A1A" stroke-width="9" stroke-linecap="round"/>
+      <circle cx="-66" cy="-86" r="15" fill="#1A1A1A"/><circle cx="70" cy="-154" r="15" fill="#1A1A1A"/>
+      <use href="#head"/>
+      <!-- striped headcloth -->
+      <path d="M-118 -280 Q-120 -400 0 -398 Q120 -400 118 -280 L140 -170 L96 -176 L92 -268 Q0 -300 -92 -268 L-96 -176 L-140 -170 Z" fill="#E8B530" stroke="#1A1A1A" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M-128 -210 L-100 -210 M-132 -240 L-98 -240 M128 -210 L100 -210 M132 -240 L98 -240" stroke="#2B4BA8" stroke-width="8"/>
+      <path d="M6 -392 C 10 -430, 52 -440, 54 -412 C 56 -390, 26 -388, 22 -404" fill="none" stroke="#1A1A1A" stroke-width="8" stroke-linecap="round"/>
+      <ellipse cx="-40" cy="-240" rx="12" ry="20" fill="#1A1A1A"/><ellipse cx="40" cy="-240" rx="12" ry="20" fill="#1A1A1A"/>
+      <circle cx="-36" cy="-247" r="4" fill="#fff"/><circle cx="44" cy="-247" r="4" fill="#fff"/>
+      <path d="M-16 -204 Q0 -190 16 -204" stroke="#1A1A1A" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <use href="#scarf"/>
+    </g>
+  </g>
+
+  <!-- labels -->
+  <g font-family="'Courier New', monospace" font-size="26" fill="#1A1A1A" text-anchor="middle">
+    <text x="300" y="830" fill="#F3EDE2">curious</text>
+    <text x="800" y="830" fill="#F3EDE2">shocked</text>
+    <text x="1300" y="830" fill="#F3EDE2">costume: ancient Egypt</text>
+  </g>
+  <g font-family="'Courier New', monospace" font-size="30" font-weight="bold" fill="#1A1A1A">
+    <text x="60" y="80">PIP — concept sketch (not final art)</text>
+  </g>
+  <g font-family="'Courier New', monospace" font-size="20" fill="#1A1A1A">
+    <text x="60" y="118">"?" curl · red scarf always · same face in every era</text>
+  </g>
+  <!-- palette -->
+  <g transform="translate(60 150)" font-family="'Courier New', monospace" font-size="16">
+    <rect width="44" height="44" fill="#1A1A1A"/><rect x="54" width="44" height="44" fill="#F3EDE2" stroke="#1A1A1A" stroke-width="2"/>
+    <rect x="108" width="44" height="44" fill="#E8452C"/><rect x="162" width="44" height="44" fill="#2B4BA8"/><rect x="216" width="44" height="44" fill="#E8B530"/>
+  </g>
+  <rect width="1600" height="900" filter="url(#grain)"/>
+</svg>

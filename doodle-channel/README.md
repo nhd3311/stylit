@@ -9,12 +9,18 @@ Scripts and scene images are AI-generated → reviewed by a human → voiced wit
 
 ```
 doodle-channel/
-├── style-guide.md                  # style lock prompt, mascot, editing + ElevenLabs defaults
+├── style-guide.md                  # v1 style (plain doodle) + editing/ElevenLabs defaults
+├── character/
+│   ├── pip.md                      # v2: host "Pip", risograph style, STYLE/PIP LOCK, Google Flow prompts
+│   └── pip-concept.svg/.png        # rough concept sketch (not final art)
 ├── tools/build_episode.py          # scenes.json → prompts, voice text, CSV, SRT, chapters
 └── episodes/
-    └── 001-how-humans-told-time/
-        ├── scenes.json             # SOURCE OF TRUTH: chapters → scenes (narration, visual, overlay)
-        ├── fact-check.md           # every claim + where to verify it
+    ├── 001-why-ai-animal-memes-go-viral/
+    │   └── script-v1.md            # researched script, waiting for approval
+    └── 002-how-humans-told-time/
+        ├── script-v2.md            # researched rewrite, waiting for approval
+        ├── scenes.json             # v1 scenes (to be regenerated from script-v2 after approval)
+        ├── fact-check.md           # v1 fact table
         ├── youtube-metadata.md     # titles, thumbnail ideas, description, tags
         └── build/                  # generated, don't edit by hand
 ```

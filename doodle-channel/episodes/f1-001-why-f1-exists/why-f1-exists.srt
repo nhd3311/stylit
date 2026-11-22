@@ -1,0 +1,503 @@
+1
+00:00:00,800 --> 00:00:06,958
+May 13th, 1950. An old wartime airfield in the middle of England.
+
+2
+00:00:07,108 --> 00:00:09,948
+The King and Queen are in the crowd:
+
+3
+00:00:09,948 --> 00:00:12,088
+the only time a reigning British monarch
+
+4
+00:00:12,088 --> 00:00:15,801
+has ever attended a motor race in Britain.
+
+5
+00:00:15,951 --> 00:00:19,311
+Up front: Italian cars in blood red.
+
+6
+00:00:19,311 --> 00:00:24,101
+Seventy laps later, an Italian named Giuseppe Farina wins.
+
+7
+00:00:24,251 --> 00:00:27,551
+Nobody watching knows it yet, but they've just seen the
+
+8
+00:00:27,551 --> 00:00:31,953
+first ever race of the Formula One World Championship.
+
+9
+00:00:32,103 --> 00:00:34,263
+But F1 didn't start that day.
+
+10
+00:00:34,263 --> 00:00:36,783
+It started fifty-six years earlier… with
+
+11
+00:00:36,783 --> 00:00:40,126
+a newspaper trying to sell more newspapers.
+
+12
+00:00:45,856 --> 00:00:50,876
+1894. Cars are brand new, noisy and unreliable.
+
+13
+00:00:50,876 --> 00:00:54,023
+Most people think they're a toy for rich weirdos.
+
+14
+00:00:54,173 --> 00:00:59,373
+So a Paris newspaper, Le Petit Journal, organises a challenge:
+
+15
+00:00:59,373 --> 00:01:04,190
+drive from Paris to Rouen, about 126 kilometres.
+
+16
+00:01:04,340 --> 00:01:05,860
+But it wasn't a race.
+
+17
+00:01:05,860 --> 00:01:11,040
+The prize was for the vehicle that was safe, easy to handle and cheap to run.
+
+18
+00:01:11,040 --> 00:01:16,129
+The fastest machine, a steam-powered one, didn't even get the top prize.
+
+19
+00:01:16,279 --> 00:01:17,799
+A year later came Paris–Bordeaux–Paris:
+
+20
+00:01:17,799 --> 00:01:21,419
+almost twelve hundred kilometres, there and back.
+
+21
+00:01:21,419 --> 00:01:24,959
+A man named Émile Levassor got back first,
+
+22
+00:01:24,959 --> 00:01:29,522
+after driving for about two days with almost no rest.
+
+23
+00:01:29,672 --> 00:01:34,472
+Why race at all? Because a race is the best advert there is.
+
+24
+00:01:34,472 --> 00:01:37,412
+If your car survives twelve hundred kilometres,
+
+25
+00:01:37,412 --> 00:01:40,906
+people believe it can survive their trip to the market.
+
+26
+00:01:41,056 --> 00:01:43,516
+That's reason number one F1 exists:
+
+27
+00:01:43,516 --> 00:01:46,110
+to prove the machine works.
+
+28
+00:01:47,360 --> 00:01:50,420
+Within a few years, cars got much faster.
+
+29
+00:01:50,420 --> 00:01:52,180
+The races didn't change.
+
+30
+00:01:52,180 --> 00:01:55,580
+They still ran on open public roads, between cities,
+
+31
+00:01:55,580 --> 00:02:00,323
+through dust, villages, and crowds standing right at the edge.
+
+32
+00:02:00,473 --> 00:02:06,007
+In 1903, more than two hundred cars set off from Paris to Madrid.
+
+33
+00:02:06,157 --> 00:02:08,157
+It turned into a disaster.
+
+34
+00:02:08,157 --> 00:02:10,677
+Crash after crash on the first day.
+
+35
+00:02:10,677 --> 00:02:13,577
+Drivers, mechanics and spectators were killed,
+
+36
+00:02:13,577 --> 00:02:18,617
+including Marcel Renault, one of the brothers who founded Renault.
+
+37
+00:02:18,767 --> 00:02:21,507
+The government stopped the race at Bordeaux.
+
+38
+00:02:21,507 --> 00:02:25,774
+The cars weren't even allowed to drive out under their own power.
+
+39
+00:02:25,924 --> 00:02:32,144
+After that, the era of racing between cities on open roads was basically over.
+
+40
+00:02:32,144 --> 00:02:37,020
+Racing moved onto closed circuits, loops of road closed to the public.
+
+41
+00:02:37,170 --> 00:02:42,823
+Reason number two: racing needed its own safe place, away from the public.
+
+42
+00:02:44,073 --> 00:02:48,093
+Around the same time, an American newspaper owner named James Gordon
+
+43
+00:02:48,093 --> 00:02:53,433
+Bennett set up a race between countries, not just car companies.
+
+44
+00:02:53,433 --> 00:02:55,582
+Every nation sent a team.
+
+45
+00:02:55,732 --> 00:02:59,272
+To tell them apart, each country got its own colour.
+
+46
+00:02:59,272 --> 00:03:02,372
+France raced in blue. Germany in white.
+
+47
+00:03:02,372 --> 00:03:03,694
+Italy in red.
+
+48
+00:03:03,844 --> 00:03:06,424
+Britain couldn't use red, white or blue:
+
+49
+00:03:06,424 --> 00:03:11,024
+those were taken. And in 1903, the British team raced in Ireland,
+
+50
+00:03:11,024 --> 00:03:15,184
+because racing on public roads was illegal in Britain.
+
+51
+00:03:15,184 --> 00:03:18,964
+So they picked green, in honour of Ireland's shamrock.
+
+52
+00:03:18,964 --> 00:03:21,100
+That's British racing green.
+
+53
+00:03:21,250 --> 00:03:25,730
+And that's why, more than a century later, Ferrari is still red.
+
+54
+00:03:25,730 --> 00:03:28,081
+It's Italy's old racing colour.
+
+55
+00:03:29,331 --> 00:03:32,451
+In 1906, the Automobile Club of France held
+
+56
+00:03:32,451 --> 00:03:35,991
+a new kind of race near the town of Le Mans.
+
+57
+00:03:35,991 --> 00:03:37,171
+They called it the Grand Prix:
+
+58
+00:03:37,171 --> 00:03:39,965
+French for "big prize".
+
+59
+00:03:40,115 --> 00:03:42,715
+The track was a loop of closed public roads,
+
+60
+00:03:42,715 --> 00:03:45,995
+more than a hundred kilometres around.
+
+61
+00:03:45,995 --> 00:03:50,839
+The race lasted two days, and covered over twelve hundred kilometres.
+
+62
+00:03:50,989 --> 00:03:53,269
+The winner was Ferenc Szisz, a Hungarian mechanic
+
+63
+00:03:53,269 --> 00:03:57,109
+driving for Renault, with a riding mechanic next to him.
+
+64
+00:03:57,109 --> 00:04:02,329
+Their average speed: about a hundred and one kilometres per hour.
+
+65
+00:04:02,329 --> 00:04:05,419
+On dirt roads. In 1906.
+
+66
+00:04:05,569 --> 00:04:07,629
+Grand Prix racing was born.
+
+67
+00:04:07,629 --> 00:04:09,529
+But it was still a mess.
+
+68
+00:04:09,529 --> 00:04:13,762
+Every race had its own rules, and there was no single champion.
+
+69
+00:04:15,012 --> 00:04:18,092
+In the 1930s, Grand Prix racing got a
+
+70
+00:04:18,092 --> 00:04:21,618
+European Championship, and it got political.
+
+71
+00:04:21,768 --> 00:04:24,928
+The German government poured money into two teams,
+
+72
+00:04:24,928 --> 00:04:29,728
+Mercedes-Benz and Auto Union, to show off German engineering.
+
+73
+00:04:29,728 --> 00:04:32,428
+Their cars were so dominant and so shiny
+
+74
+00:04:32,428 --> 00:04:35,968
+they became known as the "Silver Arrows".
+
+75
+00:04:36,118 --> 00:04:38,998
+There's a famous story that Mercedes scraped the white
+
+76
+00:04:38,998 --> 00:04:42,818
+paint off their car to make it light enough to race.
+
+77
+00:04:42,818 --> 00:04:47,078
+It's a great story. Historians say it's probably not true:
+
+78
+00:04:47,078 --> 00:04:50,219
+the weight limit wasn't even used at that race.
+
+79
+00:04:50,369 --> 00:04:53,838
+Then the Second World War stopped everything.
+
+80
+00:04:53,988 --> 00:04:59,568
+In Italy, Alfa Romeo had a small, brilliant racing car called the 158.
+
+81
+00:04:59,568 --> 00:05:03,548
+To keep it out of the war, the cars were hidden near Milan:
+
+82
+00:05:03,548 --> 00:05:08,450
+legend says in a cheese factory, other accounts say a pig farm.
+
+83
+00:05:08,600 --> 00:05:11,744
+Remember that car. It will be important.
+
+84
+00:05:12,994 --> 00:05:15,674
+After the war, the sport's governing body,
+
+85
+00:05:15,674 --> 00:05:20,434
+today called the FIA, wrote one rulebook for top-level racing:
+
+86
+00:05:20,434 --> 00:05:22,206
+a single "formula".
+
+87
+00:05:22,356 --> 00:05:24,496
+That's literally what the name means.
+
+88
+00:05:24,496 --> 00:05:28,236
+A formula is a set of rules every car must follow.
+
+89
+00:05:28,236 --> 00:05:30,916
+Engine size, weight, design.
+
+90
+00:05:30,916 --> 00:05:33,416
+Formula One was the top one.
+
+91
+00:05:33,416 --> 00:05:36,709
+Lower categories like Formula Two came later.
+
+92
+00:05:36,859 --> 00:05:40,739
+The first version allowed either big 4.5-litre engines,
+
+93
+00:05:40,739 --> 00:05:46,246
+or small 1.5-litre engines with a supercharger.
+
+94
+00:05:46,396 --> 00:05:49,136
+Why bother? Because without one formula,
+
+95
+00:05:49,136 --> 00:05:53,076
+the richest team just builds the biggest monster and wins.
+
+96
+00:05:53,076 --> 00:05:57,933
+A formula makes different machines race on roughly equal terms.
+
+97
+00:05:58,083 --> 00:06:00,980
+Reason number three: make it fair.
+
+98
+00:06:02,230 --> 00:06:04,290
+There was still one thing missing:
+
+99
+00:06:04,290 --> 00:06:06,091
+a single champion.
+
+100
+00:06:06,241 --> 00:06:11,321
+In 1949, motorcycles got their own world championship.
+
+101
+00:06:11,321 --> 00:06:14,470
+Car racing didn't want to be left behind.
+
+102
+00:06:14,620 --> 00:06:17,980
+So in early 1950, an Italian count named
+
+103
+00:06:17,980 --> 00:06:22,600
+Antonio Brivio suggested an idea at the FIA:
+
+104
+00:06:22,600 --> 00:06:25,760
+link the big national Grands Prix into one season,
+
+105
+00:06:25,760 --> 00:06:31,274
+give points to the top finishers, and crown one World Champion of drivers.
+
+106
+00:06:31,424 --> 00:06:33,824
+The first season had seven races:
+
+107
+00:06:33,824 --> 00:06:38,524
+six in Europe, plus the Indianapolis 500 in America,
+
+108
+00:06:38,524 --> 00:06:43,314
+which counted even though almost none of the European drivers went.
+
+109
+00:06:43,464 --> 00:06:45,024
+And the first race of all?
+
+110
+00:06:45,024 --> 00:06:48,946
+Silverstone. May 13th, 1950.
+
+111
+00:06:49,096 --> 00:06:54,096
+The car that won it was that same little Alfa Romeo 158,
+
+112
+00:06:54,096 --> 00:06:57,505
+the one that had spent the war hidden on a farm.
+
+113
+00:06:57,655 --> 00:07:02,015
+Giuseppe Farina won that day, and at the end of the season,
+
+114
+00:07:02,015 --> 00:07:05,451
+he became Formula One's first World Champion.
+
+115
+00:07:06,701 --> 00:07:09,301
+So why does Formula One exist?
+
+116
+00:07:09,301 --> 00:07:12,101
+Because people needed to prove their machines worked,
+
+117
+00:07:12,101 --> 00:07:17,805
+find a safe place to race them, make the fight fair, and crown one champion.
+
+118
+00:07:17,955 --> 00:07:21,975
+Seventy-six years later, it's the same four reasons.
+
+119
+00:07:21,975 --> 00:07:26,035
+Car makers still use F1 to prove their technology.
+
+120
+00:07:26,035 --> 00:07:28,375
+Teams still fight over the rulebook.
+
+121
+00:07:28,375 --> 00:07:31,921
+And twenty-something drivers still chase one title.
+
+122
+00:07:32,071 --> 00:07:34,636
+Not bad for a newspaper stunt.
+
+123
+00:07:34,786 --> 00:07:36,566
+If you want the next chapter:
+
+124
+00:07:36,566 --> 00:07:39,266
+how this sport went from a dangerous hobby
+
+125
+00:07:39,266 --> 00:07:42,106
+to a billion-dollar machine, subscribe.
+
+126
+00:07:42,106 --> 00:07:43,692
+See you on the grid.

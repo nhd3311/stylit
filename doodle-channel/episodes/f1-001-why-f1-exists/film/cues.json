@@ -1,0 +1,632 @@
+[
+ {
+  "t0": 0.8,
+  "t1": 6.958,
+  "text": "May 13th, 1950. An old wartime airfield in the middle of England."
+ },
+ {
+  "t0": 7.108,
+  "t1": 9.948,
+  "text": "The King and Queen are in the crowd:"
+ },
+ {
+  "t0": 9.948,
+  "t1": 12.088,
+  "text": "the only time a reigning British monarch"
+ },
+ {
+  "t0": 12.088,
+  "t1": 15.801,
+  "text": "has ever attended a motor race in Britain."
+ },
+ {
+  "t0": 15.951,
+  "t1": 19.311,
+  "text": "Up front: Italian cars in blood red."
+ },
+ {
+  "t0": 19.311,
+  "t1": 24.101,
+  "text": "Seventy laps later, an Italian named Giuseppe Farina wins."
+ },
+ {
+  "t0": 24.251,
+  "t1": 27.551,
+  "text": "Nobody watching knows it yet, but they've just seen the"
+ },
+ {
+  "t0": 27.551,
+  "t1": 31.953,
+  "text": "first ever race of the Formula One World Championship."
+ },
+ {
+  "t0": 32.103,
+  "t1": 34.263,
+  "text": "But F1 didn't start that day."
+ },
+ {
+  "t0": 34.263,
+  "t1": 36.783,
+  "text": "It started fifty-six years earlier\u2026 with"
+ },
+ {
+  "t0": 36.783,
+  "t1": 40.126,
+  "text": "a newspaper trying to sell more newspapers."
+ },
+ {
+  "t0": 45.856,
+  "t1": 50.876,
+  "text": "1894. Cars are brand new, noisy and unreliable."
+ },
+ {
+  "t0": 50.876,
+  "t1": 54.023,
+  "text": "Most people think they're a toy for rich weirdos."
+ },
+ {
+  "t0": 54.173,
+  "t1": 59.373,
+  "text": "So a Paris newspaper, Le Petit Journal, organises a challenge:"
+ },
+ {
+  "t0": 59.373,
+  "t1": 64.19,
+  "text": "drive from Paris to Rouen, about 126 kilometres."
+ },
+ {
+  "t0": 64.34,
+  "t1": 65.86,
+  "text": "But it wasn't a race."
+ },
+ {
+  "t0": 65.86,
+  "t1": 71.04,
+  "text": "The prize was for the vehicle that was safe, easy to handle and cheap to run."
+ },
+ {
+  "t0": 71.04,
+  "t1": 76.129,
+  "text": "The fastest machine, a steam-powered one, didn't even get the top prize."
+ },
+ {
+  "t0": 76.279,
+  "t1": 77.799,
+  "text": "A year later came Paris\u2013Bordeaux\u2013Paris:"
+ },
+ {
+  "t0": 77.799,
+  "t1": 81.419,
+  "text": "almost twelve hundred kilometres, there and back."
+ },
+ {
+  "t0": 81.419,
+  "t1": 84.959,
+  "text": "A man named \u00c9mile Levassor got back first,"
+ },
+ {
+  "t0": 84.959,
+  "t1": 89.522,
+  "text": "after driving for about two days with almost no rest."
+ },
+ {
+  "t0": 89.672,
+  "t1": 94.472,
+  "text": "Why race at all? Because a race is the best advert there is."
+ },
+ {
+  "t0": 94.472,
+  "t1": 97.412,
+  "text": "If your car survives twelve hundred kilometres,"
+ },
+ {
+  "t0": 97.412,
+  "t1": 100.906,
+  "text": "people believe it can survive their trip to the market."
+ },
+ {
+  "t0": 101.056,
+  "t1": 103.516,
+  "text": "That's reason number one F1 exists:"
+ },
+ {
+  "t0": 103.516,
+  "t1": 106.11,
+  "text": "to prove the machine works."
+ },
+ {
+  "t0": 107.36,
+  "t1": 110.42,
+  "text": "Within a few years, cars got much faster."
+ },
+ {
+  "t0": 110.42,
+  "t1": 112.18,
+  "text": "The races didn't change."
+ },
+ {
+  "t0": 112.18,
+  "t1": 115.58,
+  "text": "They still ran on open public roads, between cities,"
+ },
+ {
+  "t0": 115.58,
+  "t1": 120.323,
+  "text": "through dust, villages, and crowds standing right at the edge."
+ },
+ {
+  "t0": 120.473,
+  "t1": 126.007,
+  "text": "In 1903, more than two hundred cars set off from Paris to Madrid."
+ },
+ {
+  "t0": 126.157,
+  "t1": 128.157,
+  "text": "It turned into a disaster."
+ },
+ {
+  "t0": 128.157,
+  "t1": 130.677,
+  "text": "Crash after crash on the first day."
+ },
+ {
+  "t0": 130.677,
+  "t1": 133.577,
+  "text": "Drivers, mechanics and spectators were killed,"
+ },
+ {
+  "t0": 133.577,
+  "t1": 138.617,
+  "text": "including Marcel Renault, one of the brothers who founded Renault."
+ },
+ {
+  "t0": 138.767,
+  "t1": 141.507,
+  "text": "The government stopped the race at Bordeaux."
+ },
+ {
+  "t0": 141.507,
+  "t1": 145.774,
+  "text": "The cars weren't even allowed to drive out under their own power."
+ },
+ {
+  "t0": 145.924,
+  "t1": 152.144,
+  "text": "After that, the era of racing between cities on open roads was basically over."
+ },
+ {
+  "t0": 152.144,
+  "t1": 157.02,
+  "text": "Racing moved onto closed circuits, loops of road closed to the public."
+ },
+ {
+  "t0": 157.17,
+  "t1": 162.823,
+  "text": "Reason number two: racing needed its own safe place, away from the public."
+ },
+ {
+  "t0": 164.073,
+  "t1": 168.093,
+  "text": "Around the same time, an American newspaper owner named James Gordon"
+ },
+ {
+  "t0": 168.093,
+  "t1": 173.433,
+  "text": "Bennett set up a race between countries, not just car companies."
+ },
+ {
+  "t0": 173.433,
+  "t1": 175.582,
+  "text": "Every nation sent a team."
+ },
+ {
+  "t0": 175.732,
+  "t1": 179.272,
+  "text": "To tell them apart, each country got its own colour."
+ },
+ {
+  "t0": 179.272,
+  "t1": 182.372,
+  "text": "France raced in blue. Germany in white."
+ },
+ {
+  "t0": 182.372,
+  "t1": 183.694,
+  "text": "Italy in red."
+ },
+ {
+  "t0": 183.844,
+  "t1": 186.424,
+  "text": "Britain couldn't use red, white or blue:"
+ },
+ {
+  "t0": 186.424,
+  "t1": 191.024,
+  "text": "those were taken. And in 1903, the British team raced in Ireland,"
+ },
+ {
+  "t0": 191.024,
+  "t1": 195.184,
+  "text": "because racing on public roads was illegal in Britain."
+ },
+ {
+  "t0": 195.184,
+  "t1": 198.964,
+  "text": "So they picked green, in honour of Ireland's shamrock."
+ },
+ {
+  "t0": 198.964,
+  "t1": 201.1,
+  "text": "That's British racing green."
+ },
+ {
+  "t0": 201.25,
+  "t1": 205.73,
+  "text": "And that's why, more than a century later, Ferrari is still red."
+ },
+ {
+  "t0": 205.73,
+  "t1": 208.081,
+  "text": "It's Italy's old racing colour."
+ },
+ {
+  "t0": 209.331,
+  "t1": 212.451,
+  "text": "In 1906, the Automobile Club of France held"
+ },
+ {
+  "t0": 212.451,
+  "t1": 215.991,
+  "text": "a new kind of race near the town of Le Mans."
+ },
+ {
+  "t0": 215.991,
+  "t1": 217.171,
+  "text": "They called it the Grand Prix:"
+ },
+ {
+  "t0": 217.171,
+  "t1": 219.965,
+  "text": "French for \"big prize\"."
+ },
+ {
+  "t0": 220.115,
+  "t1": 222.715,
+  "text": "The track was a loop of closed public roads,"
+ },
+ {
+  "t0": 222.715,
+  "t1": 225.995,
+  "text": "more than a hundred kilometres around."
+ },
+ {
+  "t0": 225.995,
+  "t1": 230.839,
+  "text": "The race lasted two days, and covered over twelve hundred kilometres."
+ },
+ {
+  "t0": 230.989,
+  "t1": 233.269,
+  "text": "The winner was Ferenc Szisz, a Hungarian mechanic"
+ },
+ {
+  "t0": 233.269,
+  "t1": 237.109,
+  "text": "driving for Renault, with a riding mechanic next to him."
+ },
+ {
+  "t0": 237.109,
+  "t1": 242.329,
+  "text": "Their average speed: about a hundred and one kilometres per hour."
+ },
+ {
+  "t0": 242.329,
+  "t1": 245.419,
+  "text": "On dirt roads. In 1906."
+ },
+ {
+  "t0": 245.569,
+  "t1": 247.629,
+  "text": "Grand Prix racing was born."
+ },
+ {
+  "t0": 247.629,
+  "t1": 249.529,
+  "text": "But it was still a mess."
+ },
+ {
+  "t0": 249.529,
+  "t1": 253.762,
+  "text": "Every race had its own rules, and there was no single champion."
+ },
+ {
+  "t0": 255.012,
+  "t1": 258.092,
+  "text": "In the 1930s, Grand Prix racing got a"
+ },
+ {
+  "t0": 258.092,
+  "t1": 261.618,
+  "text": "European Championship, and it got political."
+ },
+ {
+  "t0": 261.768,
+  "t1": 264.928,
+  "text": "The German government poured money into two teams,"
+ },
+ {
+  "t0": 264.928,
+  "t1": 269.728,
+  "text": "Mercedes-Benz and Auto Union, to show off German engineering."
+ },
+ {
+  "t0": 269.728,
+  "t1": 272.428,
+  "text": "Their cars were so dominant and so shiny"
+ },
+ {
+  "t0": 272.428,
+  "t1": 275.968,
+  "text": "they became known as the \"Silver Arrows\"."
+ },
+ {
+  "t0": 276.118,
+  "t1": 278.998,
+  "text": "There's a famous story that Mercedes scraped the white"
+ },
+ {
+  "t0": 278.998,
+  "t1": 282.818,
+  "text": "paint off their car to make it light enough to race."
+ },
+ {
+  "t0": 282.818,
+  "t1": 287.078,
+  "text": "It's a great story. Historians say it's probably not true:"
+ },
+ {
+  "t0": 287.078,
+  "t1": 290.219,
+  "text": "the weight limit wasn't even used at that race."
+ },
+ {
+  "t0": 290.369,
+  "t1": 293.838,
+  "text": "Then the Second World War stopped everything."
+ },
+ {
+  "t0": 293.988,
+  "t1": 299.568,
+  "text": "In Italy, Alfa Romeo had a small, brilliant racing car called the 158."
+ },
+ {
+  "t0": 299.568,
+  "t1": 303.548,
+  "text": "To keep it out of the war, the cars were hidden near Milan:"
+ },
+ {
+  "t0": 303.548,
+  "t1": 308.45,
+  "text": "legend says in a cheese factory, other accounts say a pig farm."
+ },
+ {
+  "t0": 308.6,
+  "t1": 311.744,
+  "text": "Remember that car. It will be important."
+ },
+ {
+  "t0": 312.994,
+  "t1": 315.674,
+  "text": "After the war, the sport's governing body,"
+ },
+ {
+  "t0": 315.674,
+  "t1": 320.434,
+  "text": "today called the FIA, wrote one rulebook for top-level racing:"
+ },
+ {
+  "t0": 320.434,
+  "t1": 322.206,
+  "text": "a single \"formula\"."
+ },
+ {
+  "t0": 322.356,
+  "t1": 324.496,
+  "text": "That's literally what the name means."
+ },
+ {
+  "t0": 324.496,
+  "t1": 328.236,
+  "text": "A formula is a set of rules every car must follow."
+ },
+ {
+  "t0": 328.236,
+  "t1": 330.916,
+  "text": "Engine size, weight, design."
+ },
+ {
+  "t0": 330.916,
+  "t1": 333.416,
+  "text": "Formula One was the top one."
+ },
+ {
+  "t0": 333.416,
+  "t1": 336.709,
+  "text": "Lower categories like Formula Two came later."
+ },
+ {
+  "t0": 336.859,
+  "t1": 340.739,
+  "text": "The first version allowed either big 4.5-litre engines,"
+ },
+ {
+  "t0": 340.739,
+  "t1": 346.246,
+  "text": "or small 1.5-litre engines with a supercharger."
+ },
+ {
+  "t0": 346.396,
+  "t1": 349.136,
+  "text": "Why bother? Because without one formula,"
+ },
+ {
+  "t0": 349.136,
+  "t1": 353.076,
+  "text": "the richest team just builds the biggest monster and wins."
+ },
+ {
+  "t0": 353.076,
+  "t1": 357.933,
+  "text": "A formula makes different machines race on roughly equal terms."
+ },
+ {
+  "t0": 358.083,
+  "t1": 360.98,
+  "text": "Reason number three: make it fair."
+ },
+ {
+  "t0": 362.23,
+  "t1": 364.29,
+  "text": "There was still one thing missing:"
+ },
+ {
+  "t0": 364.29,
+  "t1": 366.091,
+  "text": "a single champion."
+ },
+ {
+  "t0": 366.241,
+  "t1": 371.321,
+  "text": "In 1949, motorcycles got their own world championship."
+ },
+ {
+  "t0": 371.321,
+  "t1": 374.47,
+  "text": "Car racing didn't want to be left behind."
+ },
+ {
+  "t0": 374.62,
+  "t1": 377.98,
+  "text": "So in early 1950, an Italian count named"
+ },
+ {
+  "t0": 377.98,
+  "t1": 382.6,
+  "text": "Antonio Brivio suggested an idea at the FIA:"
+ },
+ {
+  "t0": 382.6,
+  "t1": 385.76,
+  "text": "link the big national Grands Prix into one season,"
+ },
+ {
+  "t0": 385.76,
+  "t1": 391.274,
+  "text": "give points to the top finishers, and crown one World Champion of drivers."
+ },
+ {
+  "t0": 391.424,
+  "t1": 393.824,
+  "text": "The first season had seven races:"
+ },
+ {
+  "t0": 393.824,
+  "t1": 398.524,
+  "text": "six in Europe, plus the Indianapolis 500 in America,"
+ },
+ {
+  "t0": 398.524,
+  "t1": 403.314,
+  "text": "which counted even though almost none of the European drivers went."
+ },
+ {
+  "t0": 403.464,
+  "t1": 405.024,
+  "text": "And the first race of all?"
+ },
+ {
+  "t0": 405.024,
+  "t1": 408.946,
+  "text": "Silverstone. May 13th, 1950."
+ },
+ {
+  "t0": 409.096,
+  "t1": 414.096,
+  "text": "The car that won it was that same little Alfa Romeo 158,"
+ },
+ {
+  "t0": 414.096,
+  "t1": 417.505,
+  "text": "the one that had spent the war hidden on a farm."
+ },
+ {
+  "t0": 417.655,
+  "t1": 422.015,
+  "text": "Giuseppe Farina won that day, and at the end of the season,"
+ },
+ {
+  "t0": 422.015,
+  "t1": 425.451,
+  "text": "he became Formula One's first World Champion."
+ },
+ {
+  "t0": 426.701,
+  "t1": 429.301,
+  "text": "So why does Formula One exist?"
+ },
+ {
+  "t0": 429.301,
+  "t1": 432.101,
+  "text": "Because people needed to prove their machines worked,"
+ },
+ {
+  "t0": 432.101,
+  "t1": 437.805,
+  "text": "find a safe place to race them, make the fight fair, and crown one champion."
+ },
+ {
+  "t0": 437.955,
+  "t1": 441.975,
+  "text": "Seventy-six years later, it's the same four reasons."
+ },
+ {
+  "t0": 441.975,
+  "t1": 446.035,
+  "text": "Car makers still use F1 to prove their technology."
+ },
+ {
+  "t0": 446.035,
+  "t1": 448.375,
+  "text": "Teams still fight over the rulebook."
+ },
+ {
+  "t0": 448.375,
+  "t1": 451.921,
+  "text": "And twenty-something drivers still chase one title."
+ },
+ {
+  "t0": 452.071,
+  "t1": 454.636,
+  "text": "Not bad for a newspaper stunt."
+ },
+ {
+  "t0": 454.786,
+  "t1": 456.566,
+  "text": "If you want the next chapter:"
+ },
+ {
+  "t0": 456.566,
+  "t1": 459.266,
+  "text": "how this sport went from a dangerous hobby"
+ },
+ {
+  "t0": 459.266,
+  "t1": 462.106,
+  "text": "to a billion-dollar machine, subscribe."
+ },
+ {
+  "t0": 462.106,
+  "t1": 463.692,
+  "text": "See you on the grid."
+ }
+]

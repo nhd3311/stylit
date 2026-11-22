@@ -1,0 +1,10 @@
+Why does F1 even exist? (Apex motorsport channel, ep. 1)
+
+Script, research, direction, drawing code: made with Claude (Anthropic), reviewed by the channel owner.
+Narration: Kokoro TTS (kokoro-onnx, voice bm_george), Apache-2.0 model, generated offline. Draft voice: may be replaced by ElevenLabs.
+Music: original score synthesised in code (mix.py), no samples.
+Sound effects: procedural, Lemo-Opuscar core/audio/sfx.py (MIT).
+Tools: Lemo-Opuscar library (github.com/lemomo-ai/lemo-opuscar), MIT code.
+Fonts: Jost (Indestructible Type*, OFL-1.1, fonts/OFL-Jost.txt), Patrick Hand (OFL-1.1, fonts/OFL-PatrickHand.txt), from github.com/google/fonts.
+Map outlines: hand-simplified coastlines drawn in code (no map data used).
+No F1, team or sponsor logos, no broadcast footage, no F1 music. Sources for every fact: ../script-v1.md.

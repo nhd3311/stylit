@@ -11,13 +11,15 @@ Scripts and scene images are AI-generated → reviewed by a human → voiced wit
 doodle-channel/
 ├── style-guide.md                  # v1 style (plain doodle) + editing/ElevenLabs defaults
 ├── character/
-│   ├── pip.md                      # v2: host "Pip", risograph style, STYLE/PIP LOCK, Google Flow prompts
-│   └── pip-concept.svg/.png        # rough concept sketch (not final art)
+│   ├── apex.md                     # host "Apex" (motorsport), risograph style, STYLE/APEX LOCK, Google Flow prompts
+│   └── apex-concept.svg/.png       # rough concept sketch (not final art)
 ├── tools/build_episode.py          # scenes.json → prompts, voice text, CSV, SRT, chapters
 └── episodes/
-    ├── 001-why-ai-animal-memes-go-viral/
+    ├── f1-001-why-f1-exists/
+    │   └── script-v1.md            # F1 ep 1: origin of Formula 1, waiting for approval
+    ├── 001-why-ai-animal-memes-go-viral/   # on hold
     │   └── script-v1.md            # researched script, waiting for approval
-    └── 002-how-humans-told-time/
+    └── 002-how-humans-told-time/   # on hold
         ├── script-v2.md            # researched rewrite, waiting for approval
         ├── scenes.json             # v1 scenes (to be regenerated from script-v2 after approval)
         ├── fact-check.md           # v1 fact table

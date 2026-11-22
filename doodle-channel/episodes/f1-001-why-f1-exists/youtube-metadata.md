@@ -12,18 +12,18 @@
 ```
 Formula 1 didn't start in 1950. It started in 1894, with a newspaper trying to sell more newspapers.
 
-From the "race of death" of 1903 to the first Grand Prix in 1906, from the Silver Arrows to a race car hidden on a farm through the Second World War: this is why F1 exists.
+From a steam tractor that won the race but lost the prize, to the "race of death" of 1903, Michelin's secret weapon in 1906, Nuvolari beating the Silver Arrows, and a race car hidden on a farm through the Second World War: this is why F1 exists.
 
 CHAPTERS
 0:00 Cold open: Silverstone, 1950
-0:45 A newspaper stunt (1894)
-1:47 The race of death (1903)
-2:44 Why Ferrari is red
-3:29 The first Grand Prix (1906)
-4:15 Silver Arrows and hidden cars
-5:12 The "Formula"
-6:02 One world champion (1950)
-7:06 Why F1 still exists
+1:01 CH1: A Newspaper Stunt (1894–1895)
+2:30 CH2: The Race of Death (1903)
+3:36 CH3: Why Ferrari Is Red
+4:19 CH4: The First Grand Prix (1906)
+5:17 CH5: Silver Arrows and Hidden Cars (1930s–1945)
+6:26 CH6: The "Formula" (1946)
+7:07 CH7: One World Champion (1950)
+8:17 OUTRO
 
 Sources: see the pinned comment.
 This channel uses AI tools for drawing and voice; every fact is checked by a human before upload.
@@ -41,7 +41,7 @@ Spotted a mistake? Tell me 👇
 ```
 
 ## Upload checklist
-- [ ] Upload `film/out/why-f1-exists.mp4`. Subtitles are burned in; also upload `why-f1-exists.srt` as English CC
+- [ ] Upload `film/out/why-f1-exists-v2.mp4`. Subtitles are burned in; also upload `why-f1-exists.srt` as English CC
 - [ ] Altered/synthetic content: **not required** (stylised animation, no realistic people/events)
 - [ ] Made for kids: **No**
 - [ ] End screen (last 20 s): next episode + subscribe

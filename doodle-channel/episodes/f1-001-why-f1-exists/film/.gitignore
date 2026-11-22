@@ -3,3 +3,5 @@ stills/
 voice/*.wav
 voice/redo*/
 voice/asr.log
+voice2/*.wav
+voice2/redo*/

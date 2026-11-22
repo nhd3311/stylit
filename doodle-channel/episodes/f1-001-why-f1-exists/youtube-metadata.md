@@ -16,14 +16,14 @@ From a steam tractor that won the race but lost the prize, to the "race of death
 
 CHAPTERS
 0:00 Cold open: Silverstone, 1950
-1:01 CH1: A Newspaper Stunt (1894–1895)
-2:30 CH2: The Race of Death (1903)
-3:36 CH3: Why Ferrari Is Red
-4:19 CH4: The First Grand Prix (1906)
-5:17 CH5: Silver Arrows and Hidden Cars (1930s–1945)
-6:26 CH6: The "Formula" (1946)
-7:07 CH7: One World Champion (1950)
-8:17 OUTRO
+1:01 A Newspaper Stunt (1894–1895)
+2:30 The Race of Death (1903)
+3:36 Why Ferrari Is Red
+4:19 The First Grand Prix (1906)
+5:17 Silver Arrows and Hidden Cars (1930s–1945)
+6:26 The "Formula" (1946)
+7:07 One World Champion (1950)
+8:17 Why F1 still exists
 
 Sources: see the pinned comment.
 This channel uses AI tools for drawing and voice; every fact is checked by a human before upload.

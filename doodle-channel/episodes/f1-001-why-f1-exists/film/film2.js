@@ -74,6 +74,15 @@ const P = (n, box) => proj(...CITY[n], box);
 
 // ---------- shots ----------
 const SH = {
+  P00_1: { cam: [[960, 560, 1.12], [960, 540, 1.0]], draw(lt, d, cam) {
+    L(cam, .5, () => { fill('#E4E1DA'); const cols = [C.red, C.orange, '#2E8B8B', C.silver, C.blue, C.green, '#E6E6E6']; for (let i = 0; i < 7; i++) { poly(g, [[-200 + i * 380, 640], [-200 + i * 380, 300], [140 + i * 380, 300], [140 + i * 380, 640]], C.light, C.ink, 6); rrect(g, -200 + i * 380, 300, 340, 50, 0, cols[i], C.ink, 5, false); } });
+    L(cam, 1, () => { ground(640, '#9A9690'); for (let i = 0; i < 4; i++) car2(g, 420 + i * 420, 840 + (i % 2) * 110, .5, { model: 'modern', color: [C.red, C.orange, '#2E8B8B', C.blue][i], t: lt + i, driver: { hat: 'helmet' } });
+      apex(1760, 1000, .5, { suit: 'pit', hat: 'headset', pose: lt > d * .55 ? 'shock' : 'think', expr: lt > d * .55 ? 'shock' : 'think', t: lt }); });
+    card(M - 30, 90, 1120, 300, C.white);
+    text(g, 'F1 STARTED IN 1950?', M, 190, { size: 64, weight: 800, t: lt / .4, mis: C.orange });
+    if (lt > d * .45) { const k = eo((lt - d * .45) / .3); line(g, [[M - 10, 168], [lerp(M - 10, M + 700, k), 168]], C.red, 12); }
+    if (lt > d * .55) { text(g, '1894', M, 330, { size: 120, weight: 800, t: (lt - d * .55) * 3, mis: C.red }); small('the 56 years nobody tells you about', lt, d * .65, M + 330, 320, { weight: 700 }); }
+  } },
   P01_1: { cam: [[960, 540, 1.0], [980, 520, 1.12]], draw(lt, d, cam) {
     L(cam, 1, () => { fill('#6E9A5A'); g.fillStyle = tint(g, '#3E6B3A', .3, 12); g.fillRect(-W, -H, 3 * W, 3 * H);
       for (const [a, b] of [[[-400, 760], [2300, 820]], [[-200, 980], [1300, -200]], [[2200, 1000], [700, -200]]]) line(g, [a, b], '#CFC9BB', 120);
@@ -89,7 +98,7 @@ const SH = {
       const r = rng(5); for (let i = 0; i < 80; i++) { const k = i / 80, x = lerp(-200, 2100, k), y = lerp(780, 830, k) + 70; (i % 2 ? (xx, yy) => rrect(g, xx, yy - 18, 30, 18, 3, C.mustard, C.ink, 2) : (xx, yy) => rrect(g, xx, yy - 26, 18, 26, 3, C.red, C.ink, 2))(x, y); }
       const n = Math.floor(seg(lt, 0, d) * 600); for (let i = 0; i < n; i++) circ(g, r() * 2400 - 240, 950 + r() * 260, 7, [C.red, C.blue, C.mustard, C.paper][i % 4], null, 0, false);
     });
-    card(M - 30, 100, 720, 180); cap('13 MAY 1950', lt, .3, M, 190, 90); small('oil drums · straw bales · tens of thousands of fans', lt, 1.2, M, 250);
+    card(M - 30, 100, 1000, 180); cap('13 MAY 1950', lt, .3, M, 190, 90); small('perimeter roads · oil drums · straw bales · ≈100,000 fans', lt, 1.2, M, 250);
   } },
   P01_3: { cam: [[760, 520, 1.15], [1000, 540, 1.0]], draw(lt, d, cam) {
     L(cam, .4, () => { fill('#CFE0E8'); clouds(g, lt, 3, 5, 120); });
@@ -130,7 +139,7 @@ const SH = {
     fill('#D6E4EA'); g.save(); g.translate(0, 0); hills(g, W, 520, '#8FB07A', 30, .003, 4); ground(640, '#BDB6A8'); car2(g, 900, 860, .9, { model: 'alfa158', color: C.red, num: 1, driver: { hat: 'leather', expr: 'grin' } });
     g.fillStyle = 'rgba(243,237,226,.45)'; g.fillRect(0, 0, W, H); stamp(g, 'RACE Nº1', 1380, 330, lt - .4, { size: 120 }); g.restore(); g.restore();
     const yr = Math.round(lerp(1950, 1894, eio(seg(lt, d * .5, d * .95))));
-    if (tear > .3) { text(g, String(yr), M, 420, { size: 220, weight: 800, mis: C.orange }); small('60 years of problems', lt, d * .7, M, 490); }
+    if (tear > .3) { text(g, String(yr), M, 420, { size: 220, weight: 800, mis: C.orange }); small('56 years of problems', lt, d * .7, M, 490); }
   } },
   TITLE: { cam: [[960, 540, 1], [960, 540, 1]], draw(lt, d) {
     fill(C.paper); paper(g, W, H);
@@ -220,7 +229,7 @@ const SH = {
     L(cam, 1, () => { ground(700, '#CBBFA8'); const cols = [C.blue, C.red, C.white, C.green, C.mustard, C.blue, C.red];
       for (let i = 6; i >= 0; i--) car2(g, 1800 - i * 330 + Math.max(0, lt - 2 - i * .3) * 120, 800 + (i % 3) * 80, .48, { model: i % 2 ? 'renault1903' : 'panhard1895', color: cols[i], spin: lt * 4, t: lt + i, driver: { hat: 'leather' }, mech: { hat: 'flat' } });
       crowd(g, -300, 2300, 1080, 24, .4, 43, lt); });
-    card(M - 30, 100, 700, 200); cap('PARIS → MADRID', lt, .3, M, 190, 70); small('dawn · 200+ cars · huge crowds', lt, 1.1, M, 250);
+    card(M - 30, 100, 700, 200); cap('VERSAILLES → MADRID', lt, .3, M, 190, 66); small('24 May 1903 · dawn · 200+ cars', lt, 1.1, M, 250);
   } },
   P06_3: { cam: [[960, 540, 1.0], [960, 520, 1.1]], draw(lt, d, cam) {
     L(cam, .3, () => { fill('#E9DDBF'); hills(g, W * 2, 560, '#C9B98F', 30, .004, 5); });
@@ -264,17 +273,17 @@ const SH = {
     fill(C.paper); paper(g, W, H);
     L(cam, 1, () => { ground(860, C.light); g.save(); g.translate(960, 640); g.scale(2.2, 2.2); poly(g, [[-50, -120], [50, -120], [36, -50], [10, -30], [10, 0], [34, 14], [-34, 14], [-10, 0], [-10, -30], [-36, -50]], C.mustard, C.ink, 4); g.restore();
       fig(g, 660, 860, .55, { suit: 'suit', hat: 'top', mustache: true, expr: 'smug', pose: 'point', t: lt });
-      [[C.blue, 'FRANCE'], [C.white, 'GERMANY'], [C.red, 'ITALY'], [C.green, 'BRITAIN'], ['#7FA6C9', 'USA']].forEach(([col, n], i) => { const x = 1180 + i * 150, k = lt - 1 - i * .35; if (k < 0) return;
+      [[C.blue, 'FRANCE'], [C.white, 'GERMANY'], [C.mustard, 'BELGIUM'], [C.red, 'USA'], [C.ink, 'ITALY*']].forEach(([col, n], i) => { const x = 1180 + i * 150, k = lt - 1 - i * .35; if (k < 0) return;
         fig(g, x, 860, .32 * pop(k * 1.3), { suitColor: col, expr: 'happy', pose: 'hold', t: lt + i }); rrect(g, x + 8, 860 - 230, 70, 46, 4, col, C.ink, 4); line(g, [[x + 8, 860 - 184], [x + 8, 860 - 120]], C.ink, 4); text(g, n, x, 910, { size: 22, weight: 700, align: 'center', t: k * 2 }); }); });
-    cap('GORDON BENNETT CUP', lt, .3, M, 180, 70); small('1900–1905 · countries, not companies', lt, 1, M, 240);
+    cap('GORDON BENNETT CUP', lt, .3, M, 180, 70); small('1900–1905 · countries, not companies', lt, 1, M, 240); small('*Italy raced in black at first', lt, 3, 1180, 560, { size: 26, color: C.grey });
   } },
   P09_2: { cam: [[960, 540, 1], [960, 540, 1.04]], draw(lt, d, cam) {
     fill(C.paper); paper(g, W, H);
-    [[C.blue, 'FRANCE'], [C.white, 'GERMANY'], [C.red, 'ITALY']].forEach(([col, n], i) => {
-      const at = .8 + i * 1.1, k = eo((lt - at) / 1.1), y = 430 + i * 240; line(g, [[0, y + 4], [W, y + 4]], C.light, 6);
-      car2(g, lerp(-500, 1150, k), y, .5, { model: 'renault1903', color: col, spin: lt * 12, speed: 1 - k, t: lt, driver: { hat: 'leather' }, mech: { hat: 'flat' } });
-      text(g, n, 1540, y - 50, { size: 50, weight: 800, t: (lt - at - .5) * 2, mis: col === C.white ? C.grey : col }); });
-    cap('ONE COLOUR PER NATION', lt, .2, M, 170, 64);
+    [[C.blue, 'FRANCE'], [C.white, 'GERMANY'], [C.mustard, 'BELGIUM'], [C.red, 'USA']].forEach(([col, n], i) => {
+      const at = .6 + i * .9, k = eo((lt - at) / 1.1), y = 360 + i * 185; line(g, [[0, y + 4], [W, y + 4]], C.light, 6);
+      car2(g, lerp(-500, 1150, k), y, .42, { model: 'renault1903', color: col, spin: lt * 12, speed: 1 - k, t: lt, driver: { hat: 'leather' }, mech: { hat: 'flat' } });
+      text(g, n, 1540, y - 40, { size: 46, weight: 800, t: (lt - at - .5) * 2, mis: col === C.white ? C.grey : col }); });
+    cap('ONE COLOUR PER NATION · 1900', lt, .2, M, 170, 60);
   } },
   P09_3: { cam: [[960, 560, 1.12], [960, 540, 1.0]], draw(lt, d, cam) {
     L(cam, .3, () => { fill('#CFE0E8'); clouds(g, lt, 23, 3, 140); g.save(); g.translate(1380, 220); const sk = pop(seg(lt, d * .5, d * .6) * 1.6); g.scale(sk, sk); for (const [dx, dy] of [[-50, 0], [50, 0], [0, -70]]) circ(g, dx, dy, 62, '#4C9A5F', C.ink, 6); line(g, [[0, 40], [20, 140]], C.ink, 10); g.restore(); });
@@ -290,7 +299,7 @@ const SH = {
     car2(g, lerp(960, 500, k), 820, .8, { model: 'renault1906', color: C.red, t: lt });
     if (k > 0) { g.globalAlpha = k; car2(g, lerp(960, 1400, k), 820, .66, { model: 'modern', color: C.red, t: lt, driver: { hat: 'helmet' } }); g.globalAlpha = 1; }
     text(g, '1906', lerp(960, 500, k), 920, { size: 44, weight: 800, align: 'center', t: 1 }); text(g, 'TODAY', 1400, 920, { size: 44, weight: 800, align: 'center', t: (lt - d * .55) * 2 });
-    card(M - 30, 100, 640, 180); cap('ITALY = RED', lt, .5, M, 190, 90, { color: C.red, mis: C.mustard }); small('Ferrari still races in it', lt, 1.6, M, 250);
+    card(M - 30, 100, 960, 180); cap('ITALY = RED', lt, .5, M, 190, 90, { color: C.red, mis: C.mustard }); small('black at first · red later · Ferrari still races in it', lt, 1.6, M, 250);
   } },
   P10_1: { cam: [[960, 420, 1.15], [960, 540, 1.0]], draw(lt, d, cam) {
     L(cam, .2, () => { fill('#F0DDB0'); sun(g, 1550, 240, 140); clouds(g, lt, 29, 3, 120, '#F7E9C8'); });
@@ -321,8 +330,8 @@ const SH = {
     L(cam, 1, () => { ground(860, C.dust); car2(g, 820, 860, .9, { model: 'renault1906', color: C.blue, t: lt, driver: { hat: 'leather', mustache: true, expr: 'determined' } });
       const k = seg(lt % 4, .5, 2.5); g.save(); g.translate(lerp(1500, 980, eio(k)), 760); g.rotate(lt * 3); circ(g, 0, 0, 80, null, C.ink, 18, false); circ(g, 0, 0, 62, null, C.grey, 6, false); g.restore();
       fig(g, 1500, 880, .55, { pose: 'hold', suitColor: C.blue, hat: 'flat', expr: 'grin', t: lt }); });
-    card(M - 30, 100, 900, 330, C.white); cap('SECRET WEAPON', lt, .3, M, 175, 60); small('Michelin detachable rims', lt, .9, M, 230, { weight: 700, color: C.orange });
-    text(g, 'RENAULT  ≈ 2 min', M, 320, { size: 44, weight: 800, t: (lt - 1.6) * 2 }); text(g, 'OTHERS   10+ min', M, 390, { size: 44, weight: 800, color: C.grey, t: (lt - 2.2) * 2 });
+    card(M - 30, 100, 900, 330, C.white); cap('SECRET WEAPON', lt, .3, M, 175, 60); small('Michelin detachable rims · Renault & Fiat', lt, .9, M, 230, { weight: 700, color: C.orange });
+    text(g, 'WITH RIMS   a few min', M, 320, { size: 44, weight: 800, t: (lt - 1.6) * 2 }); text(g, 'WITHOUT     10+ min', M, 390, { size: 44, weight: 800, color: C.grey, t: (lt - 2.2) * 2 });
   } },
   P11_2: { cam: [[960, 540, 1.0], [960, 540, 1.08]], draw(lt, d, cam) {
     L(cam, .3, () => { fill('#F0DDB0'); sun(g, 1600, 220, 120); hills(g, W * 2, 600, '#9DB56B', 40, .004, 2); });
@@ -435,13 +444,13 @@ const SH = {
     else { L(cam, .3, () => { fill('#D6E4EA'); clouds(g, lt, 8, 4, 140); hills(g, W * 2, 520, '#8FB07A', 30, .003, 4); }); L(cam, .7, () => grandstand(-300, 560, 2600, 130, lt, C.green, 23));
       L(cam, 1, () => { ground(640, '#BDB6A8'); g.fillStyle = C.grass; g.fillRect(-W, 900, 3 * W, H); line(g, [[1500, 640], [1500, 900]], C.ink, 10); for (let i = 0; i < 6; i++) { g.fillStyle = i % 2 ? C.ink : C.white; g.fillRect(1490, 640 + i * 43, 20, 43); }
         car2(g, lerp(-300, 1400, eo((lt - sw) / 2.4)), 860, .8, { model: 'alfa158', color: C.red, num: 1, spin: lt * 18, speed: 1, t: lt, driver: { hat: 'leather', expr: 'grin' } }); bales(g, -100, W + 100, 960, 1); }); }
-    card(M - 30, 100, 820, 160); cap('THE SAME ALFA ROMEO 158', lt, .3, M, 200, 60);
+    card(M - 30, 100, 880, 160); cap('SAME MODEL: ALFA ROMEO 158', lt, .3, M, 200, 60);
   } },
   P16_2: { cam: [[960, 540, 1.1], [960, 540, 1.0]], draw(lt, d, cam) {
     L(cam, .3, () => { fill('#F3E3C3'); sun(g, 1600, 200, 110); hills(g, W * 2, 560, '#9DB56B', 30, .004, 8); for (let i = 0; i < 20; i++) tree(g, -300 + i * 140, 640, .55, '#4E7A44'); });
     L(cam, 1, () => { ground(660, '#BDB6A8'); car2(g, 760 + Math.sin(lt) * 30, 860, .66, { model: 'alfa158', color: C.red, spin: lt * 20, speed: 1, t: lt, num: 1, driver: { hat: 'leather', expr: 'determined' } }); car2(g, 900 - Math.sin(lt) * 30, 980, .66, { model: 'alfa158', color: C.red, spin: lt * 20, speed: 1, t: lt + 1, num: 1, driver: { hat: 'leather', expr: 'grin' } }); speedLines(g, lt, 700, 1000, 10, C.white); });
     card(1260, 100, 560, 280, C.white); text(g, 'BEFORE MONZA', 1300, 170, { size: 36, weight: 800, color: C.grey, t: lt * 2 });
-    text(g, 'FANGIO   +2', 1300, 250, { size: 52, weight: 800, t: (lt - .8) * 2 }); text(g, 'FARINA', 1300, 330, { size: 52, weight: 800, t: (lt - 1.2) * 2, color: C.red });
+    text(g, 'FANGIO   +2', 1300, 250, { size: 52, weight: 800, t: (lt - .8) * 2 }); text(g, 'FARINA', 1300, 330, { size: 52, weight: 800, t: (lt - 1.2) * 2, color: C.red }); small('Fangio leads by 2 points', lt, 2, M, 330, { color: C.orange });
     card(M - 30, 100, 700, 200); cap('MONZA · 1950', lt, .3, M, 180, 70); small('team-mates fight for the title', lt, 1.2, M, 245);
   } },
   P16_3: { cam: [[960, 600, 1.12], [960, 540, 1.0]], draw(lt, d, cam) {
@@ -476,6 +485,7 @@ const SH = {
 
 // ---------- sound cues (seconds after a shot starts; 'h' = middle) ----------
 const SFX = {
+  P00_1: [[1, 'engine'], ['h', 'stamp']],
   P01_1: [[0, 'low']], P01_2: [[.3, 'draw'], [1.5, 'cheer']], P01_3: [[0, 'cheer']], P02_1: [[0, 'engine']], P02_2: [[0, 'engine'], [1, 'pass'], [2.7, 'pass'], [4.4, 'pass']],
   P02_3: [[.4, 'stamp'], ['h', 'paper']], TITLE: [[0, 'title']], P03_1: [[0, 'chug']], P03_2: [[0, 'press']], P03_3: [[1.2, 'tick']], P04_1: [[0, 'chug'], [2, 'stamp']],
   P04_2: [[.5, 'draw']], P04_3: [[2, 'stamp']], P05_2: [[.7, 'ding']], P06_1: [[0, 'engine']], P06_2: [[0, 'cheer']], P06_3: [[0, 'pass'], [4, 'pass']], P07_1: [[0, 'low']],

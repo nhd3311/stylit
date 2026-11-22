@@ -1,13 +1,19 @@
 [
  {
+  "id": "P00",
+  "text": "If you think Formula One started in nineteen fifty, you're missing the fifty-six years that explain everything you see on the grid today.",
+  "voice": "bm_george",
+  "speed": 0.97
+ },
+ {
   "id": "P01",
-  "text": "A few years earlier, this place trained bomber crews for the Second World War. Now, on the thirteenth of May, nineteen fifty, its runways are lined with oil drums and straw bales, and tens of thousands of people have come to watch cars race around them. Even the King and Queen are here: the only time a reigning British monarch has ever attended a motor race in Britain.",
+  "text": "A few years earlier, this place trained bomber crews for the Second World War. Now, on the thirteenth of May, nineteen fifty, its old perimeter roads have become a racetrack, lined with oil drums and straw bales, and a crowd of around a hundred thousand people has come to watch. Even the King and Queen are here: the only time a reigning British monarch has ever attended a motor race in Britain.",
   "voice": "bm_george",
   "speed": 0.97
  },
  {
   "id": "P02",
-  "text": "At the front of the grid sit four blood-red Alfa Romeos. Ferrari didn't even turn up, after a row over starting money. Seventy laps later, an Italian named Giuseppe Farina takes the chequered flag, and without quite realising it, everyone here has just watched the very first race of the Formula One World Championship. But that championship didn't appear out of nowhere. It was the answer to sixty years of problems, and the first one began with a newspaper trying to sell more newspapers.",
+  "text": "At the front of the grid sit four blood-red Alfa Romeos. Ferrari didn't even turn up, after a row over starting money. Seventy laps later, an Italian named Giuseppe Farina takes the chequered flag, and without quite realising it, everyone here has just watched the very first race of the Formula One World Championship. But that championship didn't appear out of nowhere. It was the answer to fifty-six years of problems, and the first one began with a newspaper trying to sell more newspapers.",
   "voice": "bm_george",
   "speed": 0.97
  },
@@ -31,7 +37,7 @@
  },
  {
   "id": "P06",
-  "text": "The trouble is, the machines get fast much quicker than the roads get safe. By nineteen oh three, the biggest cars can top a hundred kilometres per hour, on dirt roads, through villages, with crowds standing right at the edge. That May, more than two hundred cars set off from Paris for Madrid. The dust is so thick drivers can barely see the road, and spectators keep stepping out to get a closer look.",
+  "text": "The trouble is, the machines get fast much quicker than the roads get safe. By nineteen oh three, the biggest cars can top a hundred kilometres per hour, on dirt roads, through villages, with crowds standing right at the edge. That May, more than two hundred cars set off from Versailles, just outside Paris, heading for Madrid. The dust is so thick drivers can barely see the road, and spectators keep stepping out to get a closer look.",
   "voice": "bm_george",
   "speed": 0.97
  },
@@ -49,7 +55,7 @@
  },
  {
   "id": "P09",
-  "text": "Around the same time, the American newspaper owner James Gordon Bennett creates a cup for teams representing whole countries, not just car makers. To tell them apart, every nation gets a colour: blue for France, white for Germany, red for Italy. Britain can't use red, white or blue, because they're taken. And in nineteen oh three, Britain's home race has to be held in Ireland, because racing on public roads is illegal in Britain itself. So the British team goes green, in honour of Ireland's shamrock. That's British racing green. And it's why, more than a century later, Ferrari still races in red: it's Italy's old racing colour.",
+  "text": "Around the same time, the American newspaper owner James Gordon Bennett creates a cup for teams representing whole countries, not just car makers. To tell them apart, each nation is given a colour: blue for France, white for Germany, yellow for Belgium, and red for the United States. Britain can't use red, white or blue, because they're taken. And in nineteen oh three, Britain's home race has to be held in Ireland, because racing on public roads is illegal in Britain itself. So the British team goes green, and the story goes it was a nod to Ireland's shamrock. That's British racing green. Italy, which first raced in black, ends up with red a little later, and that's why, more than a century on, Ferrari still races in red.",
   "voice": "bm_george",
   "speed": 0.97
  },
@@ -61,7 +67,7 @@
  },
  {
   "id": "P11",
-  "text": "But Renault has a secret weapon: new detachable rims from Michelin. Instead of cutting the tyre off, the crew swaps the whole rim in a couple of minutes. Their driver, a Hungarian mechanic named Ferenc Sis, wins at an average of about a hundred and one kilometres per hour, on dirt roads, in nineteen oh six. Grand Prix racing is born. But it is still a patchwork: every race has its own rules, and nobody is crowned champion of all of them.",
+  "text": "But Renault, like Fiat, has a new secret weapon: detachable rims from Michelin. Instead of cutting the tyre off, the crew swaps the whole rim in a couple of minutes. Their driver, a Hungarian mechanic named Ferenc Sis, wins at an average of about a hundred and one kilometres per hour, on dirt roads, in nineteen oh six. Grand Prix racing is born. But it is still a patchwork: every race has its own rules, and nobody is crowned champion of all of them.",
   "voice": "bm_george",
   "speed": 0.97
  },
@@ -85,13 +91,13 @@
  },
  {
   "id": "P15",
-  "text": "One thing is still missing. In nineteen forty-nine, motorcycles get their own world championship, and car racing doesn't want to be left behind. So in early nineteen fifty, the Italian count Antonio Brivio proposes linking the big national Grands Prix into one season, with points for the top five finishers and one extra point for the fastest lap. The first season has seven races: six in Europe, plus the Indianapolis five hundred in America, which counts, even though almost no European drivers go.",
+  "text": "One thing is still missing. In nineteen forty-nine, motorcycles get their own world championship, and car racing doesn't want to be left behind. So in early nineteen fifty, according to most accounts, the Italian count Antonio Brivio proposes linking the big national Grands Prix into one season, with points for the top five finishers and one extra point for the fastest lap. The first season has seven races: six in Europe, plus the Indianapolis five hundred in America, which counts, even though almost no European drivers go.",
   "voice": "bm_george",
   "speed": 0.97
  },
  {
   "id": "P16",
-  "text": "And the first race of all is Silverstone, on that May day in nineteen fifty, won by the very car that spent the war hidden on a farm: the Alfa Romeo one fifty-eight. The title goes down to the final race at Monza, between two Alfa Romeo team-mates: Farina and a young Argentinian called Juan Manuel Fangio. Farina wins the race, and the championship, by three points. Giuseppe Farina becomes Formula One's first World Champion. Reason number four: crown one champion.",
+  "text": "And the first race of all is Silverstone, on that May day in nineteen fifty, won by the very model that spent the war hidden on a farm: the Alfa Romeo one fifty-eight. The title goes down to the final race at Monza, where Farina's own team-mate, a young Argentinian called Juan Manuel Fangio, leads him by two points. Farina wins the race, and the championship, by three points. Giuseppe Farina becomes Formula One's first World Champion. Reason number four: crown one champion.",
   "voice": "bm_george",
   "speed": 0.97
  },

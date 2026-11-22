@@ -1,9 +1,7 @@
 # YouTube metadata: F1 Ep. 001
 
-**Title (pick one):**
-1. Why Does F1 Even Exist? The Origin of Formula 1
-2. How a Newspaper Stunt Became Formula 1
-3. The ENTIRE Origin Story of F1 (1894–1950)
+**Title:** How a Newspaper Stunt Became Formula 1  *(yt-package linter: 100/100 with thumbnail text "WHY F1 EXISTS")*
+Alternatives: Why Does F1 Even Exist? The Origin of Formula 1 (80) · The ENTIRE Origin Story of F1 (1894–1950) (84)
 
 **Thumbnail idea:** Apex (white round head, goggles) on the left looking shocked, holding an 1894 newspaper; on the right the red Alfa Romeo 158 (no logos) bursting out of a hay barn. Text: **"WHY F1 EXISTS"** (max 3 words, hand-lettered, black + orange).
 
@@ -16,14 +14,14 @@ From a steam tractor that won the race but lost the prize, to the "race of death
 
 CHAPTERS
 0:00 Cold open: Silverstone, 1950
-1:01 A Newspaper Stunt (1894–1895)
-2:30 The Race of Death (1903)
-3:36 Why Ferrari Is Red
-4:19 The First Grand Prix (1906)
-5:17 Silver Arrows and Hidden Cars (1930s–1945)
-6:26 The "Formula" (1946)
-7:07 One World Champion (1950)
-8:17 Why F1 still exists
+1:11 A Newspaper Stunt (1894–1895)
+2:41 The Race of Death (1903)
+3:48 Why Ferrari Is Red
+4:35 The First Grand Prix (1906)
+5:34 Silver Arrows and Hidden Cars (1930s–1945)
+6:43 The "Formula" (1946)
+7:23 One World Champion (1950)
+8:36 Why F1 still exists
 
 Sources: see the pinned comment.
 This channel uses AI tools for drawing and voice; every fact is checked by a human before upload.
@@ -36,12 +34,12 @@ formula 1 history, history of f1, why does f1 exist, origin of formula 1, first 
 
 ## Pinned comment
 ```
-📚 Sources: Wikipedia (1950 British GP, Paris–Rouen, Paris–Madrid, 1906 French GP, Gordon Bennett Cup, British racing green, Silver Arrows, History of Formula One, 1950 season), Motor Sport Magazine, Goodwood, Formula1.com, Stellantis Heritage, AIACR European Championship. Full list with links: in the script file.
+📚 Sources: Wikipedia (1950 British GP, Paris–Rouen, Paris–Madrid, 1906 French GP, Gordon Bennett Cup, British racing green, Silver Arrows, History of Formula One, 1950 season), Motor Sport Magazine, Goodwood, Formula1.com, Stellantis Heritage, AIACR European Championship. Every claim with its source: fact-check-v3.md.
 Spotted a mistake? Tell me 👇
 ```
 
 ## Upload checklist
-- [ ] Upload `film/out/why-f1-exists-v2.mp4`. Subtitles are burned in; also upload `why-f1-exists.srt` as English CC
+- [ ] Upload `film/out/how-a-newspaper-stunt-became-f1-v3.mp4`. Subtitles are burned in; also upload `why-f1-exists.srt` as English CC
 - [ ] Altered/synthetic content: **not required** (stylised animation, no realistic people/events)
 - [ ] Made for kids: **No**
 - [ ] End screen (last 20 s): next episode + subscribe

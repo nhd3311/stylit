@@ -2,7 +2,7 @@
 import json, re
 from pathlib import Path
 HERE = Path(__file__).resolve().parent.parent
-src = (HERE.parent / "script-v2.md").read_text().split("\n---\n")[1]
+src = (HERE.parent / "script-v3.md").read_text().split("\n---\n")[1]
 
 DIGITS = [  # spoken → subtitle (longest first)
     ("a hundred and twenty-six kilometres", "126 km"), ("a hundred and one kilometres per hour", "101 km/h"),

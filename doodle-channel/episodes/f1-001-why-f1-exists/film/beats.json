@@ -1,5 +1,13 @@
 [
  {
+  "para": "P00",
+  "chapter": "COLD OPEN: Silverstone, 1950",
+  "visual": "Modern grid; a big \"1950\" gets crossed out and \"1894\" stamps in.",
+  "text": "If you think Formula One started in nineteen fifty, you're missing the fifty-six years that explain everything you see on the grid today.",
+  "id": "P00_1",
+  "sub": "If you think Formula One started in 1950, you're missing the fifty-six years that explain everything you see on the grid today."
+ },
+ {
   "para": "P01",
   "chapter": "COLD OPEN: Silverstone, 1950",
   "visual": "Wellington bombers parked on a grey airfield, 1943; the ground crew walks past.",
@@ -10,10 +18,10 @@
  {
   "para": "P01",
   "chapter": "COLD OPEN: Silverstone, 1950",
-  "visual": "Same airfield, 1950: oil drums and straw bales line the runways, crowds pour in.",
-  "text": "Now, on the thirteenth of May, nineteen fifty, its runways are lined with oil drums and straw bales, and tens of thousands of people have come to watch cars race around them.",
+  "visual": "Same airfield, 1950: oil drums and straw bales line the perimeter roads, crowds pour in.",
+  "text": "Now, on the thirteenth of May, nineteen fifty, its old perimeter roads have become a racetrack, lined with oil drums and straw bales, and a crowd of around a hundred thousand people has come to watch.",
   "id": "P01_2",
-  "sub": "Now, on the 13th of May, 1950, its runways are lined with oil drums and straw bales, and tens of thousands of people have come to watch cars race around them."
+  "sub": "Now, on the 13th of May, 1950, its old perimeter roads have become a racetrack, lined with oil drums and straw bales, and a crowd of around a hundred thousand people has come to watch."
  },
  {
   "para": "P01",
@@ -43,9 +51,9 @@
   "para": "P02",
   "chapter": "COLD OPEN: Silverstone, 1950",
   "visual": "Freeze-frame; the image tears like old paper, revealing an 1894 newspaper.",
-  "text": "But that championship didn't appear out of nowhere. It was the answer to sixty years of problems, and the first one began with a newspaper trying to sell more newspapers.",
+  "text": "But that championship didn't appear out of nowhere. It was the answer to fifty-six years of problems, and the first one began with a newspaper trying to sell more newspapers.",
   "id": "P02_3",
-  "sub": "But that championship didn't appear out of nowhere. It was the answer to 60 years of problems, and the first one began with a newspaper trying to sell more newspapers."
+  "sub": "But that championship didn't appear out of nowhere. It was the answer to fifty-six years of problems, and the first one began with a newspaper trying to sell more newspapers."
  },
  {
   "para": "P03",
@@ -123,9 +131,9 @@
   "para": "P06",
   "chapter": "CH2: The Race of Death (1903)",
   "visual": "Paris dawn start: a long queue of cars, huge crowds.",
-  "text": "That May, more than two hundred cars set off from Paris for Madrid.",
+  "text": "That May, more than two hundred cars set off from Versailles, just outside Paris, heading for Madrid.",
   "id": "P06_2",
-  "sub": "That May, more than 200 cars set off from Paris for Madrid."
+  "sub": "That May, more than 200 cars set off from Versailles, just outside Paris, heading for Madrid."
  },
  {
   "para": "P06",
@@ -186,26 +194,26 @@
  {
   "para": "P09",
   "chapter": "CH3: Why Ferrari Is Red",
-  "visual": "Three cars in a row: blue, white, red.",
-  "text": "To tell them apart, every nation gets a colour: blue for France, white for Germany, red for Italy.",
+  "visual": "Four cars in a row: blue, white, yellow, red.",
+  "text": "To tell them apart, each nation is given a colour: blue for France, white for Germany, yellow for Belgium, and red for the United States.",
   "id": "P09_2",
-  "sub": "To tell them apart, every nation gets a colour: blue for France, white for Germany, red for Italy."
+  "sub": "To tell them apart, each nation is given a colour: blue for France, white for Germany, yellow for Belgium, and red for the United States."
  },
  {
   "para": "P09",
   "chapter": "CH3: Why Ferrari Is Red",
   "visual": "Green car on an Irish country road; shamrock-shaped clouds.",
-  "text": "Britain can't use red, white or blue, because they're taken. And in nineteen oh three, Britain's home race has to be held in Ireland, because racing on public roads is illegal in Britain itself. So the British team goes green, in honour of Ireland's shamrock. That's British racing green.",
+  "text": "Britain can't use red, white or blue, because they're taken. And in nineteen oh three, Britain's home race has to be held in Ireland, because racing on public roads is illegal in Britain itself. So the British team goes green, and the story goes it was a nod to Ireland's shamrock. That's British racing green.",
   "id": "P09_3",
-  "sub": "Britain can't use red, white or blue, because they're taken. And in 1903, Britain's home race has to be held in Ireland, because racing on public roads is illegal in Britain itself. So the British team goes green, in honour of Ireland's shamrock. That's British racing green."
+  "sub": "Britain can't use red, white or blue, because they're taken. And in 1903, Britain's home race has to be held in Ireland, because racing on public roads is illegal in Britain itself. So the British team goes green, and the story goes it was a nod to Ireland's shamrock. That's British racing green."
  },
  {
   "para": "P09",
   "chapter": "CH3: Why Ferrari Is Red",
   "visual": "A 1906 red car morphs into a modern red F1 car.",
-  "text": "And it's why, more than a century later, Ferrari still races in red: it's Italy's old racing colour.",
+  "text": "Italy, which first raced in black, ends up with red a little later, and that's why, more than a century on, Ferrari still races in red.",
   "id": "P09_4",
-  "sub": "And it's why, more than a century later, Ferrari still races in red: it's Italy's old racing colour."
+  "sub": "Italy, which first raced in black, ends up with red a little later, and that's why, more than a century on, Ferrari still races in red."
  },
  {
   "para": "P10",
@@ -235,9 +243,9 @@
   "para": "P11",
   "chapter": "CH4: The First Grand Prix (1906)",
   "visual": "Renault pit: mechanic swaps a whole rim in seconds; Szisz roars away.",
-  "text": "But Renault has a secret weapon: new detachable rims from Michelin. Instead of cutting the tyre off, the crew swaps the whole rim in a couple of minutes.",
+  "text": "But Renault, like Fiat, has a new secret weapon: detachable rims from Michelin. Instead of cutting the tyre off, the crew swaps the whole rim in a couple of minutes.",
   "id": "P11_1",
-  "sub": "But Renault has a secret weapon: new detachable rims from Michelin. Instead of cutting the tyre off, the crew swaps the whole rim in a couple of minutes."
+  "sub": "But Renault, like Fiat, has a new secret weapon: detachable rims from Michelin. Instead of cutting the tyre off, the crew swaps the whole rim in a couple of minutes."
  },
  {
   "para": "P11",
@@ -347,9 +355,9 @@
   "para": "P15",
   "chapter": "CH7: One World Champion (1950)",
   "visual": "Count Brivio linking dots across a map of Europe.",
-  "text": "So in early nineteen fifty, the Italian count Antonio Brivio proposes linking the big national Grands Prix into one season, with points for the top five finishers and one extra point for the fastest lap.",
+  "text": "So in early nineteen fifty, according to most accounts, the Italian count Antonio Brivio proposes linking the big national Grands Prix into one season, with points for the top five finishers and one extra point for the fastest lap.",
   "id": "P15_2",
-  "sub": "So in early 1950, the Italian count Antonio Brivio proposes linking the big national Grands Prix into one season, with points for the top five finishers and one extra point for the fastest lap."
+  "sub": "So in early 1950, according to most accounts, the Italian count Antonio Brivio proposes linking the big national Grands Prix into one season, with points for the top five finishers and one extra point for the fastest lap."
  },
  {
   "para": "P15",
@@ -363,17 +371,17 @@
   "para": "P16",
   "chapter": "CH7: One World Champion (1950)",
   "visual": "Barn doors burst open; the red 158 races out onto Silverstone.",
-  "text": "And the first race of all is Silverstone, on that May day in nineteen fifty, won by the very car that spent the war hidden on a farm: the Alfa Romeo one fifty-eight.",
+  "text": "And the first race of all is Silverstone, on that May day in nineteen fifty, won by the very model that spent the war hidden on a farm: the Alfa Romeo one fifty-eight.",
   "id": "P16_1",
-  "sub": "And the first race of all is Silverstone, on that May day in 1950, won by the very car that spent the war hidden on a farm: the Alfa Romeo 158."
+  "sub": "And the first race of all is Silverstone, on that May day in 1950, won by the very model that spent the war hidden on a farm: the Alfa Romeo 158."
  },
  {
   "para": "P16",
   "chapter": "CH7: One World Champion (1950)",
   "visual": "Monza 1950: Farina and Fangio side by side, a points board.",
-  "text": "The title goes down to the final race at Monza, between two Alfa Romeo team-mates: Farina and a young Argentinian called Juan Manuel Fangio.",
+  "text": "The title goes down to the final race at Monza, where Farina's own team-mate, a young Argentinian called Juan Manuel Fangio, leads him by two points.",
   "id": "P16_2",
-  "sub": "The title goes down to the final race at Monza, between two Alfa Romeo team-mates: Farina and a young Argentinian called Juan Manuel Fangio."
+  "sub": "The title goes down to the final race at Monza, where Farina's own team-mate, a young Argentinian called Juan Manuel Fangio, leads him by two points."
  },
  {
   "para": "P16",

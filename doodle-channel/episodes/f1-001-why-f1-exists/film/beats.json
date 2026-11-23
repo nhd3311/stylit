@@ -1,0 +1,434 @@
+[
+ {
+  "para": "P00",
+  "chapter": "COLD OPEN: Silverstone, 1950",
+  "visual": "Modern grid; a big \"1950\" gets crossed out and \"1894\" stamps in.",
+  "text": "If you think Formula One started in nineteen fifty, you're missing the fifty-six years that explain everything you see on the grid today.",
+  "id": "P00_1",
+  "sub": "If you think Formula One started in 1950, you're missing the fifty-six years that explain everything you see on the grid today."
+ },
+ {
+  "para": "P01",
+  "chapter": "COLD OPEN: Silverstone, 1950",
+  "visual": "Wellington bombers parked on a grey airfield, 1943; the ground crew walks past.",
+  "text": "A few years earlier, this place trained bomber crews for the Second World War.",
+  "id": "P01_1",
+  "sub": "A few years earlier, this place trained bomber crews for the Second World War."
+ },
+ {
+  "para": "P01",
+  "chapter": "COLD OPEN: Silverstone, 1950",
+  "visual": "Same airfield, 1950: oil drums and straw bales line the perimeter roads, crowds pour in.",
+  "text": "Now, on the thirteenth of May, nineteen fifty, its old perimeter roads have become a racetrack, lined with oil drums and straw bales, and a crowd of around a hundred thousand people has come to watch.",
+  "id": "P01_2",
+  "sub": "Now, on the 13th of May, 1950, its old perimeter roads have become a racetrack, lined with oil drums and straw bales, and a crowd of around a hundred thousand people has come to watch."
+ },
+ {
+  "para": "P01",
+  "chapter": "COLD OPEN: Silverstone, 1950",
+  "visual": "Royal box: the King and Queen arrive; Apex in a flat cap gapes.",
+  "text": "Even the King and Queen are here: the only time a reigning British monarch has ever attended a motor race in Britain.",
+  "id": "P01_3",
+  "sub": "Even the King and Queen are here: the only time a reigning British monarch has ever attended a motor race in Britain."
+ },
+ {
+  "para": "P02",
+  "chapter": "COLD OPEN: Silverstone, 1950",
+  "visual": "The grid: four red Alfa Romeos at the front.",
+  "text": "At the front of the grid sit four blood-red Alfa Romeos. Ferrari didn't even turn up, after a row over starting money.",
+  "id": "P02_1",
+  "sub": "At the front of the grid sit four blood-red Alfa Romeos. Ferrari didn't even turn up, after a row over starting money."
+ },
+ {
+  "para": "P02",
+  "chapter": "COLD OPEN: Silverstone, 1950",
+  "visual": "The race: red cars howling past the bales; Farina leading.",
+  "text": "Seventy laps later, an Italian named Giuseppe Farina takes the chequered flag, and without quite realising it, everyone here has just watched the very first race of the Formula One World Championship.",
+  "id": "P02_2",
+  "sub": "70 laps later, an Italian named Giuseppe Farina takes the chequered flag, and without quite realising it, everyone here has just watched the very first race of the Formula One World Championship."
+ },
+ {
+  "para": "P02",
+  "chapter": "COLD OPEN: Silverstone, 1950",
+  "visual": "Freeze-frame; the image tears like old paper, revealing an 1894 newspaper.",
+  "text": "But that championship didn't appear out of nowhere. It was the answer to fifty-six years of problems, and the first one began with a newspaper trying to sell more newspapers.",
+  "id": "P02_3",
+  "sub": "But that championship didn't appear out of nowhere. It was the answer to fifty-six years of problems, and the first one began with a newspaper trying to sell more newspapers."
+ },
+ {
+  "para": "P03",
+  "chapter": "CH1: A Newspaper Stunt (1894–1895)",
+  "visual": "1894 Paris street: horses everywhere, one smoking car; people laughing.",
+  "text": "In eighteen ninety-four, the car is barely ten years old. It's loud, it breaks down constantly, and most people think it's a toy for rich eccentrics.",
+  "id": "P03_1",
+  "sub": "In 1894, the car is barely 10 years old. It's loud, it breaks down constantly, and most people think it's a toy for rich eccentrics."
+ },
+ {
+  "para": "P03",
+  "chapter": "CH1: A Newspaper Stunt (1894–1895)",
+  "visual": "Le Petit Journal printing press; headline being set.",
+  "text": "So the Paris newspaper Le Petit Journal announces a challenge: drive from Paris to Rouen, about a hundred and twenty-six kilometres, and prove these machines are actually useful.",
+  "id": "P03_2",
+  "sub": "So the Paris newspaper Le Petit Journal announces a challenge: drive from Paris to Rouen, about 126 km, and prove these machines are actually useful."
+ },
+ {
+  "para": "P03",
+  "chapter": "CH1: A Newspaper Stunt (1894–1895)",
+  "visual": "Start line: a jumble of steam carriages and petrol cars.",
+  "text": "More than a hundred entries are sent in, but only twenty-one machines actually make it to the start.",
+  "id": "P03_3",
+  "sub": "More than a hundred entries are sent in, but only 21 machines actually make it to the start."
+ },
+ {
+  "para": "P04",
+  "chapter": "CH1: A Newspaper Stunt (1894–1895)",
+  "visual": "Steam tractor arriving first; judges with clipboards shake their heads.",
+  "text": "And it isn't really a race. The judges are looking for a vehicle that is safe, easy to handle and cheap to run. So when Count de Dion's big steam tractor arrives first, it doesn't get the top prize, because it needs a second man on board just to stoke the boiler. That goes, shared, to two petrol car makers: Peugeot and Panhard.",
+  "id": "P04_1",
+  "sub": "And it isn't really a race. The judges are looking for a vehicle that is safe, easy to handle and cheap to run. So when Count de Dion's big steam tractor arrives first, it doesn't get the top prize, because it needs a second man on board just to stoke the boiler. That goes, shared, to two petrol car makers: Peugeot and Panhard."
+ },
+ {
+  "para": "P04",
+  "chapter": "CH1: A Newspaper Stunt (1894–1895)",
+  "visual": "Map: Paris → Bordeaux → Paris, a line drawn by night.",
+  "text": "A year later, the stakes go up: Paris to Bordeaux and back again, almost twelve hundred kilometres. Émile Levassor drives through two nights, almost without rest, and gets back first after nearly forty-nine hours.",
+  "id": "P04_2",
+  "sub": "A year later, the stakes go up: Paris to Bordeaux and back again, almost 1,200 km. Émile Levassor drives through two nights, almost without rest, and gets back first after nearly 49 hours."
+ },
+ {
+  "para": "P04",
+  "chapter": "CH1: A Newspaper Stunt (1894–1895)",
+  "visual": "Levassor at the finish; an official points at his two seats.",
+  "text": "But there's a catch. The rules say the winner must be a four-seat car, and Levassor's has only two. So the official victory goes to a Peugeot that arrives hours later.",
+  "id": "P04_3",
+  "sub": "But there's a catch. The rules say the winner must be a four-seat car, and Levassor's has only two. So the official victory goes to a Peugeot that arrives hours later."
+ },
+ {
+  "para": "P05",
+  "chapter": "CH1: A Newspaper Stunt (1894–1895)",
+  "visual": "Apex as a salesman, pointing at a mud-caked car; buyers nodding.",
+  "text": "Still, the point is made. A car that survives twelve hundred kilometres sells itself. Racing has become the best advertisement in the world, and that is the first reason Formula One exists: to prove the machine works.",
+  "id": "P05_1",
+  "sub": "Still, the point is made. A car that survives 1,200 km sells itself. Racing has become the best advertisement in the world, and that is the first reason Formula One exists: to prove the machine works."
+ },
+ {
+  "para": "P05",
+  "chapter": "CH1: A Newspaper Stunt (1894–1895)",
+  "visual": "Checklist card, item 1 ticked.",
+  "text": "",
+  "id": "P05_2",
+  "sub": ""
+ },
+ {
+  "para": "P06",
+  "chapter": "CH2: The Race of Death (1903)",
+  "visual": "Speedometer needle sweeping past 100 km/h; a car blurring along a dirt road.",
+  "text": "The trouble is, the machines get fast much quicker than the roads get safe. By nineteen oh three, the biggest cars can top a hundred kilometres per hour, on dirt roads, through villages, with crowds standing right at the edge.",
+  "id": "P06_1",
+  "sub": "The trouble is, the machines get fast much quicker than the roads get safe. By 1903, the biggest cars can top 100 km/h, on dirt roads, through villages, with crowds standing right at the edge."
+ },
+ {
+  "para": "P06",
+  "chapter": "CH2: The Race of Death (1903)",
+  "visual": "Paris dawn start: a long queue of cars, huge crowds.",
+  "text": "That May, more than two hundred cars set off from Versailles, just outside Paris, heading for Madrid.",
+  "id": "P06_2",
+  "sub": "That May, more than 200 cars set off from Versailles, just outside Paris, heading for Madrid."
+ },
+ {
+  "para": "P06",
+  "chapter": "CH2: The Race of Death (1903)",
+  "visual": "Dust road: cars disappear into their own dust; spectators step into the road.",
+  "text": "The dust is so thick drivers can barely see the road, and spectators keep stepping out to get a closer look.",
+  "id": "P06_3",
+  "sub": "The dust is so thick drivers can barely see the road, and spectators keep stepping out to get a closer look."
+ },
+ {
+  "para": "P07",
+  "chapter": "CH2: The Race of Death (1903)",
+  "visual": "Somber tree by the roadside, a broken wheel, smoke.",
+  "text": "Crash follows crash. Among those killed is Marcel Renault, one of the three brothers who founded Renault. Trying to pass a rival in the dust, he misses a bend and hits a tree.",
+  "id": "P07_1",
+  "sub": "Crash follows crash. Among those killed is Marcel Renault, one of the three brothers who founded Renault. Trying to pass a rival in the dust, he misses a bend and hits a tree."
+ },
+ {
+  "para": "P07",
+  "chapter": "CH2: The Race of Death (1903)",
+  "visual": "Louis Renault at the finish, hearing the news.",
+  "text": "His brother Louis reaches Bordeaux first in his class, and learns there what has happened.",
+  "id": "P07_2",
+  "sub": "His brother Louis reaches Bordeaux first in his class, and learns there what has happened."
+ },
+ {
+  "para": "P07",
+  "chapter": "CH2: The Race of Death (1903)",
+  "visual": "Gendarme stopping cars at Bordeaux; horses towing cars to the station.",
+  "text": "That night the French government stops the race. The cars aren't even allowed to start their engines again: horses tow them to the railway station.",
+  "id": "P07_3",
+  "sub": "That night the French government stops the race. The cars aren't even allowed to start their engines again: horses tow them to the railway station."
+ },
+ {
+  "para": "P08",
+  "chapter": "CH2: The Race of Death (1903)",
+  "visual": "Map: the long Paris–Madrid line curls up into a small closed loop.",
+  "text": "That is the end of racing between cities on open roads. From now on, racing moves onto closed circuits: loops of road shut to the public. Reason number two: racing needs its own safe place.",
+  "id": "P08_1",
+  "sub": "That is the end of racing between cities on open roads. From now on, racing moves onto closed circuits: loops of road shut to the public. Reason number two: racing needs its own safe place."
+ },
+ {
+  "para": "P08",
+  "chapter": "CH2: The Race of Death (1903)",
+  "visual": "Checklist card, item 2 ticked.",
+  "text": "",
+  "id": "P08_2",
+  "sub": ""
+ },
+ {
+  "para": "P09",
+  "chapter": "CH3: Why Ferrari Is Red",
+  "visual": "Gordon Bennett with a trophy; teams with flags.",
+  "text": "Around the same time, the American newspaper owner James Gordon Bennett creates a cup for teams representing whole countries, not just car makers.",
+  "id": "P09_1",
+  "sub": "Around the same time, the American newspaper owner James Gordon Bennett creates a cup for teams representing whole countries, not just car makers."
+ },
+ {
+  "para": "P09",
+  "chapter": "CH3: Why Ferrari Is Red",
+  "visual": "Four cars in a row: blue, white, yellow, red.",
+  "text": "To tell them apart, each nation is given a colour: blue for France, white for Germany, yellow for Belgium, and red for the United States.",
+  "id": "P09_2",
+  "sub": "To tell them apart, each nation is given a colour: blue for France, white for Germany, yellow for Belgium, and red for the United States."
+ },
+ {
+  "para": "P09",
+  "chapter": "CH3: Why Ferrari Is Red",
+  "visual": "Green car on an Irish country road; shamrock-shaped clouds.",
+  "text": "Britain can't use red, white or blue, because they're taken. And in nineteen oh three, Britain's home race has to be held in Ireland, because racing on public roads is illegal in Britain itself. So the British team goes green, and the story goes it was a nod to Ireland's shamrock. That's British racing green.",
+  "id": "P09_3",
+  "sub": "Britain can't use red, white or blue, because they're taken. And in 1903, Britain's home race has to be held in Ireland, because racing on public roads is illegal in Britain itself. So the British team goes green, and the story goes it was a nod to Ireland's shamrock. That's British racing green."
+ },
+ {
+  "para": "P09",
+  "chapter": "CH3: Why Ferrari Is Red",
+  "visual": "A 1906 red car morphs into a modern red F1 car.",
+  "text": "Italy, which first raced in black, ends up with red a little later, and that's why, more than a century on, Ferrari still races in red.",
+  "id": "P09_4",
+  "sub": "Italy, which first raced in black, ends up with red a little later, and that's why, more than a century on, Ferrari still races in red."
+ },
+ {
+  "para": "P10",
+  "chapter": "CH4: The First Grand Prix (1906)",
+  "visual": "French countryside, a vast loop of closed roads near Le Mans.",
+  "text": "In nineteen oh six, the Automobile Club of France runs a new kind of race on closed public roads near Le Mans, and gives it a grand name: the Grand Prix, French for \"big prize\".",
+  "id": "P10_1",
+  "sub": "In 1906, the Automobile Club of France runs a new kind of race on closed public roads near Le Mans, and gives it a grand name: the Grand Prix, French for \"big prize\"."
+ },
+ {
+  "para": "P10",
+  "chapter": "CH4: The First Grand Prix (1906)",
+  "visual": "Circuit map: a triangle of roads, lap counter.",
+  "text": "Each lap is more than a hundred kilometres. The race runs over two days, twelve laps, more than twelve hundred kilometres in summer heat.",
+  "id": "P10_2",
+  "sub": "Each lap is more than 100 km. The race runs over two days, 12 laps, more than 1,200 km in summer heat."
+ },
+ {
+  "para": "P10",
+  "chapter": "CH4: The First Grand Prix (1906)",
+  "visual": "Punctures everywhere: drivers cutting tyres off with knives.",
+  "text": "In that heat, the roads break up and tyres explode. Changing one means cutting the old tyre off the wheel by hand, which can take well over ten minutes.",
+  "id": "P10_3",
+  "sub": "In that heat, the roads break up and tyres explode. Changing one means cutting the old tyre off the wheel by hand, which can take well over ten minutes."
+ },
+ {
+  "para": "P11",
+  "chapter": "CH4: The First Grand Prix (1906)",
+  "visual": "Renault pit: mechanic swaps a whole rim in seconds; Szisz roars away.",
+  "text": "But Renault, like Fiat, has a new secret weapon: detachable rims from Michelin. Instead of cutting the tyre off, the crew swaps the whole rim in a couple of minutes.",
+  "id": "P11_1",
+  "sub": "But Renault, like Fiat, has a new secret weapon: detachable rims from Michelin. Instead of cutting the tyre off, the crew swaps the whole rim in a couple of minutes."
+ },
+ {
+  "para": "P11",
+  "chapter": "CH4: The First Grand Prix (1906)",
+  "visual": "Szisz and his riding mechanic racing through the dust.",
+  "text": "Their driver, a Hungarian mechanic named Ferenc Szisz, wins at an average of about a hundred and one kilometres per hour, on dirt roads, in nineteen oh six.",
+  "id": "P11_2",
+  "sub": "Their driver, a Hungarian mechanic named Ferenc Szisz, wins at an average of about 101 km/h, on dirt roads, in 1906."
+ },
+ {
+  "para": "P11",
+  "chapter": "CH4: The First Grand Prix (1906)",
+  "visual": "A pile of different rulebooks toppling.",
+  "text": "Grand Prix racing is born. But it is still a patchwork: every race has its own rules, and nobody is crowned champion of all of them.",
+  "id": "P11_3",
+  "sub": "Grand Prix racing is born. But it is still a patchwork: every race has its own rules, and nobody is crowned champion of all of them."
+ },
+ {
+  "para": "P12",
+  "chapter": "CH5: Silver Arrows and Hidden Cars (1930s–1945)",
+  "visual": "1930s grandstand with flags; huge crowd.",
+  "text": "In the nineteen thirties, Grand Prix racing finally gets a European Championship, and it also gets political.",
+  "id": "P12_1",
+  "sub": "In the 1930s, Grand Prix racing finally gets a European Championship, and it also gets political."
+ },
+ {
+  "para": "P12",
+  "chapter": "CH5: Silver Arrows and Hidden Cars (1930s–1945)",
+  "visual": "Two silver streamliners blasting past.",
+  "text": "The German government backs two teams, Mercedes-Benz and Auto Union, to show off German engineering, and their silver cars, the Silver Arrows, become almost unbeatable.",
+  "id": "P12_2",
+  "sub": "The German government backs two teams, Mercedes-Benz and Auto Union, to show off German engineering, and their silver cars, the Silver Arrows, become almost unbeatable."
+ },
+ {
+  "para": "P12",
+  "chapter": "CH5: Silver Arrows and Hidden Cars (1930s–1945)",
+  "visual": "Mechanic sanding paint off; \"MYTH?\" stamp.",
+  "text": "Legend says Mercedes scraped the white paint off their car to get it under the weight limit. It's a great story, but historians think it's probably made up: that weight limit wasn't even used at the race in question.",
+  "id": "P12_3",
+  "sub": "Legend says Mercedes scraped the white paint off their car to get it under the weight limit. It's a great story, but historians think it's probably made up: that weight limit wasn't even used at the race in question."
+ },
+ {
+  "para": "P13",
+  "chapter": "CH5: Silver Arrows and Hidden Cars (1930s–1945)",
+  "visual": "Nürburgring 1935: an old red Alfa chasing silver cars; enormous crowd.",
+  "text": "And they can be beaten. At the nineteen thirty-five German Grand Prix, in front of around three hundred thousand spectators, Tazio Nuvolari, in an outdated red Alfa Romeo, chases down the Silver Arrows and wins on the last lap.",
+  "id": "P13_1",
+  "sub": "And they can be beaten. At the 1935 German Grand Prix, in front of around 300,000 spectators, Tazio Nuvolari, in an outdated red Alfa Romeo, chases down the Silver Arrows and wins on the last lap."
+ },
+ {
+  "para": "P13",
+  "chapter": "CH5: Silver Arrows and Hidden Cars (1930s–1945)",
+  "visual": "Silent, overgrown track; a chain across the gate.",
+  "text": "Then the Second World War stops everything.",
+  "id": "P13_2",
+  "sub": "Then the Second World War stops everything."
+ },
+ {
+  "para": "P13",
+  "chapter": "CH5: Silver Arrows and Hidden Cars (1930s–1945)",
+  "visual": "Hay barn: a red car hidden under wood; a pig sniffs it.",
+  "text": "In Italy, Alfa Romeo has a small, brilliant racing car called the one fifty-eight. To keep it safe, the cars are hidden near Milan, in a cheese factory according to legend, on a pig farm according to others. Remember that car.",
+  "id": "P13_3",
+  "sub": "In Italy, Alfa Romeo has a small, brilliant racing car called the 158. To keep it safe, the cars are hidden near Milan, in a cheese factory according to legend, on a pig farm according to others. Remember that car."
+ },
+ {
+  "para": "P14",
+  "chapter": "CH6: The \"Formula\" (1946)",
+  "visual": "Smoky Paris room: officials around one big rulebook.",
+  "text": "After the war, the sport's governing body, today called the FIA, writes one rulebook for top-level racing: a single \"formula\". That's literally what the name means: a formula is the set of rules every car must follow, from engine size to weight.",
+  "id": "P14_1",
+  "sub": "After the war, the sport's governing body, today called the FIA, writes one rulebook for top-level racing: a single \"formula\". That's literally what the name means: a formula is the set of rules every car must follow, from engine size to weight."
+ },
+ {
+  "para": "P14",
+  "chapter": "CH6: The \"Formula\" (1946)",
+  "visual": "Balance scale: big 4.5 L engine vs small supercharged 1.5 L.",
+  "text": "The first one allows either a big four point five litre engine, or a small one point five litre engine with a supercharger.",
+  "id": "P14_2",
+  "sub": "The first one allows either a big 4.5-litre engine, or a small 1.5-litre engine with a supercharger."
+ },
+ {
+  "para": "P14",
+  "chapter": "CH6: The \"Formula\" (1946)",
+  "visual": "A monster car blocked by a wall of rules; two normal cars racing side by side.",
+  "text": "Without it, the richest team simply builds the biggest monster. With it, very different machines can race on roughly equal terms. Reason number three: make it fair.",
+  "id": "P14_3",
+  "sub": "Without it, the richest team simply builds the biggest monster. With it, very different machines can race on roughly equal terms. Reason number three: make it fair."
+ },
+ {
+  "para": "P14",
+  "chapter": "CH6: The \"Formula\" (1946)",
+  "visual": "Checklist card, item 3 ticked.",
+  "text": "",
+  "id": "P14_4",
+  "sub": ""
+ },
+ {
+  "para": "P15",
+  "chapter": "CH7: One World Champion (1950)",
+  "visual": "Motorbike with a trophy passing a sulking racing car.",
+  "text": "One thing is still missing. In nineteen forty-nine, motorcycles get their own world championship, and car racing doesn't want to be left behind.",
+  "id": "P15_1",
+  "sub": "One thing is still missing. In 1949, motorcycles get their own world championship, and car racing doesn't want to be left behind."
+ },
+ {
+  "para": "P15",
+  "chapter": "CH7: One World Champion (1950)",
+  "visual": "Count Brivio linking dots across a map of Europe.",
+  "text": "So in early nineteen fifty, according to most accounts, the Italian count Antonio Brivio proposes linking the big national Grands Prix into one season, with points for the top five finishers and one extra point for the fastest lap.",
+  "id": "P15_2",
+  "sub": "So in early 1950, according to most accounts, the Italian count Antonio Brivio proposes linking the big national Grands Prix into one season, with points for the top five finishers and one extra point for the fastest lap."
+ },
+ {
+  "para": "P15",
+  "chapter": "CH7: One World Champion (1950)",
+  "visual": "Map with seven pins + \"USA\" box.",
+  "text": "The first season has seven races: six in Europe, plus the Indianapolis five hundred in America, which counts, even though almost no European drivers go.",
+  "id": "P15_3",
+  "sub": "The first season has seven races: six in Europe, plus the Indianapolis 500 in America, which counts, even though almost no European drivers go."
+ },
+ {
+  "para": "P16",
+  "chapter": "CH7: One World Champion (1950)",
+  "visual": "Barn doors burst open; the red 158 races out onto Silverstone.",
+  "text": "And the first race of all is Silverstone, on that May day in nineteen fifty, won by the very model that spent the war hidden on a farm: the Alfa Romeo one fifty-eight.",
+  "id": "P16_1",
+  "sub": "And the first race of all is Silverstone, on that May day in 1950, won by the very model that spent the war hidden on a farm: the Alfa Romeo 158."
+ },
+ {
+  "para": "P16",
+  "chapter": "CH7: One World Champion (1950)",
+  "visual": "Monza 1950: Farina and Fangio side by side, a points board.",
+  "text": "The title goes down to the final race at Monza, where Farina's own team-mate, a young Argentinian called Juan Manuel Fangio, leads him by two points.",
+  "id": "P16_2",
+  "sub": "The title goes down to the final race at Monza, where Farina's own team-mate, a young Argentinian called Juan Manuel Fangio, leads him by two points."
+ },
+ {
+  "para": "P16",
+  "chapter": "CH7: One World Champion (1950)",
+  "visual": "Podium, confetti: Farina 30, Fangio 27.",
+  "text": "Farina wins the race, and the championship, by three points. Giuseppe Farina becomes Formula One's first World Champion. Reason number four: crown one champion.",
+  "id": "P16_3",
+  "sub": "Farina wins the race, and the championship, by 3 points. Giuseppe Farina becomes Formula One's first World Champion. Reason number four: crown one champion."
+ },
+ {
+  "para": "P16",
+  "chapter": "CH7: One World Champion (1950)",
+  "visual": "Checklist card, all four ticked.",
+  "text": "",
+  "id": "P16_4",
+  "sub": ""
+ },
+ {
+  "para": "P17",
+  "chapter": "OUTRO",
+  "visual": "The four ticks morph into a modern pit lane.",
+  "text": "So, why does Formula One exist? Because people needed to prove their machines worked, find a safe place to race them, make the fight fair, and crown one champion.",
+  "id": "P17_1",
+  "sub": "So, why does Formula One exist? Because people needed to prove their machines worked, find a safe place to race them, make the fight fair, and crown one champion."
+ },
+ {
+  "para": "P17",
+  "chapter": "OUTRO",
+  "visual": "Apex walking down a modern pit lane in team kit.",
+  "text": "Seventy-six years later, it's still the same four reasons. Car makers still use Formula One to prove their technology, teams still fight over every line of the rulebook, and twenty-two drivers still chase one title.",
+  "id": "P17_2",
+  "sub": "76 years later, it's still the same four reasons. Car makers still use Formula One to prove their technology, teams still fight over every line of the rulebook, and 22 drivers still chase one title."
+ },
+ {
+  "para": "P17",
+  "chapter": "OUTRO",
+  "visual": "Apex picks an 1894 newspaper up off the pit lane floor and grins.",
+  "text": "Not bad for a newspaper stunt.",
+  "id": "P17_3",
+  "sub": "Not bad for a newspaper stunt."
+ },
+ {
+  "para": "P17",
+  "chapter": "OUTRO",
+  "visual": "End card: next episode.",
+  "text": "Next time: how this sport went from a deadly hobby to a billion-dollar machine. Subscribe, and I'll see you on the grid.",
+  "id": "P17_4",
+  "sub": "Next time: how this sport went from a deadly hobby to a billion-dollar machine. Subscribe, and I'll see you on the grid."
+ }
+]

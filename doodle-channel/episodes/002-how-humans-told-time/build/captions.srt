@@ -1,0 +1,931 @@
+1
+00:00:00,000 --> 00:00:03,600
+Right now, the phone in your pocket is quietly
+
+2
+00:00:03,600 --> 00:00:06,400
+syncing its time with atomic clocks —
+
+3
+00:00:06,400 --> 00:00:10,000
+machines so precise they would barely drift a second
+
+4
+00:00:10,000 --> 00:00:11,600
+in millions of years.
+
+5
+00:00:11,900 --> 00:00:14,300
+But for most of human history,
+
+6
+00:00:14,300 --> 00:00:17,100
+nobody knew exactly what time it was.
+
+7
+00:00:17,100 --> 00:00:19,100
+And honestly? Nobody really cared.
+
+8
+00:00:19,400 --> 00:00:23,000
+So how did we go from watching shadows on
+
+9
+00:00:23,000 --> 00:00:26,600
+the ground, to splitting a single second into billions
+
+10
+00:00:26,600 --> 00:00:27,400
+of pieces?
+
+11
+00:00:27,700 --> 00:00:30,700
+Let's rewind. Way back.
+
+12
+00:00:32,000 --> 00:00:34,400
+For early humans, time was simple.
+
+13
+00:00:34,400 --> 00:00:36,400
+The sun came up —
+
+14
+00:00:36,400 --> 00:00:39,600
+you got up. The sun went down —
+
+15
+00:00:39,600 --> 00:00:41,200
+you went to sleep.
+
+16
+00:00:41,500 --> 00:00:43,900
+Seasons mattered way more than minutes.
+
+17
+00:00:43,900 --> 00:00:45,900
+When will the river flood?
+
+18
+00:00:45,900 --> 00:00:47,900
+When do the animals move?
+
+19
+00:00:47,900 --> 00:00:49,500
+When should we plant?
+
+20
+00:00:49,800 --> 00:00:51,800
+So people watched the sky.
+
+21
+00:00:51,800 --> 00:00:55,400
+Monuments like Stonehenge line up with the sun on
+
+22
+00:00:55,400 --> 00:00:57,000
+the solstices — basically,
+
+23
+00:00:57,000 --> 00:00:58,200
+giant stone calendars.
+
+24
+00:00:58,500 --> 00:01:01,700
+But to track time within a single day,
+
+25
+00:01:01,700 --> 00:01:03,300
+you needed something simpler:
+
+26
+00:01:03,300 --> 00:01:06,100
+a stick. Plant it in the ground,
+
+27
+00:01:06,100 --> 00:01:09,700
+and its shadow moves as the sun crosses the
+
+28
+00:01:09,700 --> 00:01:10,100
+sky.
+
+29
+00:01:10,400 --> 00:01:14,000
+The ancient Egyptians turned this idea into real tools.
+
+30
+00:01:14,000 --> 00:01:17,200
+Around three and a half thousand years ago,
+
+31
+00:01:17,200 --> 00:01:20,800
+they were using shadow clocks and sundials to split
+
+32
+00:01:20,800 --> 00:01:22,000
+daylight into parts.
+
+33
+00:01:22,300 --> 00:01:25,100
+They divided the day into twelve hours,
+
+34
+00:01:25,100 --> 00:01:27,500
+and the night into another twelve.
+
+35
+00:01:27,500 --> 00:01:30,700
+That's where our twenty-four hour day comes from.
+
+36
+00:01:31,000 --> 00:01:32,600
+But here's the twist:
+
+37
+00:01:32,600 --> 00:01:34,200
+those hours weren't equal.
+
+38
+00:01:34,200 --> 00:01:37,000
+Daylight was always split into twelve parts,
+
+39
+00:01:37,000 --> 00:01:40,600
+so a summer hour was longer than a winter
+
+40
+00:01:40,600 --> 00:01:41,000
+hour.
+
+41
+00:01:41,300 --> 00:01:44,900
+Imagine your work shift getting longer every single summer.
+
+42
+00:01:44,900 --> 00:01:45,700
+No thanks.
+
+43
+00:01:46,000 --> 00:01:48,400
+And sundials had one huge bug.
+
+44
+00:01:48,400 --> 00:01:50,400
+They don't work at night.
+
+45
+00:01:50,400 --> 00:01:52,000
+Or when it's cloudy.
+
+46
+00:01:53,300 --> 00:01:55,700
+So the Egyptians tried something else:
+
+47
+00:01:55,700 --> 00:01:57,300
+water. A water clock,
+
+48
+00:01:57,300 --> 00:02:00,900
+or clepsydra, is basically a stone bowl with a
+
+49
+00:02:00,900 --> 00:02:02,900
+tiny hole near the bottom.
+
+50
+00:02:03,200 --> 00:02:06,000
+Water drips out at a steady rate,
+
+51
+00:02:06,000 --> 00:02:09,600
+and marks on the inside tell you how much
+
+52
+00:02:09,600 --> 00:02:13,200
+time has passed. One surviving Egyptian water clock is
+
+53
+00:02:13,200 --> 00:02:16,000
+around three thousand four hundred years old.
+
+54
+00:02:16,300 --> 00:02:19,900
+The ancient Greeks even used water clocks in court,
+
+55
+00:02:19,900 --> 00:02:22,700
+to limit how long people could speak.
+
+56
+00:02:22,700 --> 00:02:25,500
+Talk too long? Your water runs out.
+
+57
+00:02:25,800 --> 00:02:29,400
+Meanwhile, in Mesopotamia, the Babylonians were obsessed with the
+
+58
+00:02:29,400 --> 00:02:33,000
+number sixty. They did their math in base sixty.
+
+59
+00:02:33,300 --> 00:02:36,500
+Why sixty? Because it splits evenly into two,
+
+60
+00:02:36,500 --> 00:02:38,100
+three, four, five, six,
+
+61
+00:02:38,100 --> 00:02:39,700
+ten, twelve, fifteen, twenty,
+
+62
+00:02:39,700 --> 00:02:42,900
+and thirty. Super handy for dividing things up.
+
+63
+00:02:43,200 --> 00:02:46,400
+That ancient habit, passed down through Greek astronomers,
+
+64
+00:02:46,400 --> 00:02:50,000
+is why an hour has sixty minutes and a
+
+65
+00:02:50,000 --> 00:02:51,600
+minute has sixty seconds.
+
+66
+00:02:51,600 --> 00:02:54,000
+Every time you check the clock,
+
+67
+00:02:54,000 --> 00:02:55,600
+you're doing Babylonian math.
+
+68
+00:02:56,900 --> 00:02:58,500
+Fast forward to China,
+
+69
+00:02:58,500 --> 00:03:02,100
+in the 1090s. A scholar named Su Song built
+
+70
+00:03:02,100 --> 00:03:04,900
+something incredible: a giant astronomical clock tower,
+
+71
+00:03:04,900 --> 00:03:06,900
+more than ten meters tall.
+
+72
+00:03:07,200 --> 00:03:10,000
+It was powered by a water wheel,
+
+73
+00:03:10,000 --> 00:03:13,600
+and it used a clever mechanism called an escapement,
+
+74
+00:03:13,600 --> 00:03:16,400
+letting the wheel move forward in small,
+
+75
+00:03:16,400 --> 00:03:17,200
+regular steps.
+
+76
+00:03:17,500 --> 00:03:19,500
+It rang bells, struck gongs,
+
+77
+00:03:19,500 --> 00:03:22,300
+and rotated a model of the stars.
+
+78
+00:03:22,300 --> 00:03:25,500
+A water-powered machine, almost a thousand years ago.
+
+79
+00:03:25,800 --> 00:03:29,400
+In Europe, the push for better clocks came from
+
+80
+00:03:29,400 --> 00:03:33,000
+monks. Monasteries held prayers at set times of the
+
+81
+00:03:33,000 --> 00:03:36,600
+day and night, and someone had to ring the
+
+82
+00:03:36,600 --> 00:03:37,800
+bell on time.
+
+83
+00:03:38,100 --> 00:03:41,700
+In fact, the word clock comes from the medieval
+
+84
+00:03:41,700 --> 00:03:43,300
+Latin word clocca —
+
+85
+00:03:43,300 --> 00:03:44,100
+meaning bell.
+
+86
+00:03:44,400 --> 00:03:46,400
+By the late twelve hundreds,
+
+87
+00:03:46,400 --> 00:03:48,800
+Europeans were building fully mechanical clocks,
+
+88
+00:03:48,800 --> 00:03:52,400
+driven by heavy falling weights and controlled by an
+
+89
+00:03:52,400 --> 00:03:52,800
+escapement.
+
+90
+00:03:53,100 --> 00:03:54,700
+These clocks were huge,
+
+91
+00:03:54,700 --> 00:03:57,100
+loud, and honestly, not that accurate.
+
+92
+00:03:57,100 --> 00:04:00,700
+They could drift by many minutes every single day.
+
+93
+00:04:01,000 --> 00:04:03,800
+Many didn't even have a minute hand.
+
+94
+00:04:03,800 --> 00:04:06,600
+Just one hand, pointing to the hour.
+
+95
+00:04:06,600 --> 00:04:07,800
+Because why bother?
+
+96
+00:04:08,100 --> 00:04:10,900
+Still, towns proudly put them in towers.
+
+97
+00:04:10,900 --> 00:04:14,100
+Now the whole town heard the same hours,
+
+98
+00:04:14,100 --> 00:04:16,500
+ringing out from the same tower.
+
+99
+00:04:17,800 --> 00:04:21,400
+Then came a bored young man in a church.
+
+100
+00:04:21,400 --> 00:04:24,200
+The story goes that in the 1580s,
+
+101
+00:04:24,200 --> 00:04:27,800
+a student named Galileo Galilei watched a lamp swinging
+
+102
+00:04:27,800 --> 00:04:29,000
+in Pisa Cathedral.
+
+103
+00:04:29,300 --> 00:04:30,900
+He noticed something weird:
+
+104
+00:04:30,900 --> 00:04:34,500
+big swings and small swings seemed to take the
+
+105
+00:04:34,500 --> 00:04:36,100
+same amount of time.
+
+106
+00:04:36,400 --> 00:04:39,600
+Historians aren't sure that lamp story really happened.
+
+107
+00:04:39,600 --> 00:04:42,000
+But Galileo really did study pendulums,
+
+108
+00:04:42,000 --> 00:04:44,400
+and realized they could keep time.
+
+109
+00:04:44,700 --> 00:04:48,300
+In 1656, the Dutch scientist Christiaan Huygens built the
+
+110
+00:04:48,300 --> 00:04:49,500
+first pendulum clock.
+
+111
+00:04:49,800 --> 00:04:53,400
+The result? Clocks went from losing minutes per day,
+
+112
+00:04:53,400 --> 00:04:55,000
+to losing only seconds.
+
+113
+00:04:55,000 --> 00:04:58,200
+Suddenly, a minute hand was actually worth adding.
+
+114
+00:04:58,500 --> 00:05:01,700
+For the next two hundred and seventy years,
+
+115
+00:05:01,700 --> 00:05:04,500
+the pendulum ruled the world of timekeeping.
+
+116
+00:05:05,800 --> 00:05:08,200
+But pendulums have one big weakness:
+
+117
+00:05:08,200 --> 00:05:10,600
+put one on a rocking ship,
+
+118
+00:05:10,600 --> 00:05:12,200
+and it goes crazy.
+
+119
+00:05:12,500 --> 00:05:15,700
+And at sea, that was a deadly problem.
+
+120
+00:05:15,700 --> 00:05:18,500
+Sailors could work out their latitude —
+
+121
+00:05:18,500 --> 00:05:21,700
+how far north or south they were —
+
+122
+00:05:21,700 --> 00:05:24,100
+from the sun and the stars.
+
+123
+00:05:24,400 --> 00:05:28,000
+But longitude — how far east or west —
+
+124
+00:05:28,000 --> 00:05:30,400
+was a nightmare. Ships got lost,
+
+125
+00:05:30,400 --> 00:05:32,000
+ran out of supplies,
+
+126
+00:05:32,000 --> 00:05:33,600
+or crashed into rocks.
+
+127
+00:05:33,900 --> 00:05:37,500
+In 1707, four British warships wrecked off the Isles
+
+128
+00:05:37,500 --> 00:05:41,100
+of Scilly, and well over a thousand sailors died.
+
+129
+00:05:41,400 --> 00:05:45,000
+Here's the trick. The Earth turns fifteen degrees every
+
+130
+00:05:45,000 --> 00:05:48,600
+hour. So if you know the time back home,
+
+131
+00:05:48,600 --> 00:05:51,400
+and the local time where you are,
+
+132
+00:05:51,400 --> 00:05:53,800
+the difference tells you your longitude.
+
+133
+00:05:54,100 --> 00:05:56,100
+Local time is easy —
+
+134
+00:05:56,100 --> 00:05:57,700
+just watch the sun.
+
+135
+00:05:57,700 --> 00:06:00,500
+But keeping home time on a rocking,
+
+136
+00:06:00,500 --> 00:06:04,100
+freezing, salty ship? That needed a clock no one
+
+137
+00:06:04,100 --> 00:06:05,300
+had built yet.
+
+138
+00:06:05,600 --> 00:06:09,200
+In 1714, the British government offered a prize worth
+
+139
+00:06:09,200 --> 00:06:12,800
+millions in today's money to anyone who could solve
+
+140
+00:06:12,800 --> 00:06:13,200
+it.
+
+141
+00:06:13,500 --> 00:06:17,100
+A self-taught carpenter named John Harrison spent decades on
+
+142
+00:06:17,100 --> 00:06:18,700
+the problem. His masterpiece,
+
+143
+00:06:18,700 --> 00:06:21,900
+the H4, looked like a big pocket watch.
+
+144
+00:06:22,200 --> 00:06:25,400
+On a test voyage to Jamaica in 1761,
+
+145
+00:06:25,400 --> 00:06:29,000
+it lost only about five seconds in eighty-one days
+
+146
+00:06:29,000 --> 00:06:29,800
+at sea.
+
+147
+00:06:30,100 --> 00:06:33,100
+Navigation was never the same again.
+
+148
+00:06:34,400 --> 00:06:36,400
+Now, even in the 1800s,
+
+149
+00:06:36,400 --> 00:06:40,000
+every town still set its clocks by its own
+
+150
+00:06:40,000 --> 00:06:43,600
+sun. Noon was whenever the sun was highest —
+
+151
+00:06:43,600 --> 00:06:44,800
+right there, locally.
+
+152
+00:06:45,100 --> 00:06:48,700
+So noon in one city might be several minutes
+
+153
+00:06:48,700 --> 00:06:51,900
+different from noon in the next city over.
+
+154
+00:06:51,900 --> 00:06:53,500
+No big deal —
+
+155
+00:06:53,500 --> 00:06:55,100
+until trains showed up.
+
+156
+00:06:55,400 --> 00:06:59,000
+Railways needed schedules. And schedules with dozens of different
+
+157
+00:06:59,000 --> 00:07:01,400
+local times were a total mess.
+
+158
+00:07:01,700 --> 00:07:03,300
+Britain fixed it first.
+
+159
+00:07:03,300 --> 00:07:04,900
+By the late 1840s,
+
+160
+00:07:04,900 --> 00:07:08,100
+most British railways were running on London time.
+
+161
+00:07:08,400 --> 00:07:10,800
+In North America, on November eighteenth,
+
+162
+00:07:10,800 --> 00:07:14,000
+1883, the railroads switched to standard time zones.
+
+163
+00:07:14,000 --> 00:07:17,200
+People called it the Day of Two Noons,
+
+164
+00:07:17,200 --> 00:07:20,800
+because many towns saw noon twice as clocks were
+
+165
+00:07:20,800 --> 00:07:21,200
+reset.
+
+166
+00:07:21,500 --> 00:07:23,500
+A year later, in 1884,
+
+167
+00:07:23,500 --> 00:07:26,300
+delegates from twenty-five countries met in Washington,
+
+168
+00:07:26,300 --> 00:07:28,300
+and chose Greenwich, in London,
+
+169
+00:07:28,300 --> 00:07:29,900
+as the prime meridian:
+
+170
+00:07:29,900 --> 00:07:31,100
+zero degrees longitude.
+
+171
+00:07:31,400 --> 00:07:33,114
+Time stopped being local.
+
+172
+00:07:33,114 --> 00:07:34,400
+It became global.
+
+173
+00:07:35,700 --> 00:07:39,300
+In 1927, engineers at Bell Labs built the first
+
+174
+00:07:39,300 --> 00:07:40,100
+quartz clock.
+
+175
+00:07:40,400 --> 00:07:43,200
+Quartz is a crystal with a superpower.
+
+176
+00:07:43,200 --> 00:07:45,600
+Squeeze it, and it makes electricity.
+
+177
+00:07:45,600 --> 00:07:47,200
+Zap it with electricity,
+
+178
+00:07:47,200 --> 00:07:48,800
+and it vibrates —
+
+179
+00:07:48,800 --> 00:07:50,800
+at a very steady rate.
+
+180
+00:07:51,100 --> 00:07:54,300
+Count those vibrations, and you've got a clock.
+
+181
+00:07:54,300 --> 00:07:57,900
+A typical quartz watch crystal vibrates exactly thirty-two thousand,
+
+182
+00:07:57,900 --> 00:08:00,700
+seven hundred and sixty-eight times per second.
+
+183
+00:08:01,000 --> 00:08:03,400
+In 1969, Seiko released the Astron,
+
+184
+00:08:03,400 --> 00:08:05,400
+the world's first quartz wristwatch.
+
+185
+00:08:05,400 --> 00:08:07,400
+Within a couple of decades,
+
+186
+00:08:07,400 --> 00:08:10,200
+cheap and accurate quartz watches were everywhere.
+
+187
+00:08:10,500 --> 00:08:12,500
+But scientists wanted even better.
+
+188
+00:08:12,500 --> 00:08:14,900
+So they looked inside the atom.
+
+189
+00:08:15,200 --> 00:08:18,800
+In 1955, Louis Essen and Jack Parry in Britain
+
+190
+00:08:18,800 --> 00:08:21,200
+built the first accurate atomic clock,
+
+191
+00:08:21,200 --> 00:08:22,400
+using cesium atoms.
+
+192
+00:08:22,700 --> 00:08:26,300
+Atoms of the same type vibrate at exactly the
+
+193
+00:08:26,300 --> 00:08:27,900
+same frequency. Always. Everywhere.
+
+194
+00:08:27,900 --> 00:08:29,500
+They're nature's perfect metronome.
+
+195
+00:08:29,800 --> 00:08:33,000
+In 1967, the world officially redefined the second.
+
+196
+00:08:33,000 --> 00:08:36,600
+One second is now the time it takes for
+
+197
+00:08:36,600 --> 00:08:39,000
+nine billion, one hundred ninety-two million,
+
+198
+00:08:39,000 --> 00:08:40,600
+six hundred thirty-one thousand,
+
+199
+00:08:40,600 --> 00:08:44,200
+seven hundred and seventy cycles of radiation from a
+
+200
+00:08:44,200 --> 00:08:45,000
+cesium atom.
+
+201
+00:08:45,300 --> 00:08:48,900
+Yep. The second is no longer based on the
+
+202
+00:08:48,900 --> 00:08:51,300
+Earth's spin. It's based on atoms.
+
+203
+00:08:52,600 --> 00:08:55,800
+And you use atomic clocks every single day,
+
+204
+00:08:55,800 --> 00:08:57,400
+without even knowing it.
+
+205
+00:08:57,400 --> 00:09:00,600
+Every GPS satellite carries atomic clocks on board.
+
+206
+00:09:00,900 --> 00:09:04,500
+Your phone figures out where you are by measuring
+
+207
+00:09:04,500 --> 00:09:08,100
+how long signals take to arrive from several satellites.
+
+208
+00:09:08,400 --> 00:09:12,000
+Light travels about thirty centimeters in a billionth of
+
+209
+00:09:12,000 --> 00:09:15,600
+a second. So a timing error of just one
+
+210
+00:09:15,600 --> 00:09:19,200
+millionth of a second could put you around three
+
+211
+00:09:19,200 --> 00:09:20,400
+hundred meters off.
+
+212
+00:09:20,700 --> 00:09:24,300
+Today, the best experimental optical clocks are so precise,
+
+213
+00:09:24,300 --> 00:09:27,900
+they wouldn't lose a second over the entire age
+
+214
+00:09:27,900 --> 00:09:29,100
+of the universe.
+
+215
+00:09:29,400 --> 00:09:33,000
+Fun fact: the Earth itself is a sloppy clock.
+
+216
+00:09:33,000 --> 00:09:35,000
+Its spin is slightly irregular,
+
+217
+00:09:35,000 --> 00:09:38,600
+so since 1972, scientists have added leap seconds to
+
+218
+00:09:38,600 --> 00:09:41,800
+keep atomic time in sync with the planet.
+
+219
+00:09:42,100 --> 00:09:44,900
+But leap seconds cause headaches for computers.
+
+220
+00:09:44,900 --> 00:09:48,500
+So in 2022, the world voted to scrap them
+
+221
+00:09:48,500 --> 00:09:49,300
+by 2035.
+
+222
+00:09:50,600 --> 00:09:53,400
+So, from a stick in the ground,
+
+223
+00:09:53,400 --> 00:09:55,800
+to a crystal on your wrist,
+
+224
+00:09:55,800 --> 00:09:59,400
+to atoms vibrating billions of times a second —
+
+225
+00:09:59,700 --> 00:10:03,300
+humans spent thousands of years chasing one simple question:
+
+226
+00:10:03,300 --> 00:10:04,900
+what time is it?
+
+227
+00:10:05,200 --> 00:10:07,600
+And the funny thing is —
+
+228
+00:10:07,600 --> 00:10:10,800
+now that we can measure time almost perfectly,
+
+229
+00:10:10,800 --> 00:10:14,400
+we still never seem to have enough of it.
+
+230
+00:10:14,700 --> 00:10:17,500
+If you enjoyed this trip through time,
+
+231
+00:10:17,500 --> 00:10:21,100
+subscribe. Next time, we'll find out how humans went
+
+232
+00:10:21,100 --> 00:10:23,500
+from trading cows to using money.
+
+233
+00:10:23,500 --> 00:10:24,700
+See you then!

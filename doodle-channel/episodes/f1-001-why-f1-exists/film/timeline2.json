@@ -1,0 +1,671 @@
+{
+ "dur": 555.098,
+ "title": {
+  "t0": 66.464,
+  "t1": 70.664
+ },
+ "chapters": [
+  {
+   "name": "COLD OPEN: Silverstone, 1950",
+   "t0": 0.8
+  },
+  {
+   "name": "CH1: A Newspaper Stunt (1894\u20131895)",
+   "t0": 71.664
+  },
+  {
+   "name": "CH2: The Race of Death (1903)",
+   "t0": 161.318
+  },
+  {
+   "name": "CH3: Why Ferrari Is Red",
+   "t0": 228.895
+  },
+  {
+   "name": "CH4: The First Grand Prix (1906)",
+   "t0": 275.573
+  },
+  {
+   "name": "CH5: Silver Arrows and Hidden Cars (1930s\u20131945)",
+   "t0": 334.183
+  },
+  {
+   "name": "CH6: The \"Formula\" (1946)",
+   "t0": 403.431
+  },
+  {
+   "name": "CH7: One World Champion (1950)",
+   "t0": 443.778
+  },
+  {
+   "name": "OUTRO",
+   "t0": 516.482
+  }
+ ],
+ "shots": [
+  {
+   "id": "P00_1",
+   "para": "P00",
+   "chapter": "COLD OPEN: Silverstone, 1950",
+   "visual": "Modern grid; a big \"1950\" gets crossed out and \"1894\" stamps in.",
+   "t0": 0.8,
+   "v1": 9.676,
+   "s0": 0.0,
+   "s1": 10.076
+  },
+  {
+   "id": "P01_1",
+   "para": "P01",
+   "chapter": "COLD OPEN: Silverstone, 1950",
+   "visual": "Wellington bombers parked on a grey airfield, 1943; the ground crew walks past.",
+   "t0": 10.076,
+   "v1": 14.376,
+   "s0": 10.076,
+   "s1": 14.376
+  },
+  {
+   "id": "P01_2",
+   "para": "P01",
+   "chapter": "COLD OPEN: Silverstone, 1950",
+   "visual": "Same airfield, 1950: oil drums and straw bales line the perimeter roads, crowds pour in.",
+   "t0": 14.376,
+   "v1": 26.736,
+   "s0": 14.376,
+   "s1": 26.736
+  },
+  {
+   "id": "P01_3",
+   "para": "P01",
+   "chapter": "COLD OPEN: Silverstone, 1950",
+   "visual": "Royal box: the King and Queen arrive; Apex in a flat cap gapes.",
+   "t0": 26.736,
+   "v1": 33.787,
+   "s0": 26.736,
+   "s1": 34.187
+  },
+  {
+   "id": "P02_1",
+   "para": "P02",
+   "chapter": "COLD OPEN: Silverstone, 1950",
+   "visual": "The grid: four red Alfa Romeos at the front.",
+   "t0": 34.187,
+   "v1": 41.627,
+   "s0": 34.187,
+   "s1": 41.627
+  },
+  {
+   "id": "P02_2",
+   "para": "P02",
+   "chapter": "COLD OPEN: Silverstone, 1950",
+   "visual": "The race: red cars howling past the bales; Farina leading.",
+   "t0": 41.627,
+   "v1": 55.067,
+   "s0": 41.627,
+   "s1": 55.067
+  },
+  {
+   "id": "P02_3",
+   "para": "P02",
+   "chapter": "COLD OPEN: Silverstone, 1950",
+   "visual": "Freeze-frame; the image tears like old paper, revealing an 1894 newspaper.",
+   "t0": 55.067,
+   "v1": 66.064,
+   "s0": 55.067,
+   "s1": 66.464
+  },
+  {
+   "id": "TITLE",
+   "para": "",
+   "chapter": "TITLE",
+   "visual": "title",
+   "t0": 66.464,
+   "v1": 70.664,
+   "s0": 66.464,
+   "s1": 71.664
+  },
+  {
+   "id": "P03_1",
+   "para": "P03",
+   "chapter": "CH1: A Newspaper Stunt (1894\u20131895)",
+   "visual": "1894 Paris street: horses everywhere, one smoking car; people laughing.",
+   "t0": 71.664,
+   "v1": 80.484,
+   "s0": 71.664,
+   "s1": 80.484
+  },
+  {
+   "id": "P03_2",
+   "para": "P03",
+   "chapter": "CH1: A Newspaper Stunt (1894\u20131895)",
+   "visual": "Le Petit Journal printing press; headline being set.",
+   "t0": 80.484,
+   "v1": 91.164,
+   "s0": 80.484,
+   "s1": 91.164
+  },
+  {
+   "id": "P03_3",
+   "para": "P03",
+   "chapter": "CH1: A Newspaper Stunt (1894\u20131895)",
+   "visual": "Start line: a jumble of steam carriages and petrol cars.",
+   "t0": 91.164,
+   "v1": 96.751,
+   "s0": 91.164,
+   "s1": 97.151
+  },
+  {
+   "id": "P04_1",
+   "para": "P04",
+   "chapter": "CH1: A Newspaper Stunt (1894\u20131895)",
+   "visual": "Steam tractor arriving first; judges with clipboards shake their heads.",
+   "t0": 97.151,
+   "v1": 118.011,
+   "s0": 97.151,
+   "s1": 118.011
+  },
+  {
+   "id": "P04_2",
+   "para": "P04",
+   "chapter": "CH1: A Newspaper Stunt (1894\u20131895)",
+   "visual": "Map: Paris \u2192 Bordeaux \u2192 Paris, a line drawn by night.",
+   "t0": 118.011,
+   "v1": 132.631,
+   "s0": 118.011,
+   "s1": 132.631
+  },
+  {
+   "id": "P04_3",
+   "para": "P04",
+   "chapter": "CH1: A Newspaper Stunt (1894\u20131895)",
+   "visual": "Levassor at the finish; an official points at his two seats.",
+   "t0": 132.631,
+   "v1": 141.576,
+   "s0": 132.631,
+   "s1": 141.976
+  },
+  {
+   "id": "P05_1",
+   "para": "P05",
+   "chapter": "CH1: A Newspaper Stunt (1894\u20131895)",
+   "visual": "Apex as a salesman, pointing at a mud-caked car; buyers nodding.",
+   "t0": 141.976,
+   "v1": 156.718,
+   "s0": 141.976,
+   "s1": 156.918
+  },
+  {
+   "id": "P05_2",
+   "para": "P05",
+   "chapter": "CH1: A Newspaper Stunt (1894\u20131895)",
+   "visual": "Checklist card, item 1 ticked.",
+   "t0": 156.918,
+   "v1": 159.918,
+   "s0": 156.918,
+   "s1": 161.318
+  },
+  {
+   "id": "P06_1",
+   "para": "P06",
+   "chapter": "CH2: The Race of Death (1903)",
+   "visual": "Speedometer needle sweeping past 100 km/h; a car blurring along a dirt road.",
+   "t0": 161.318,
+   "v1": 174.058,
+   "s0": 161.318,
+   "s1": 174.058
+  },
+  {
+   "id": "P06_2",
+   "para": "P06",
+   "chapter": "CH2: The Race of Death (1903)",
+   "visual": "Paris dawn start: a long queue of cars, huge crowds.",
+   "t0": 174.058,
+   "v1": 180.158,
+   "s0": 174.058,
+   "s1": 180.158
+  },
+  {
+   "id": "P06_3",
+   "para": "P06",
+   "chapter": "CH2: The Race of Death (1903)",
+   "visual": "Dust road: cars disappear into their own dust; spectators step into the road.",
+   "t0": 180.158,
+   "v1": 186.593,
+   "s0": 180.158,
+   "s1": 186.993
+  },
+  {
+   "id": "P07_1",
+   "para": "P07",
+   "chapter": "CH2: The Race of Death (1903)",
+   "visual": "Somber tree by the roadside, a broken wheel, smoke.",
+   "t0": 186.993,
+   "v1": 197.593,
+   "s0": 186.993,
+   "s1": 197.593
+  },
+  {
+   "id": "P07_2",
+   "para": "P07",
+   "chapter": "CH2: The Race of Death (1903)",
+   "visual": "Louis Renault at the finish, hearing the news.",
+   "t0": 197.593,
+   "v1": 202.353,
+   "s0": 197.593,
+   "s1": 202.353
+  },
+  {
+   "id": "P07_3",
+   "para": "P07",
+   "chapter": "CH2: The Race of Death (1903)",
+   "visual": "Gendarme stopping cars at Bordeaux; horses towing cars to the station.",
+   "t0": 202.353,
+   "v1": 210.875,
+   "s0": 202.353,
+   "s1": 211.275
+  },
+  {
+   "id": "P08_1",
+   "para": "P08",
+   "chapter": "CH2: The Race of Death (1903)",
+   "visual": "Map: the long Paris\u2013Madrid line curls up into a small closed loop.",
+   "t0": 211.275,
+   "v1": 224.295,
+   "s0": 211.275,
+   "s1": 224.495
+  },
+  {
+   "id": "P08_2",
+   "para": "P08",
+   "chapter": "CH2: The Race of Death (1903)",
+   "visual": "Checklist card, item 2 ticked.",
+   "t0": 224.495,
+   "v1": 227.495,
+   "s0": 224.495,
+   "s1": 228.895
+  },
+  {
+   "id": "P09_1",
+   "para": "P09",
+   "chapter": "CH3: Why Ferrari Is Red",
+   "visual": "Gordon Bennett with a trophy; teams with flags.",
+   "t0": 228.895,
+   "v1": 237.815,
+   "s0": 228.895,
+   "s1": 237.815
+  },
+  {
+   "id": "P09_2",
+   "para": "P09",
+   "chapter": "CH3: Why Ferrari Is Red",
+   "visual": "Four cars in a row: blue, white, yellow, red.",
+   "t0": 237.815,
+   "v1": 246.935,
+   "s0": 237.815,
+   "s1": 246.935
+  },
+  {
+   "id": "P09_3",
+   "para": "P09",
+   "chapter": "CH3: Why Ferrari Is Red",
+   "visual": "Green car on an Irish country road; shamrock-shaped clouds.",
+   "t0": 246.935,
+   "v1": 265.595,
+   "s0": 246.935,
+   "s1": 265.595
+  },
+  {
+   "id": "P09_4",
+   "para": "P09",
+   "chapter": "CH3: Why Ferrari Is Red",
+   "visual": "A 1906 red car morphs into a modern red F1 car.",
+   "t0": 265.595,
+   "v1": 274.173,
+   "s0": 265.595,
+   "s1": 275.573
+  },
+  {
+   "id": "P10_1",
+   "para": "P10",
+   "chapter": "CH4: The First Grand Prix (1906)",
+   "visual": "French countryside, a vast loop of closed roads near Le Mans.",
+   "t0": 275.573,
+   "v1": 287.253,
+   "s0": 275.573,
+   "s1": 287.253
+  },
+  {
+   "id": "P10_2",
+   "para": "P10",
+   "chapter": "CH4: The First Grand Prix (1906)",
+   "visual": "Circuit map: a triangle of roads, lap counter.",
+   "t0": 287.253,
+   "v1": 296.213,
+   "s0": 287.253,
+   "s1": 296.213
+  },
+  {
+   "id": "P10_3",
+   "para": "P10",
+   "chapter": "CH4: The First Grand Prix (1906)",
+   "visual": "Punctures everywhere: drivers cutting tyres off with knives.",
+   "t0": 296.213,
+   "v1": 306.205,
+   "s0": 296.213,
+   "s1": 306.605
+  },
+  {
+   "id": "P11_1",
+   "para": "P11",
+   "chapter": "CH4: The First Grand Prix (1906)",
+   "visual": "Renault pit: mechanic swaps a whole rim in seconds; Szisz roars away.",
+   "t0": 306.605,
+   "v1": 315.865,
+   "s0": 306.605,
+   "s1": 315.865
+  },
+  {
+   "id": "P11_2",
+   "para": "P11",
+   "chapter": "CH4: The First Grand Prix (1906)",
+   "visual": "Szisz and his riding mechanic racing through the dust.",
+   "t0": 315.865,
+   "v1": 324.945,
+   "s0": 315.865,
+   "s1": 324.945
+  },
+  {
+   "id": "P11_3",
+   "para": "P11",
+   "chapter": "CH4: The First Grand Prix (1906)",
+   "visual": "A pile of different rulebooks toppling.",
+   "t0": 324.945,
+   "v1": 332.783,
+   "s0": 324.945,
+   "s1": 334.183
+  },
+  {
+   "id": "P12_1",
+   "para": "P12",
+   "chapter": "CH5: Silver Arrows and Hidden Cars (1930s\u20131945)",
+   "visual": "1930s grandstand with flags; huge crowd.",
+   "t0": 334.183,
+   "v1": 341.223,
+   "s0": 334.183,
+   "s1": 341.223
+  },
+  {
+   "id": "P12_2",
+   "para": "P12",
+   "chapter": "CH5: Silver Arrows and Hidden Cars (1930s\u20131945)",
+   "visual": "Two silver streamliners blasting past.",
+   "t0": 341.223,
+   "v1": 353.183,
+   "s0": 341.223,
+   "s1": 353.183
+  },
+  {
+   "id": "P12_3",
+   "para": "P12",
+   "chapter": "CH5: Silver Arrows and Hidden Cars (1930s\u20131945)",
+   "visual": "Mechanic sanding paint off; \"MYTH?\" stamp.",
+   "t0": 353.183,
+   "v1": 367.112,
+   "s0": 353.183,
+   "s1": 367.512
+  },
+  {
+   "id": "P13_1",
+   "para": "P13",
+   "chapter": "CH5: Silver Arrows and Hidden Cars (1930s\u20131945)",
+   "visual": "N\u00fcrburgring 1935: an old red Alfa chasing silver cars; enormous crowd.",
+   "t0": 367.512,
+   "v1": 383.652,
+   "s0": 367.512,
+   "s1": 383.652
+  },
+  {
+   "id": "P13_2",
+   "para": "P13",
+   "chapter": "CH5: Silver Arrows and Hidden Cars (1930s\u20131945)",
+   "visual": "Silent, overgrown track; a chain across the gate.",
+   "t0": 383.652,
+   "v1": 386.352,
+   "s0": 383.652,
+   "s1": 386.352
+  },
+  {
+   "id": "P13_3",
+   "para": "P13",
+   "chapter": "CH5: Silver Arrows and Hidden Cars (1930s\u20131945)",
+   "visual": "Hay barn: a red car hidden under wood; a pig sniffs it.",
+   "t0": 386.352,
+   "v1": 402.031,
+   "s0": 386.352,
+   "s1": 403.431
+  },
+  {
+   "id": "P14_1",
+   "para": "P14",
+   "chapter": "CH6: The \"Formula\" (1946)",
+   "visual": "Smoky Paris room: officials around one big rulebook.",
+   "t0": 403.431,
+   "v1": 420.111,
+   "s0": 403.431,
+   "s1": 420.111
+  },
+  {
+   "id": "P14_2",
+   "para": "P14",
+   "chapter": "CH6: The \"Formula\" (1946)",
+   "visual": "Balance scale: big 4.5 L engine vs small supercharged 1.5 L.",
+   "t0": 420.111,
+   "v1": 428.171,
+   "s0": 420.111,
+   "s1": 428.171
+  },
+  {
+   "id": "P14_3",
+   "para": "P14",
+   "chapter": "CH6: The \"Formula\" (1946)",
+   "visual": "A monster car blocked by a wall of rules; two normal cars racing side by side.",
+   "t0": 428.171,
+   "v1": 439.178,
+   "s0": 428.171,
+   "s1": 439.378
+  },
+  {
+   "id": "P14_4",
+   "para": "P14",
+   "chapter": "CH6: The \"Formula\" (1946)",
+   "visual": "Checklist card, item 3 ticked.",
+   "t0": 439.378,
+   "v1": 442.378,
+   "s0": 439.378,
+   "s1": 443.778
+  },
+  {
+   "id": "P15_1",
+   "para": "P15",
+   "chapter": "CH7: One World Champion (1950)",
+   "visual": "Motorbike with a trophy passing a sulking racing car.",
+   "t0": 443.778,
+   "v1": 452.638,
+   "s0": 443.778,
+   "s1": 452.638
+  },
+  {
+   "id": "P15_2",
+   "para": "P15",
+   "chapter": "CH7: One World Champion (1950)",
+   "visual": "Count Brivio linking dots across a map of Europe.",
+   "t0": 452.638,
+   "v1": 465.098,
+   "s0": 452.638,
+   "s1": 465.098
+  },
+  {
+   "id": "P15_3",
+   "para": "P15",
+   "chapter": "CH7: One World Champion (1950)",
+   "visual": "Map with seven pins + \"USA\" box.",
+   "t0": 465.098,
+   "v1": 478.966,
+   "s0": 465.098,
+   "s1": 479.366
+  },
+  {
+   "id": "P16_1",
+   "para": "P16",
+   "chapter": "CH7: One World Champion (1950)",
+   "visual": "Barn doors burst open; the red 158 races out onto Silverstone.",
+   "t0": 479.366,
+   "v1": 490.746,
+   "s0": 479.366,
+   "s1": 490.746
+  },
+  {
+   "id": "P16_2",
+   "para": "P16",
+   "chapter": "CH7: One World Champion (1950)",
+   "visual": "Monza 1950: Farina and Fangio side by side, a points board.",
+   "t0": 490.746,
+   "v1": 500.786,
+   "s0": 490.746,
+   "s1": 500.786
+  },
+  {
+   "id": "P16_3",
+   "para": "P16",
+   "chapter": "CH7: One World Champion (1950)",
+   "visual": "Podium, confetti: Farina 30, Fangio 27.",
+   "t0": 500.786,
+   "v1": 511.882,
+   "s0": 500.786,
+   "s1": 512.082
+  },
+  {
+   "id": "P16_4",
+   "para": "P16",
+   "chapter": "CH7: One World Champion (1950)",
+   "visual": "Checklist card, all four ticked.",
+   "t0": 512.082,
+   "v1": 515.082,
+   "s0": 512.082,
+   "s1": 516.482
+  },
+  {
+   "id": "P17_1",
+   "para": "P17",
+   "chapter": "OUTRO",
+   "visual": "The four ticks morph into a modern pit lane.",
+   "t0": 516.482,
+   "v1": 527.102,
+   "s0": 516.482,
+   "s1": 527.102
+  },
+  {
+   "id": "P17_2",
+   "para": "P17",
+   "chapter": "OUTRO",
+   "visual": "Apex walking down a modern pit lane in team kit.",
+   "t0": 527.102,
+   "v1": 540.802,
+   "s0": 527.102,
+   "s1": 540.802
+  },
+  {
+   "id": "P17_3",
+   "para": "P17",
+   "chapter": "OUTRO",
+   "visual": "Apex picks an 1894 newspaper up off the pit lane floor and grins.",
+   "t0": 540.802,
+   "v1": 543.222,
+   "s0": 540.802,
+   "s1": 543.222
+  },
+  {
+   "id": "P17_4",
+   "para": "P17",
+   "chapter": "OUTRO",
+   "visual": "End card: next episode.",
+   "t0": 543.222,
+   "v1": 551.098,
+   "s0": 543.222,
+   "s1": 555.098
+  }
+ ],
+ "paras": [
+  {
+   "id": "P00",
+   "t0": 0.8
+  },
+  {
+   "id": "P01",
+   "t0": 10.076
+  },
+  {
+   "id": "P02",
+   "t0": 34.187
+  },
+  {
+   "id": "P03",
+   "t0": 71.664
+  },
+  {
+   "id": "P04",
+   "t0": 97.151
+  },
+  {
+   "id": "P05",
+   "t0": 141.976
+  },
+  {
+   "id": "P06",
+   "t0": 161.318
+  },
+  {
+   "id": "P07",
+   "t0": 186.993
+  },
+  {
+   "id": "P08",
+   "t0": 211.275
+  },
+  {
+   "id": "P09",
+   "t0": 228.895
+  },
+  {
+   "id": "P10",
+   "t0": 275.573
+  },
+  {
+   "id": "P11",
+   "t0": 306.605
+  },
+  {
+   "id": "P12",
+   "t0": 334.183
+  },
+  {
+   "id": "P13",
+   "t0": 367.512
+  },
+  {
+   "id": "P14",
+   "t0": 403.431
+  },
+  {
+   "id": "P15",
+   "t0": 443.778
+  },
+  {
+   "id": "P16",
+   "t0": 479.366
+  },
+  {
+   "id": "P17",
+   "t0": 516.482
+  }
+ ]
+}

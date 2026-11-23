@@ -1,0 +1,12 @@
+out/
+stills/
+voice/*.wav
+voice/redo*/
+voice/asr.log
+voice2/*.wav
+voice2/redo*/
+voice2/redo3/
+voice2/redo4/
+gen/images/
+gen/p31/
+gen/p25/

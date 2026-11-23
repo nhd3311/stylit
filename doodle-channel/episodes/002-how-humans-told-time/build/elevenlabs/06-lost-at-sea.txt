@@ -1,0 +1,19 @@
+But pendulums have one big weakness: put one on a rocking ship, and it goes crazy.
+
+And at sea, that was a deadly problem. Sailors could work out their latitude — how far north or south they were — from the sun and the stars.
+
+But longitude — how far east or west — was a nightmare. Ships got lost, ran out of supplies, or crashed into rocks.
+
+In 1707, four British warships wrecked off the Isles of Scilly, and well over a thousand sailors died.
+
+Here's the trick. The Earth turns fifteen degrees every hour. So if you know the time back home, and the local time where you are, the difference tells you your longitude.
+
+Local time is easy — just watch the sun. But keeping home time on a rocking, freezing, salty ship? That needed a clock no one had built yet.
+
+In 1714, the British government offered a prize worth millions in today's money to anyone who could solve it.
+
+A self-taught carpenter named John Harrison spent decades on the problem. His masterpiece, the H4, looked like a big pocket watch.
+
+On a test voyage to Jamaica in 1761, it lost only about five seconds in eighty-one days at sea.
+
+Navigation was never the same again.

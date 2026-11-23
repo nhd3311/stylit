@@ -1,0 +1,6 @@
+[
+ {"id":"apex_ref","prompt":"Character reference sheet on a plain white background: Apex shown three times side by side, front view, three-quarter view and side view, standing relaxed, same size, full body. He wears an off-white top with one vertical orange stripe, orange gloves, brown leather racing goggles pushed up on his forehead, plain white round head with dot eyes and a small smile.","apex":false},
+ {"id":"t003","prompt":"A grey wartime airfield in England in 1943: two dark green twin-engined Wellington bombers parked on the concrete, a small group of stick-figure airmen in brown flight jackets walking past, overcast sky.","apex":false},
+ {"id":"t013","prompt":"1950 race finish: a red 1950 Alfa Romeo 158 single-seater racing car crossing the finish line while a race official in a white coat waves a black-and-white chequered flag; the driver is a stick figure in a white short-sleeved racing overall and a brown leather helmet, raising one arm; straw bales line the track, crowd behind a rope.","apex":false},
+ {"id":"t030","prompt":"1894 French country road: a big black steam tractor with a tall chimney puffing smoke pulls a small carriage across a finish line first; two judges in bowler hats and suits with clipboards frown and shake their heads; Apex in a flat cap and brown waistcoat watches from the side, surprised.","apex":true}
+]

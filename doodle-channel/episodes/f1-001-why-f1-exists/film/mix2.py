@@ -13,7 +13,7 @@ import sfx  # noqa: E402
 from sfx import SR, t_, env_exp, bp, lp, hp, noise, norm, compress, limit, add  # noqa: E402
 
 T = json.loads((HERE / 'timeline2.json').read_text())
-EV = json.loads((HERE / 'events.json').read_text())['ev']
+EV = json.loads((HERE / os.environ.get('EVENTS', 'events.json')).read_text())['ev']
 DUR = T['dur']
 N = int(DUR * SR) + SR
 music, fx, voice = np.zeros((N, 2)), np.zeros((N, 2)), np.zeros((N, 2))
@@ -121,7 +121,7 @@ FX = {
     'engine': lambda: sfx.roar(2.0, .35), 'pass': lambda: sfx.whoosh(.7, .5), 'cheer': lambda: crowd(2.4, .22),
     'chug': lambda: chug(3.0, .25), 'paper': lambda: sfx.whoosh(.25, .25), 'draw': lambda: sfx.whoosh(.5, .12),
     'low': lambda: sfx.rumble(2.0, .3), 'glint': lambda: sfx.ding(.3), 'doors': lambda: sfx.creak(.5),
-    'type': lambda: sfx.click(.7, .25), 'press': lambda: chug(2.5, .2), 'click': lambda: sfx.click(1.0, .5), 'thump': lambda: sfx.thump(.6, 70), 'night': lambda: np.zeros(10),
+    'type': lambda: sfx.click(.7, .25), 'press': lambda: chug(2.5, .2), 'pop4': lambda: sfx.pop(.18), 'click': lambda: sfx.click(1.0, .5), 'thump': lambda: sfx.thump(.6, 70), 'night': lambda: np.zeros(10),
 }
 for e in EV:
     f = FX.get(e['type'])
@@ -136,5 +136,5 @@ mix = voice + music + fx
 mix = mix / max(1e-9, np.abs(mix).max()) * .9
 mix = np.stack([limit(mix[:, 0], .95), limit(mix[:, 1], .95)], 1)
 (HERE / 'out').mkdir(exist_ok=True)
-sf.write(HERE / 'out' / 'mix2.wav', mix[:int(DUR * SR)].astype(np.float32), SR)
+sf.write(HERE / 'out' / os.environ.get('OUTWAV', 'mix2.wav'), mix[:int(DUR * SR)].astype(np.float32), SR)
 print(f"mix.wav {DUR:.1f}s  voice rms {20*np.log10(v_rms):.1f} dBFS (pre-master)")

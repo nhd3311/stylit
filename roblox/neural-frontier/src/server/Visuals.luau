@@ -30,7 +30,7 @@ function Visuals.Label(parent, text, size, offset, color, maxDistance)
 	label.BackgroundTransparency = 1
 	label.TextScaled = true
 	label.RichText = true
-	label.Font = Enum.Font.BuilderSansExtraBold
+	label.Font = Enum.Font.Michroma -- chữ kiểu tương lai, khớp với giao diện
 	label.TextColor3 = color or Color3.new(1, 1, 1)
 	label.TextStrokeTransparency = 0.2
 	label.Text = text

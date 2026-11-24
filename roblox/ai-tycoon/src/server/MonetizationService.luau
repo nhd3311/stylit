@@ -8,7 +8,9 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Config = require(ReplicatedStorage.Shared.Config)
 local DataService = require(script.Parent.DataService)
-local LabService = require(script.Parent.LabService)
+local CompanyService = require(script.Parent.CompanyService)
+local ProductService = require(script.Parent.ProductService)
+local ResearchService = require(script.Parent.ResearchService)
 
 local MonetizationService = {}
 
@@ -46,13 +48,16 @@ end
 -- Gói Khởi Nghiệp là Game Pass nhưng quà chỉ phát 1 lần (đánh dấu trong data)
 local function grantStarterPack(player)
 	local profile = DataService.Profiles[player]
-	if not player:GetAttribute("StarterPack") or not profile or profile.starterClaimed or not LabService.GetLab(player) then
+	if not player:GetAttribute("StarterPack") or not profile or profile.starterClaimed or not CompanyService.GetLot(player) then
 		return
 	end
 	local pack = Config.StarterPack
 	local targetTier = Config.GpuTier[pack.gpu]
 	local installed = 0
-	for i = 1, profile.unlockedRacks do
+	for i, slot in Config.RackSlots do
+		if not CompanyService.HasFloor(player, profile, slot.floor) then
+			continue
+		end
 		if installed >= pack.gpuCount then
 			break
 		end
@@ -63,14 +68,14 @@ local function grantStarterPack(player)
 			installed += 1
 		end
 	end
-	LabService.AddTokens(player, pack.tokens)
+	CompanyService.AddCash(player, pack.cash)
 	addBoosts(profile, pack.boosts)
 	profile.starterClaimed = true
 	task.spawn(DataService.Save, player)
 
-	remotes.Notify:FireClient(player, "🎁 Đã mở Gói Khởi Nghiệp! GPU mới, token và Mega Boost đã vào lab 🚀", "Evolve")
-	LabService.RenderAll(player)
-	LabService.PushState(player)
+	remotes.Notify:FireClient(player, "🎁 Đã mở Gói Khởi Nghiệp! GPU mới, tiền và Mega Boost đã vào công ty 🚀", "Evolve")
+	CompanyService.RenderBuilding(player)
+	CompanyService.PushState(player)
 end
 
 local function grantPass(player, passKey)
@@ -83,15 +88,15 @@ local function grantPass(player, passKey)
 	elseif passKey == "StarterPack" then
 		grantStarterPack(player)
 	end
-	LabService.Refresh(player)
+	CompanyService.Refresh(player)
 end
 
--- Gọi SAU khi LabService đã dựng lab (Gói Khởi Nghiệp cần lab để lắp GPU)
+-- Gọi SAU khi CompanyService đã dựng tòa nhà (Gói Khởi Nghiệp cần kệ để lắp GPU)
 function MonetizationService.AfterLoaded(player)
 	grantStarterPack(player)
 end
 
--- Gọi khi người chơi vào game, TRƯỚC khi LabService dựng lab
+-- Gọi khi người chơi vào game, TRƯỚC khi CompanyService dựng tòa nhà
 function MonetizationService.LoadPasses(player)
 	for passKey, pass in Config.GamePasses do
 		if pass.id ~= 0 then
@@ -118,8 +123,16 @@ local function grantProduct(player, profile, product)
 		addBoosts(profile, product.boosts)
 		return true, product.name
 	elseif product.kind == "TimeWarp" then
-		local amount = LabService.TimeWarp(player, product.hours)
-		return true, product.name .. " (+" .. Config.Short(amount) .. " token)"
+		local cash, tokens = CompanyService.TimeWarp(player, product.hours)
+		return true, string.format("%s (+%s, +%s 🪙)", product.name, Config.Money(cash), Config.Short(tokens))
+	elseif product.kind == "Instant" then
+		local finish = if product.target == "Research" then ResearchService.FinishNow else ProductService.FinishNow
+		if finish(player) then
+			return true, product.name
+		end
+		-- không có gì đang chạy: tặng lại bằng boost R&D để người chơi không mất Robux
+		addBoosts(profile, { Research = 30 * 60 })
+		return true, product.name .. " (chưa có gì đang chạy nên đổi thành x2 R&D 30 phút)"
 	end
 	return false, nil
 end
@@ -155,7 +168,7 @@ local function processReceipt(receipt)
 	end
 
 	remotes.Notify:FireClient(player, "Cảm ơn đã ủng hộ! Đã nhận: " .. grantedText .. " 💖")
-	LabService.PushState(player)
+	CompanyService.PushState(player)
 	return Enum.ProductPurchaseDecision.PurchaseGranted
 end
 

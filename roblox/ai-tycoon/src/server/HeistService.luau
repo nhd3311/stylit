@@ -1,16 +1,16 @@
 -- Phi vụ đánh cắp dữ liệu.
--- Két ở mỗi lab tự sinh "ổ dữ liệu" (giá trị = vài chục giây đào của chủ lab).
---   * Chủ lab bấm E ở két để thu ổ thành token.
---   * Người khác giữ E ở két để trộm 1 ổ, rồi ôm chạy về Máy thu token của lab mình.
---   * Đang ôm ổ thì chạy chậm. Chủ lab đứng sát trộm là lấy lại được, trộm chết cũng rơi lại.
---   * Lab đang bật khiên, lab người mới (AI dưới NewbieLevel) và két vừa bị trộm thì không trộm được.
+-- Két ở sảnh mỗi tòa nhà tự sinh "ổ dữ liệu" (giá trị = vài chục giây thu nhập $ của chủ nhà).
+--   * Chủ tòa nhà bấm E ở két (trong sảnh) để thu ổ thành $.
+--   * Người khác giữ E ở két để trộm 1 ổ, rồi ôm chạy về Máy thu token ở sảnh tòa nhà mình.
+--   * Đang ôm ổ thì chạy chậm. Chủ nhà đứng sát trộm là lấy lại được, trộm chết cũng rơi lại.
+--   * Nhà đang bật khiên, nhà của người mới (AI dưới NewbieLevel) và két vừa bị trộm thì không trộm được.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Config = require(ReplicatedStorage.Shared.Config)
 local DataService = require(script.Parent.DataService)
-local LabService = require(script.Parent.LabService)
+local CompanyService = require(script.Parent.CompanyService)
 local Visuals = require(script.Parent.Visuals)
 
 local H = Config.Heist
@@ -21,7 +21,7 @@ local HeistService = {}
 local vaults = {} -- [slot] = { part, label, shield, driveParts, drives = {giá trị...}, timer, lastStolen }
 local carrying = {} -- [thief] = { items = { { owner = Player, value = number } }, visuals = {}, conns = {} }
 
-local notify = LabService.Notify
+local notify = CompanyService.Notify
 
 local function isMasterThief(player)
 	return player:GetAttribute("MasterThief") == true
@@ -68,9 +68,9 @@ local function renderVault(slot)
 		local left = shieldLeft(profile)
 		status = string.format("\n<font color='#7FDBFF'>🛡️ Khiên %d:%02d</font>", left // 60, left % 60)
 	elseif profile.ai.level < H.NewbieLevel then
-		status = "\n<font color='#AAAAAA'>🐣 Lab người mới</font>"
+		status = "\n<font color='#AAAAAA'>🐣 Công ty người mới</font>"
 	end
-	vault.label.Text = string.format("💾 %d/%d • 🪙%s%s", #vault.drives, H.MaxDrives, Config.Short(total), status)
+	vault.label.Text = string.format("💾 %d/%d • %s%s", #vault.drives, H.MaxDrives, Config.Money(total), status)
 end
 
 local function onCollect(player, slot)
@@ -83,10 +83,10 @@ local function onCollect(player, slot)
 		total += value
 	end
 	table.clear(vault.drives)
-	LabService.AddTokens(player, total)
-	notify(player, "Thu dữ liệu +" .. Config.Short(total) .. " token 💾", "Collect")
+	CompanyService.AddCash(player, total)
+	notify(player, "Thu dữ liệu +" .. Config.Money(total) .. " 💾", "Collect")
 	renderVault(slot)
-	LabService.PushState(player)
+	CompanyService.PushState(player)
 end
 
 -- ================= Ôm ổ dữ liệu =================
@@ -132,7 +132,7 @@ local function refreshCarrier(thief)
 		end
 		carrying[thief] = nil
 	end
-	LabService.PushState(thief)
+	CompanyService.PushState(thief)
 end
 
 -- Trả các ổ của `owner` (nil = tất cả) từ tay trộm về két chủ cũ
@@ -147,7 +147,7 @@ local function returnDrives(thief, owner)
 		if owner == nil or item.owner == owner then
 			table.remove(data.items, i)
 			returned += 1
-			local slot = LabService.GetLab(item.owner)
+			local slot = CompanyService.GetLot(item.owner)
 			local vault = slot and vaults[slot]
 			if vault and #vault.drives < H.MaxDrives then
 				table.insert(vault.drives, item.value)
@@ -163,11 +163,11 @@ local function onSteal(thief, slot)
 	local vault = vaults[slot]
 	local owner = slot.owner
 	local ownerProfile = owner and DataService.Profiles[owner]
-	if not ownerProfile or owner == thief or not LabService.GetLab(thief) then
+	if not ownerProfile or owner == thief or not CompanyService.GetLot(thief) then
 		return
 	end
 	if shieldLeft(ownerProfile) > 0 then
-		notify(thief, "Lab này đang bật khiên 🛡️ Thử lab khác đi!")
+		notify(thief, "Công ty này đang bật khiên 🛡️ Thử nhà khác đi!")
 		return
 	end
 	if ownerProfile.ai.level < H.NewbieLevel then
@@ -209,11 +209,11 @@ local function onSteal(thief, slot)
 	refreshCarrier(thief)
 	renderVault(slot)
 
-	notify(thief, "🕵️ Trộm được ổ dữ liệu " .. Config.Short(value) .. " token! Chạy về Máy thu token ở lab mình!", "Heist")
+	notify(thief, "🕵️ Trộm được ổ dữ liệu " .. Config.Money(value) .. "! Chạy về Máy thu token ở sảnh nhà mình!", "Heist")
 	notify(owner, "🚨 " .. thief.DisplayName .. " vừa trộm dữ liệu của bạn! Đuổi theo chạm vào để lấy lại!", "Alarm")
 end
 
--- Hook ở Máy thu token: trộm về tới lab mình thì đổi ổ thành token
+-- Hook ở Máy thu token: trộm về tới sảnh nhà mình thì đổi ổ thành $
 local function onTerminal(player)
 	local data = carrying[player]
 	if not data or #data.items == 0 then
@@ -224,13 +224,13 @@ local function onTerminal(player)
 		total += item.value
 	end
 	table.clear(data.items)
-	LabService.AddTokens(player, total)
+	CompanyService.AddCash(player, total)
 	refreshCarrier(player)
-	notify(player, "😎 Phi vụ thành công! +" .. Config.Short(total) .. " token", "Collect")
+	notify(player, "😎 Phi vụ thành công! +" .. Config.Money(total), "Collect")
 	return true
 end
 
--- Chủ lab đứng sát trộm là lấy lại
+-- Chủ nhà đứng sát trộm là lấy lại
 local function checkTags()
 	for thief, data in carrying do
 		local thiefRoot = rootOf(thief)
@@ -257,7 +257,7 @@ local function buildVault(slot)
 	local part = Visuals.Part({
 		Name = "Vault",
 		Size = Vector3.new(6, 5, 4),
-		CFrame = slot.origin * CFrame.new(28, 2.5, 28),
+		CFrame = slot.base * CFrame.new(18, 2.5, 12), -- trong sảnh, gần cửa
 		Color = Color3.fromRGB(35, 40, 60),
 		Material = Enum.Material.DiamondPlate,
 	})
@@ -317,7 +317,7 @@ local function buildVault(slot)
 	steal.HoldDuration = H.StealHold
 	steal.MaxActivationDistance = 9
 	steal.RequiresLineOfSight = false
-	steal:SetAttribute("ForOthers", true) -- client chỉ hiện nút này ở lab người khác
+	steal:SetAttribute("ForOthers", true) -- client chỉ hiện nút này ở nhà người khác
 	steal.Parent = part
 
 	part.Parent = slot.model
@@ -332,12 +332,12 @@ local function buildVault(slot)
 end
 
 function HeistService.Start()
-	for _, slot in LabService.GetLabs() do
+	for _, slot in CompanyService.GetLots() do
 		buildVault(slot)
 	end
 
-	LabService.RegisterTerminalHook(onTerminal)
-	LabService.RegisterStateProvider(function(player, profile, state)
+	CompanyService.RegisterTerminalHook(onTerminal)
+	CompanyService.RegisterStateProvider(function(player, profile, state)
 		local data = carrying[player]
 		local value = 0
 		if data then
@@ -355,8 +355,8 @@ function HeistService.Start()
 		if carrying[player] then
 			returnDrives(player, nil)
 		end
-		-- chủ lab thoát game: trộm vẫn giữ ổ đã lấy, két được dọn sạch
-		for _, slot in LabService.GetLabs() do
+		-- chủ nhà thoát game: trộm vẫn giữ ổ đã lấy, két được dọn sạch
+		for _, slot in CompanyService.GetLots() do
 			if slot.owner == player then
 				table.clear(vaults[slot].drives)
 			end
@@ -374,7 +374,7 @@ function HeistService.Start()
 					if vault.timer >= H.DriveInterval then
 						vault.timer = 0
 						if #vault.drives < H.MaxDrives then
-							local value = math.max(H.MinDriveValue, LabService.GetRate(owner) * H.DriveValueSeconds)
+							local value = math.max(H.MinDriveValue, CompanyService.CashRate(owner) * H.DriveValueSeconds)
 							table.insert(vault.drives, math.floor(value))
 						end
 					end

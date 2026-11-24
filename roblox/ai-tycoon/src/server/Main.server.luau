@@ -3,16 +3,20 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local CompanyService = require(script.Parent.CompanyService)
 local DataService = require(script.Parent.DataService)
 local HeistService = require(script.Parent.HeistService)
-local LabService = require(script.Parent.LabService)
 local LeaderboardService = require(script.Parent.LeaderboardService)
 local MonetizationService = require(script.Parent.MonetizationService)
+local ProductService = require(script.Parent.ProductService)
 local ProgressService = require(script.Parent.ProgressService)
+local ResearchService = require(script.Parent.ResearchService)
+local StockService = require(script.Parent.StockService)
+local WorldService = require(script.Parent.WorldService)
 
 local remotes = Instance.new("Folder")
 remotes.Name = "Remotes"
-for _, name in { "State", "Action", "Notify" } do
+for _, name in { "State", "Action", "Notify", "Market" } do
 	local remote = Instance.new("RemoteEvent")
 	remote.Name = name
 	remote.Parent = remotes
@@ -20,8 +24,12 @@ end
 remotes.Parent = ReplicatedStorage
 
 DataService.Start()
-LabService.Start(remotes) -- dựng lab trước, các service sau gắn thêm vào lab
+WorldService.Start() -- dựng thành phố trước
+CompanyService.Start(remotes) -- rồi tới các lô đất, các service sau gắn thêm vào lô
 HeistService.Start()
+ResearchService.Start()
+ProductService.Start()
+StockService.Start(remotes)
 ProgressService.Start()
 LeaderboardService.Start()
 MonetizationService.Start(remotes)
@@ -36,7 +44,7 @@ local function onPlayerAdded(player)
 	if not player.Parent or DataService.Profiles[player] ~= profile then
 		return
 	end
-	LabService.OnPlayerLoaded(player, profile)
+	CompanyService.OnPlayerLoaded(player, profile)
 	MonetizationService.AfterLoaded(player)
 end
 
@@ -46,6 +54,6 @@ for _, player in Players:GetPlayers() do
 end
 
 Players.PlayerRemoving:Connect(function(player)
-	LabService.OnPlayerRemoving(player)
+	CompanyService.OnPlayerRemoving(player)
 	DataService.Release(player)
 end)

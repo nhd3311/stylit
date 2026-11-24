@@ -1,6 +1,8 @@
 -- Hiệu ứng chạy riêng ở máy người chơi (không tốn băng thông server):
---   Blink = true   -> LED nhấp nháy lệch nhịp nhau
---   Spin = số      -> xoay quanh trục Y của thế giới (radian/giây)
+--   Blink = true          -> nhấp nháy lệch nhịp nhau
+--   Spin = số             -> xoay quanh trục Y của thế giới (radian/giây)
+--   Drive = số            -> chạy dọc trục X (stud/giây), quay vòng trong [DriveMin, DriveMax].
+--                            Tính theo giờ server nên mọi người chơi thấy xe ở cùng chỗ.
 
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
@@ -8,6 +10,8 @@ local TweenService = game:GetService("TweenService")
 local Fx = {}
 
 local spinning = {} -- [part] = tốc độ
+local driving = {} -- [part] = { speed, x0, min, max, offset }
+local started = false
 
 local function track(inst)
 	if not inst:IsA("BasePart") then
@@ -22,6 +26,23 @@ local function track(inst)
 	if type(speed) == "number" then
 		spinning[inst] = speed
 	end
+	local driveSpeed = inst:GetAttribute("Drive")
+	if type(driveSpeed) == "number" then
+		local min = inst:GetAttribute("DriveMin") or -250
+		local max = inst:GetAttribute("DriveMax") or 250
+		driving[inst] = {
+			speed = driveSpeed,
+			x0 = inst.Position.X,
+			min = min,
+			span = max - min,
+			offset = inst.CFrame - inst.Position, -- giữ nguyên hướng xoay
+		}
+	end
+end
+
+local function untrack(inst)
+	spinning[inst] = nil
+	driving[inst] = nil
 end
 
 function Fx.Start(root)
@@ -29,14 +50,22 @@ function Fx.Start(root)
 		track(inst)
 	end
 	root.DescendantAdded:Connect(track)
-	root.DescendantRemoving:Connect(function(inst)
-		spinning[inst] = nil
-	end)
+	root.DescendantRemoving:Connect(untrack)
 
+	if started then
+		return
+	end
+	started = true
 	RunService.RenderStepped:Connect(function(dt)
 		for part, speed in spinning do
 			local pos = part.Position
 			part.CFrame = CFrame.new(pos) * CFrame.Angles(0, speed * dt, 0) * (CFrame.new(-pos) * part.CFrame)
+		end
+		local t = workspace:GetServerTimeNow()
+		for part, d in driving do
+			local x = d.min + (d.x0 - d.min + d.speed * t) % d.span
+			local pos = part.Position
+			part.CFrame = CFrame.new(x, pos.Y, pos.Z) * d.offset
 		end
 	end)
 end

@@ -11,7 +11,7 @@ local Config = require(ReplicatedStorage.Shared.Config)
 local STORE_NAME = "AITycoon_v1"
 local MAX_RETRIES = 5
 local MAX_PURCHASE_HISTORY = 100
-local SCHEMA_VERSION = 2
+local SCHEMA_VERSION = 3
 
 -- Game chưa publish thì GetDataStore báo lỗi ngay. Bắt lỗi để vẫn chơi thử được
 -- ở "chế độ thử": data mới tinh, không tải, không lưu.
@@ -28,18 +28,23 @@ DataService.Offline = store == nil -- true = chế độ thử, không đụng t
 local function defaultData()
 	return {
 		schemaVersion = SCHEMA_VERSION,
-		tokens = Config.StartingTokens,
+		cash = Config.StartingCash,
+		tokens = 0,
 		ai = { level = 1, xp = 0 },
-		racks = {}, -- ["1".."12"] = { gpu = id, buffer = token đang chờ thu }
-		unlockedRacks = Config.Racks.FreeRacks,
+		floorsBuilt = 1, -- số tầng thường đã xây (tầng 1 = Sảnh có sẵn)
+		racks = {}, -- ["1".."20"] = { gpu = id, buffer = token đang chờ thu }
+		research = { done = {}, current = nil }, -- current = { id, progress }
+		products = {}, -- [productId] = phiên bản đã ra mắt (0 = chưa)
+		dev = nil, -- sản phẩm đang làm: { id, version, progress }
+		stocks = {}, -- [mã] = { qty, cost } (cost = tổng $ đã bỏ ra)
 		boosts = {}, -- [tên boost] = os.time() lúc hết hạn
 		purchases = {}, -- danh sách PurchaseId đã xử lý (chống cộng 2 lần)
 		lastSave = os.time(),
-		totalEarned = 0, -- tổng từ trước tới nay (bảng xếp hạng)
-		runEarned = 0, -- kiếm được từ lần IPO gần nhất (tính cổ phiếu)
+		totalEarned = 0, -- tổng $ từ trước tới nay (bảng xếp hạng)
+		runEarned = 0, -- $ kiếm được từ lần bán công ty gần nhất
 		totalClicks = 0,
-		shares = 0, -- cổ phiếu từ IPO, +% token vĩnh viễn
-		ipoCount = 0,
+		founderPoints = 0, -- từ bán công ty, +% vĩnh viễn
+		sold = 0, -- số lần đã bán công ty
 		daily = { lastClaimDay = 0, streak = 0 },
 		starterClaimed = false,
 	}
@@ -48,11 +53,20 @@ end
 -- Nâng data đời cũ lên schema hiện tại. Chạy TRƯỚC reconcile.
 local function migrate(data)
 	local version = data.schemaVersion or 1
-	if version < 2 then
-		-- v1 chưa có IPO: coi toàn bộ token đã kiếm là của lượt hiện tại
-		data.runEarned = data.totalEarned or 0
+	if version < 3 then
+		-- v3 đổi hẳn kinh tế (thêm $ và tòa nhà): làm lại từ đầu,
+		-- chỉ giữ thành tích, quà, đồ đã mua và đổi cổ phiếu IPO cũ thành Điểm Founder
+		return {
+			schemaVersion = SCHEMA_VERSION,
+			founderPoints = data.shares or 0,
+			sold = data.ipoCount or 0,
+			daily = data.daily,
+			starterClaimed = data.starterClaimed,
+			purchases = data.purchases,
+			boosts = data.boosts,
+			totalEarned = data.totalEarned or 0,
+		}
 	end
-	data.schemaVersion = SCHEMA_VERSION
 	return data
 end
 

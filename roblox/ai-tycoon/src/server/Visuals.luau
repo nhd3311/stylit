@@ -1,4 +1,4 @@
--- Đồ họa dựng bằng code: ánh sáng đêm neon, sàn lưới phát sáng, kệ máy chủ có LED,
+-- Đồ họa dựng bằng code: ánh sáng, tầng nhà kính, nóc tòa nhà, kệ máy chủ có LED,
 -- lõi AI có vòng quay. Hiệu ứng chuyển động (LED nhấp nháy, vòng quay) chạy ở client
 -- (xem client/Fx.luau) để server khỏi phải gửi thay đổi mỗi khung hình.
 --
@@ -65,14 +65,11 @@ function Visuals.Light(parent, color, range, brightness)
 	return light
 end
 
--- Ánh sáng toàn map: đêm, sương tím, bloom cho neon rực lên
+-- Ánh sáng chung. Giờ trong ngày do WorldService chạy (ngày/đêm).
 function Visuals.SetupWorld()
-	Lighting.ClockTime = 0
-	Lighting.Brightness = 1.5
-	Lighting.Ambient = Color3.fromRGB(45, 40, 70)
-	Lighting.OutdoorAmbient = Color3.fromRGB(60, 50, 90)
-	Lighting.EnvironmentDiffuseScale = 0.4
-	Lighting.EnvironmentSpecularScale = 0.6
+	Lighting.Brightness = 2
+	Lighting.EnvironmentDiffuseScale = 0.6
+	Lighting.EnvironmentSpecularScale = 0.8
 	Lighting.GlobalShadows = true
 
 	local function ensure(className, name)
@@ -85,29 +82,30 @@ function Visuals.SetupWorld()
 		return inst
 	end
 
-	local atmosphere = ensure("Atmosphere", "NeonHaze")
-	atmosphere.Density = 0.3
-	atmosphere.Offset = 0.1
-	atmosphere.Color = Color3.fromRGB(120, 80, 200)
-	atmosphere.Decay = Color3.fromRGB(40, 20, 80)
-	atmosphere.Glare = 0.2
-	atmosphere.Haze = 1.5
+	local atmosphere = ensure("Atmosphere", "CityHaze")
+	atmosphere.Density = 0.28
+	atmosphere.Offset = 0.15
+	atmosphere.Color = Color3.fromRGB(200, 180, 220)
+	atmosphere.Decay = Color3.fromRGB(110, 90, 150)
+	atmosphere.Glare = 0.3
+	atmosphere.Haze = 1.2
 
 	local bloom = ensure("BloomEffect", "NeonBloom")
-	bloom.Intensity = 0.8
-	bloom.Size = 28
-	bloom.Threshold = 0.85
+	bloom.Intensity = 0.5
+	bloom.Size = 24
+	bloom.Threshold = 0.92
 
-	local color = ensure("ColorCorrectionEffect", "NeonGrade")
-	color.Saturation = 0.25
-	color.Contrast = 0.12
-	color.TintColor = Color3.fromRGB(235, 230, 255)
+	local color = ensure("ColorCorrectionEffect", "CityGrade")
+	color.Saturation = 0.12
+	color.Contrast = 0.08
 
-	-- Baseplate mặc định màu xám nhìn chán, đổi sang nền tối
+	ensure("SunRaysEffect", "SunRays").Intensity = 0.06
+
+	-- Baseplate mặc định đổi thành nền cỏ của thung lũng
 	local baseplate = workspace:FindFirstChild("Baseplate")
 	if baseplate and baseplate:IsA("BasePart") then
-		baseplate.Color = Color3.fromRGB(12, 12, 20)
-		baseplate.Material = Enum.Material.Slate
+		baseplate.Color = Color3.fromRGB(86, 140, 70)
+		baseplate.Material = Enum.Material.Grass
 		for _, child in baseplate:GetChildren() do
 			if child:IsA("Texture") then
 				child:Destroy()
@@ -116,74 +114,124 @@ function Visuals.SetupWorld()
 	end
 end
 
--- Sàn lab: nền tối + lưới neon
-function Visuals.BuildFloor(parent, origin, width, depth)
-	Visuals.Part({
-		Name = "Floor",
+-- Một tầng nhà kính: sàn, 4 vách kính (mặt trước chừa cửa nếu `door`), cột khung, đèn trần.
+-- `base` là CFrame ở tâm mặt sàn. Trả về sàn.
+function Visuals.BuildFloorShell(parent, base, width, depth, height, door, accent)
+	local floor = Visuals.Part({
+		Name = "Slab",
 		Size = Vector3.new(width, 1, depth),
-		CFrame = origin * CFrame.new(0, -0.4, 0),
-		Color = Visuals.Colors.floor,
-		Material = Enum.Material.SmoothPlastic,
-		Reflectance = 0.15,
+		CFrame = base * CFrame.new(0, -0.5, 0),
+		Color = Color3.fromRGB(70, 72, 82),
+		Material = Enum.Material.Concrete,
+	})
+	floor.Parent = parent
+	Visuals.Part({
+		Name = "Carpet",
+		Size = Vector3.new(width - 4, 0.1, depth - 4),
+		CFrame = base * CFrame.new(0, 0.05, 0),
+		Color = Color3.fromRGB(45, 48, 62),
+		Material = Enum.Material.Fabric,
+		CanCollide = false,
 	}).Parent = parent
 
-	local spacing = 12
-	for x = -width / 2 + spacing / 2, width / 2, spacing do
+	local glassColor = Color3.fromRGB(140, 190, 230)
+	local function glass(size, cf)
 		Visuals.Part({
-			Name = "Grid",
-			Size = Vector3.new(0.15, 0.05, depth),
-			CFrame = origin * CFrame.new(x, 0.12, 0),
-			Color = Visuals.Colors.grid,
-			Material = Enum.Material.Neon,
+			Name = "Glass",
+			Size = size,
+			CFrame = cf,
+			Color = glassColor,
+			Material = Enum.Material.Glass,
 			Transparency = 0.55,
-			CanCollide = false,
-			CanQuery = false,
+			Reflectance = 0.15,
 		}).Parent = parent
 	end
-	for z = -depth / 2 + spacing / 2, depth / 2, spacing do
-		Visuals.Part({
-			Name = "Grid",
-			Size = Vector3.new(width, 0.05, 0.15),
-			CFrame = origin * CFrame.new(0, 0.12, z),
-			Color = Visuals.Colors.gridAlt,
+	local h = height - 1
+	-- vách sau, trái, phải
+	glass(Vector3.new(width, h, 0.4), base * CFrame.new(0, h / 2, -depth / 2))
+	glass(Vector3.new(0.4, h, depth), base * CFrame.new(-width / 2, h / 2, 0))
+	glass(Vector3.new(0.4, h, depth), base * CFrame.new(width / 2, h / 2, 0))
+	-- vách trước, chừa cửa 12 stud ở giữa nếu có
+	if door then
+		local side = (width - 12) / 2
+		glass(Vector3.new(side, h, 0.4), base * CFrame.new(-(6 + side / 2), h / 2, depth / 2))
+		glass(Vector3.new(side, h, 0.4), base * CFrame.new(6 + side / 2, h / 2, depth / 2))
+		glass(Vector3.new(12, h - 9, 0.4), base * CFrame.new(0, 9 + (h - 9) / 2, depth / 2))
+	else
+		glass(Vector3.new(width, h, 0.4), base * CFrame.new(0, h / 2, depth / 2))
+	end
+
+	-- cột khung ở 4 góc + giữa các mặt
+	for _, x in { -width / 2, 0, width / 2 } do
+		for _, z in { -depth / 2, depth / 2 } do
+			if not (door and x == 0 and z == depth / 2) then
+				Visuals.Part({
+					Name = "Mullion",
+					Size = Vector3.new(1, h, 1),
+					CFrame = base * CFrame.new(x, h / 2, z),
+					Color = Color3.fromRGB(40, 42, 50),
+					Material = Enum.Material.Metal,
+				}).Parent = parent
+			end
+		end
+	end
+
+	-- dải đèn viền ngoài tầng (màu nhấn của công ty) + đèn trần bên trong
+	Visuals.Part({
+		Name = "Trim",
+		Size = Vector3.new(width + 0.6, 0.4, depth + 0.6),
+		CFrame = base * CFrame.new(0, h + 0.2, 0),
+		Color = accent,
+		Material = Enum.Material.Neon,
+		CanCollide = false,
+		Transparency = 0.2,
+	}).Parent = parent
+	for _, x in { -width / 4, width / 4 } do
+		local lamp = Visuals.Part({
+			Name = "CeilingLight",
+			Size = Vector3.new(width / 3, 0.2, 2),
+			CFrame = base * CFrame.new(x, h - 0.2, 0),
+			Color = Color3.fromRGB(255, 245, 225),
 			Material = Enum.Material.Neon,
-			Transparency = 0.6,
 			CanCollide = false,
-			CanQuery = false,
-		}).Parent = parent
+		})
+		Visuals.Light(lamp, Color3.fromRGB(255, 240, 220), 22, 1.2)
+		lamp.Parent = parent
 	end
+	return floor
 end
 
--- Cổng vào lab có viền neon
-function Visuals.BuildGate(parent, cframe, color)
-	for _, x in { -9, 9 } do
-		local pillar = Visuals.Part({
-			Name = "GatePillar",
-			Size = Vector3.new(1.5, 12, 1.5),
-			CFrame = cframe * CFrame.new(x, 6, 0),
-			Color = Visuals.Colors.metal,
-			Material = Enum.Material.Metal,
-		})
-		Visuals.Part({
-			Name = "GateNeon",
-			Size = Vector3.new(0.3, 11, 1.6),
-			CFrame = pillar.CFrame * CFrame.new(0.8 * math.sign(-x), 0, 0),
-			Color = color,
-			Material = Enum.Material.Neon,
-			CanCollide = false,
-		}).Parent = pillar
-		pillar.Parent = parent
-	end
-	local beam = Visuals.Part({
-		Name = "GateBeam",
-		Size = Vector3.new(20, 1.2, 1.5),
-		CFrame = cframe * CFrame.new(0, 12.6, 0),
-		Color = color,
-		Material = Enum.Material.Neon,
+-- Nóc tòa nhà: mái, sân đỗ trực thăng, biển tên công ty phát sáng. Trả về TextLabel của biển.
+function Visuals.BuildRoof(parent, base, width, depth, accent)
+	Visuals.Part({
+		Name = "Roof",
+		Size = Vector3.new(width, 1, depth),
+		CFrame = base * CFrame.new(0, 0.5, 0),
+		Color = Color3.fromRGB(60, 62, 70),
+		Material = Enum.Material.Concrete,
+	}).Parent = parent
+	local pad = Visuals.Part({
+		Name = "Helipad",
+		Shape = Enum.PartType.Cylinder,
+		Size = Vector3.new(0.3, 18, 18),
+		CFrame = base * CFrame.new(0, 1.15, 0) * CFrame.Angles(0, 0, math.pi / 2),
+		Color = Color3.fromRGB(45, 45, 52),
+		Material = Enum.Material.Asphalt,
 	})
-	Visuals.Light(beam, color, 18, 2)
-	beam.Parent = parent
-	return beam
+	pad.Parent = parent
+	Visuals.Label(pad, "<b>H</b>", UDim2.fromScale(6, 6), Vector3.new(0, 0.6, 0), Color3.fromRGB(255, 220, 60)).Parent.MaxDistance = 200
+	local signPost = Visuals.Part({
+		Name = "SignPost",
+		Size = Vector3.new(width * 0.7, 6, 1),
+		CFrame = base * CFrame.new(0, 4, depth / 2 - 2),
+		Color = Color3.fromRGB(25, 25, 32),
+		Material = Enum.Material.Metal,
+	})
+	Visuals.Light(signPost, accent, 30, 2)
+	signPost.Parent = parent
+	local label = Visuals.Label(signPost, "", UDim2.fromScale(width * 0.9, 10), Vector3.new(0, 9, 0), accent)
+	label.Parent.MaxDistance = 600
+	return label
 end
 
 -- Kệ máy chủ: thân + kính + dải đèn trên + 3 LED nhấp nháy.

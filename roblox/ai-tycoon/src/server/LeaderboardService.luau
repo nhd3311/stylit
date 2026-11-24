@@ -1,4 +1,4 @@
--- Bảng "Top tỷ phú công nghệ" giữa map, xếp theo tổng token đã kiếm (OrderedDataStore).
+-- Bảng "Top tỷ phú công nghệ" ở quảng trường, xếp theo tổng $ đã kiếm (OrderedDataStore).
 -- Ghi điểm và tải top mỗi Config.Leaderboard.UpdateInterval giây cho đỡ tốn quota DataStore.
 
 local DataStoreService = game:GetService("DataStoreService")
@@ -8,6 +8,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Config = require(ReplicatedStorage.Shared.Config)
 local DataService = require(script.Parent.DataService)
 local Visuals = require(script.Parent.Visuals)
+local WorldService = require(script.Parent.WorldService)
 
 local LeaderboardService = {}
 
@@ -32,7 +33,7 @@ local function buildBoard()
 	local board = Visuals.Part({
 		Name = "Leaderboard",
 		Size = Vector3.new(22, 14, 1),
-		CFrame = CFrame.new(0, 13, 0), -- cao hơn đầu nhân vật ở SpawnLocation
+		CFrame = WorldService.LeaderboardCFrame, -- ở Quảng trường Công Nghệ
 		Color = Color3.fromRGB(20, 20, 35),
 		Material = Enum.Material.SmoothPlastic,
 	})
@@ -110,7 +111,7 @@ local function refresh()
 		local text = ""
 		if entry then
 			local rank = MEDALS[i] or ("#" .. i)
-			text = string.format("%s  %s  —  🪙 %s", rank, nameFor(tonumber(entry.key)), Config.Short(entry.value))
+			text = string.format("%s  %s  —  %s", rank, nameFor(tonumber(entry.key)), Config.Money(entry.value))
 		end
 		for _, faceRows in rows do
 			faceRows[i].Text = text

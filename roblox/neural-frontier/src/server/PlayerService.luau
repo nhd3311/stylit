@@ -1,5 +1,6 @@
 -- Người chơi: level/XP, máu, ba lô data, thu thập (bot tự hút + bấm tay), upload đổi Credits,
--- mua/nâng bot, nâng ba lô, kỹ năng AI Core, nhiệm vụ của Unit-0.
+-- mở Capsule ra bot (có tỉ lệ + luck), Bot Database, nâng/recycle bot, nâng ba lô,
+-- kỹ năng AI Core, nhiệm vụ của Unit-0.
 -- Server là "trọng tài": client chỉ gửi yêu cầu, server kiểm tra rồi mới làm.
 
 local Players = game:GetService("Players")
@@ -12,7 +13,8 @@ local WorldService = require(script.Parent.WorldService)
 local PlayerService = {}
 
 local remotes
-local sessions = {} -- [player] = { lastAction, lastHarvest, lastUpload, cooldowns, overclockUntil, shieldUntil }
+local sessions = {} -- [player] = { lastAction, lastHarvest, lastUpload, lastHatch, cooldowns, overclockUntil, shieldUntil }
+local rng = Random.new()
 local actions = {}
 
 -- EnemyService gắn vào đây để tránh require vòng
@@ -80,6 +82,29 @@ local function overclocked(player)
 	return session and session.overclockUntil > os.clock()
 end
 
+-- % gather cộng thêm vĩnh viễn từ các bộ Database đã hoàn thành
+local function gatherBonus(profile)
+	local bonus = 0
+	for id in profile.claimedSets do
+		local capsule = Config.CapsuleById[id]
+		if capsule then
+			bonus += capsule.reward.gather
+		end
+	end
+	return bonus
+end
+
+function PlayerService.Luck(player, profile)
+	local luck = 1
+	if player:GetAttribute("LuckyScanner") then
+		luck *= Config.Multipliers.LuckyPass
+	end
+	if boostOn(profile, "Luck") then
+		luck *= Config.Multipliers.LuckBoost
+	end
+	return luck
+end
+
 function PlayerService.GatherPerSecond(player, profile)
 	local total = 0
 	for _, i in equipped(player, profile) do
@@ -92,7 +117,7 @@ function PlayerService.GatherPerSecond(player, profile)
 	if boostOn(profile, "Gather") then
 		total *= Config.Multipliers.GatherBoost
 	end
-	return total
+	return total * (1 + gatherBonus(profile))
 end
 
 -- Sát thương/giây đội bot gây lên 1 quái gần nhất
@@ -132,6 +157,14 @@ local function publishBots(player, profile)
 	player:SetAttribute("Bots", table.concat(parts, ","))
 end
 
+local function countKeys(map)
+	local n = 0
+	for _ in map do
+		n += 1
+	end
+	return n
+end
+
 local function questInfo(player, profile)
 	local quest = Config.Quests[profile.quest]
 	if not quest then
@@ -145,6 +178,7 @@ local function questInfo(player, profile)
 		level = profile.level,
 		backpack = profile.backpack,
 		boss = if s.bosses[quest.target] then 1 else 0,
+		discovered = countKeys(profile.discovered),
 	})[quest.check]
 	local target = if quest.check == "boss" then 1 else quest.target
 	return { index = profile.quest, total = #Config.Quests, text = quest.text, reward = quest.reward, value = value, target = target }
@@ -178,6 +212,11 @@ function PlayerService.PushState(player)
 		power = Config.Power(profile.level),
 		zone = zone and zone.id,
 		quest = questInfo(player, profile),
+		luck = PlayerService.Luck(player, profile),
+		discovered = profile.discovered,
+		claimedSets = profile.claimedSets,
+		gatherBonus = gatherBonus(profile),
+		restricted = player:GetAttribute("PaidRandomRestricted") == true,
 		boosts = profile.boosts,
 		stats = profile.stats,
 		vip = player:GetAttribute("VIP") == true,
@@ -331,24 +370,87 @@ function actions.Harvest(player, profile, session)
 	PlayerService.Fx("Harvest", node.Position, zone.crystal, math.floor(gained))
 end
 
-function actions.BuyBot(player, profile, session, botId)
-	local bot = type(botId) == "string" and Config.BotById[botId]
-	if not bot then
-		return
+-- Quay 1 bot theo tỉ lệ (đã tính luck)
+local function roll(capsule, luck)
+	local odds = Config.CapsuleOdds(capsule, luck)
+	local r = rng:NextNumber()
+	for _, item in odds do
+		r -= item.chance
+		if r <= 0 then
+			return item.bot
+		end
 	end
-	if #profile.bots >= Config.MaxBots then
-		notify(player, "Your bot garage is full 🤖")
-		return
+	return odds[#odds].bot
+end
+
+-- Mở `count` capsule cho người chơi (Credits đã trừ / Robux đã trả trước khi gọi).
+-- Bot hiếm (Legendary+) được báo cho cả server.
+function PlayerService.Hatch(player, profile, capsule, count)
+	local luck = PlayerService.Luck(player, profile)
+	local results = {}
+	for _ = 1, count do
+		local bot = roll(capsule, luck)
+		local isNew = not profile.discovered[bot.id]
+		profile.discovered[bot.id] = true
+		table.insert(profile.bots, { type = bot.id, level = 1 })
+		table.insert(results, { id = bot.id, new = isNew })
+		if Config.RarityOrder[bot.rarity] >= Config.RarityOrder.Legendary then
+			for _, other in Players:GetPlayers() do
+				if other ~= player then
+					notify(other, string.format("🌟 %s hatched a %s %s!", player.DisplayName, bot.rarity, bot.name), "Announce")
+				end
+			end
+		end
 	end
-	if profile.credits < bot.price then
-		notify(player, string.format("You need %s credits for a %s", Config.Short(bot.price), bot.name))
-		return
-	end
-	profile.credits -= bot.price
-	table.insert(profile.bots, { type = bot.id, level = 1 })
-	notify(player, string.format("🤖 %s joined your squad!", bot.name), "Reward")
+	remotes.Hatch:FireClient(player, capsule.id, results)
 	publishBots(player, profile)
 	checkQuest(player, profile)
+	PlayerService.PushState(player)
+	return results
+end
+
+function actions.OpenCapsule(player, profile, session, capsuleId, count)
+	local capsule = type(capsuleId) == "string" and Config.CapsuleById[capsuleId]
+	if not capsule or not capsule.price then
+		return
+	end
+	count = if count == 3 and player:GetAttribute("TripleHatch") then 3 else 1
+	if profile.level < capsule.level then
+		notify(player, string.format("🔒 %s unlocks at level %d", capsule.name, capsule.level))
+		return
+	end
+	if #profile.bots + count > Config.MaxBots then
+		notify(player, "🤖 Bot storage is full. Recycle some bots first!")
+		return
+	end
+	local cost = capsule.price * count
+	if profile.credits < cost then
+		notify(player, string.format("You need %s credits", Config.Short(cost)))
+		return
+	end
+	-- chờ animation mở capsule chạy xong
+	if os.clock() - session.lastHatch < 1.5 then
+		return
+	end
+	session.lastHatch = os.clock()
+	profile.credits -= cost
+	PlayerService.Hatch(player, profile, capsule, count)
+end
+
+-- Bot Database: đủ bộ của 1 capsule thì nhận thưởng 1 lần
+function actions.ClaimSet(player, profile, session, capsuleId)
+	local capsule = type(capsuleId) == "string" and Config.CapsuleById[capsuleId]
+	if not capsule or profile.claimedSets[capsule.id] then
+		return
+	end
+	for _, drop in capsule.drops do
+		if not profile.discovered[drop.bot] then
+			return
+		end
+	end
+	profile.claimedSets[capsule.id] = true
+	PlayerService.AddCredits(player, capsule.reward.credits)
+	notify(player, string.format("📚 %s set complete! +%s credits, +%d%% gather forever", capsule.name, Config.Short(capsule.reward.credits), math.floor(capsule.reward.gather * 100 + 0.5)), "Reward")
 	PlayerService.PushState(player)
 end
 
@@ -381,9 +483,39 @@ function actions.RecycleBot(player, profile, session, index)
 		return
 	end
 	table.remove(profile.bots, index)
-	local refund = math.floor(bot.price * 0.3)
+	local refund = Config.RecycleValue(bot, entry.level)
 	profile.credits += refund
 	notify(player, string.format("♻️ Recycled %s for %s credits", bot.name, Config.Short(refund)))
+	publishBots(player, profile)
+	PlayerService.PushState(player)
+end
+
+-- Recycle mọi bot dự bị (không ra trận) thuộc 1 độ hiếm, để dọn kho sau khi mở nhiều capsule
+function actions.RecycleReserve(player, profile, session, rarity)
+	if type(rarity) ~= "string" or not Config.RarityOrder[rarity] then
+		return
+	end
+	local keep = {}
+	for _, i in equipped(player, profile) do
+		keep[i] = true
+	end
+	local refund, count = 0, 0
+	-- đi từ cuối lên để xoá không làm lệch chỉ số các bot chưa duyệt
+	for i = #profile.bots, 1, -1 do
+		local entry = profile.bots[i]
+		local bot = Config.BotById[entry.type]
+		if not keep[i] and bot and bot.rarity == rarity and #profile.bots > 1 then
+			refund += Config.RecycleValue(bot, entry.level)
+			table.remove(profile.bots, i)
+			count += 1
+		end
+	end
+	if count == 0 then
+		notify(player, "No reserve " .. rarity .. " bots to recycle")
+		return
+	end
+	profile.credits += refund
+	notify(player, string.format("♻️ Recycled %d %s bots for %s credits", count, rarity, Config.Short(refund)), "Reward")
 	publishBots(player, profile)
 	PlayerService.PushState(player)
 end
@@ -483,7 +615,7 @@ end
 -- ================= Vòng đời =================
 
 function PlayerService.OnPlayerLoaded(player, profile)
-	sessions[player] = { lastAction = 0, lastHarvest = 0, lastUpload = 0, cooldowns = {}, overclockUntil = 0, shieldUntil = 0 }
+	sessions[player] = { lastAction = 0, lastHarvest = 0, lastUpload = 0, lastHatch = 0, cooldowns = {}, overclockUntil = 0, shieldUntil = 0 }
 	local leaderstats = Instance.new("Folder")
 	leaderstats.Name = "leaderstats"
 	local level = Instance.new("IntValue")

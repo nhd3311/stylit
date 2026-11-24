@@ -2,7 +2,8 @@
 --   • thẻ phi công: level, XP, máu, credits (số đếm chạy lên)
 --   • thanh vùng + thanh ba lô data, thẻ nhiệm vụ, chip boost đang chạy
 --   • dock kỹ năng (Q E R F + G thu thập) có vòng hồi chiêu và đếm giây
---   • menu trái và các bảng Bots / Gear / Missions / Shop, thẻ bot có mô hình 3D xoay
+--   • menu trái và các bảng Bots / Capsules / Database / Gear / Missions / Shop, thú máy 3D trong thẻ
+--   • hoạt cảnh mở capsule (rung, bung nắp, vầng sáng theo độ hiếm)
 -- Toàn bộ dựng bằng code, không cần ảnh upload, tự co giãn theo màn hình.
 
 local MarketplaceService = game:GetService("MarketplaceService")
@@ -12,6 +13,7 @@ local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
+local BotModels = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("BotModels"))
 local Config = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Config"))
 local Effects = require(script.Parent:WaitForChild("Effects"))
 local Fx = require(script.Parent:WaitForChild("Fx"))
@@ -40,6 +42,7 @@ local C = {
 	violet = Color3.fromRGB(150, 100, 255),
 	lime = Color3.fromRGB(110, 255, 150),
 	gold = Color3.fromRGB(255, 210, 80),
+	orange = Color3.fromRGB(255, 140, 60),
 	red = Color3.fromRGB(255, 70, 90),
 	robux = Color3.fromRGB(0, 190, 115),
 	off = Color3.fromRGB(48, 56, 80),
@@ -49,6 +52,8 @@ local C = {
 local CORE_COLORS = { Pulse = C.magenta, Dash = C.lime, Overclock = C.gold, Shield = C.violet }
 local MENU = {
 	{ id = "Bots", label = "BOTS", title = "BOT SQUAD", icon = "🤖", color = C.magenta },
+	{ id = "Capsules", label = "CAPSULES", title = "CAPSULE LAB", icon = "🥚", color = C.orange },
+	{ id = "Database", label = "DATABASE", title = "BOT DATABASE", icon = "📚", color = C.blue },
 	{ id = "Gear", label = "GEAR", title = "GEAR LAB", icon = "🎒", color = C.cyan },
 	{ id = "Quests", label = "MISSIONS", title = "MISSIONS", icon = "📜", color = C.gold },
 	{ id = "Shop", label = "SHOP", title = "POWER SHOP", icon = "💎", color = C.violet },
@@ -232,20 +237,48 @@ local function button(props)
 	return b
 end
 
--- mô hình bot 3D trong thẻ (ViewportFrame), lắc nhẹ trong RenderStepped
+-- thú máy 3D trong thẻ (ViewportFrame), camera tự căn theo kích thước, cử động trong RenderStepped
+-- opts: { silhouette = true (bóng đen ???), animate = false (đứng yên cho nhẹ máy) }
 local previews = {}
-local function botViewport(parent, bot, level, size)
-	local viewport = new("ViewportFrame", { Size = size, BackgroundTransparency = 1, Ambient = Color3.fromRGB(150, 160, 190), LightColor = WHITE, LightDirection = Vector3.new(-0.6, -1, 0.4), Parent = parent })
-	local s = bot.size * (1 + ((level or 1) - 1) * 0.04)
-	local model = Instance.new("Model")
-	local body = new("Part", { Anchored = true, Shape = Enum.PartType.Ball, Size = Vector3.one * s, Color = Color3.fromRGB(235, 240, 250), Material = Enum.Material.SmoothPlastic, CFrame = CFrame.new(), Parent = model })
-	new("Part", { Anchored = true, Shape = Enum.PartType.Ball, Size = Vector3.one * s * 0.42, Color = bot.color, Material = Enum.Material.Neon, CFrame = CFrame.new(0, 0, -s * 0.32), Parent = model })
-	new("Part", { Anchored = true, Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.12, s * 1.7, s * 1.7), Color = bot.color, Material = Enum.Material.Neon, Transparency = 0.35, CFrame = CFrame.Angles(0, 0, math.pi / 2), Parent = model })
-	model.PrimaryPart = body
-	model.Parent = viewport
-	local camera = new("Camera", { FieldOfView = 35, CFrame = CFrame.lookAt(Vector3.new(s * 1.2, s * 0.8, -s * 3.6), Vector3.zero), Parent = viewport })
+local function posePreview(p, t)
+	if p.capsule then
+		BotModels.PoseCapsule(p.capsule, CFrame.Angles(0, t * 0.9 + p.phase, 0.12), 0)
+	else
+		BotModels.Pose(p.rig, CFrame.Angles(0, -0.45 + math.sin(t * 1.3 + p.phase) * 0.5, 0) * CFrame.new(-p.center), t + p.phase)
+	end
+end
+local function botViewport(parent, bot, level, size, opts)
+	opts = opts or {}
+	local viewport = new("ViewportFrame", {
+		Size = size,
+		Position = opts.position or UDim2.new(),
+		BackgroundTransparency = 1,
+		Ambient = if opts.silhouette then Color3.fromRGB(60, 66, 90) else Color3.fromRGB(150, 160, 190),
+		LightColor = WHITE,
+		LightDirection = Vector3.new(-0.6, -1, 0.4),
+		Parent = parent,
+	})
+	local rig = BotModels.Build(bot, level)
+	if opts.silhouette then
+		BotModels.Silhouette(rig)
+	end
+	local center, extent = BotModels.Bounds(rig.model)
+	rig.model.Parent = viewport
+	local distance = (extent.Magnitude / 2) / math.tan(math.rad(17.5)) * 0.85
+	local camera = new("Camera", { FieldOfView = 35, CFrame = CFrame.lookAt(Vector3.new(0.35, 0.3, -1).Unit * distance, Vector3.zero), Parent = viewport })
 	viewport.CurrentCamera = camera
-	table.insert(previews, { model = model, phase = math.random() * 6, bob = s * 0.06 })
+	local preview = { rig = rig, model = rig.model, center = center, phase = math.random() * 6, animate = opts.animate ~= false }
+	posePreview(preview, 0)
+	table.insert(previews, preview)
+	return viewport
+end
+local function capsuleViewport(parent, capsule, size, position)
+	local viewport = new("ViewportFrame", { Size = size, Position = position or UDim2.new(), BackgroundTransparency = 1, Ambient = Color3.fromRGB(160, 170, 200), LightColor = WHITE, LightDirection = Vector3.new(-0.6, -1, 0.4), Parent = parent })
+	local cap = BotModels.Capsule(capsule.color, 2)
+	cap.model.Parent = viewport
+	local camera = new("Camera", { FieldOfView = 40, CFrame = CFrame.lookAt(Vector3.new(0, 0.9, -4.4), Vector3.new(0, 0.1, 0)), Parent = viewport })
+	viewport.CurrentCamera = camera
+	table.insert(previews, { capsule = cap, model = cap.model, phase = math.random() * 6, animate = true })
 	return viewport
 end
 
@@ -343,6 +376,7 @@ local boostList = new("Frame", { AnchorPoint = Vector2.new(1, 0), Position = UDi
 local BOOSTS = {
 	Credits = { label = "💰 x2 CREDITS", color = C.gold },
 	Gather = { label = "💾 x2 GATHER", color = C.cyan },
+	Luck = { label = "🍀 x2 LUCK", color = C.lime },
 }
 local function renderBoosts()
 	for _, child in boostList:GetChildren() do
@@ -644,13 +678,13 @@ local function row(opts)
 		Parent = frame,
 	})
 	for i, spec in buttons do
-		button({ Parent = frame, AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -12 - (#buttons - i) * (width + 8), 0.5, 0), Size = UDim2.fromOffset(width, 36), Text = spec.text, Color = spec.color, onClick = spec.onClick })
+		button({ Parent = frame, AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -12 - (#buttons - i) * (width + 8), 0.5, 0), Size = UDim2.fromOffset(width, 36), Text = spec.text, Color = spec.color, onClick = spec.onClick, confirm = spec.confirm })
 	end
 	return frame
 end
 
 -- thẻ bot: mô hình 3D + độ hiếm + tên + chỉ số. tag = "ACTIVE" / "RESERVE" / nil (lò rèn)
-local function botCard(parent, bot, level, cardOrder, tag)
+local function botCard(parent, bot, level, cardOrder, tag, animate)
 	local rarity = Config.RarityColors[bot.rarity] or C.cyan
 	local card = new("Frame", { LayoutOrder = cardOrder, BackgroundColor3 = WHITE, BorderSizePixel = 0, Parent = parent }, {
 		corner(12),
@@ -658,7 +692,7 @@ local function botCard(parent, bot, level, cardOrder, tag)
 		stroke(rarity, if tag == "ACTIVE" then 2 else 1.2, if tag == "RESERVE" then 0.6 else 0.15),
 	})
 	new("Frame", { AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.new(0.5, 0, 0, 50), Size = UDim2.fromOffset(84, 84), BackgroundColor3 = rarity, BackgroundTransparency = 0.78, BorderSizePixel = 0, Parent = card }, { corner(42) })
-	botViewport(card, bot, level, UDim2.new(1, 0, 0, 96))
+	botViewport(card, bot, level, UDim2.new(1, 0, 0, 96), { animate = animate ~= false })
 	chip(card, string.upper(bot.rarity), rarity)
 	if tag then
 		local active = tag == "ACTIVE"
@@ -679,14 +713,15 @@ local function botCard(parent, bot, level, cardOrder, tag)
 end
 
 local priceCache = {}
-local function fillPrice(b, id, infoType)
+local function fillPrice(b, id, infoType, prefix)
+	prefix = prefix or ""
 	if id == 0 then
-		b.Text = "SET ID"
+		b.Text = prefix .. "SET ID"
 		return
 	end
 	local key = tostring(infoType) .. id
 	if priceCache[key] then
-		b.Text = "R$ " .. priceCache[key]
+		b.Text = prefix .. "R$ " .. priceCache[key]
 		return
 	end
 	task.spawn(function()
@@ -694,10 +729,33 @@ local function fillPrice(b, id, infoType)
 		if ok and result and result.PriceInRobux then
 			priceCache[key] = result.PriceInRobux
 			if b.Parent then
-				b.Text = "R$ " .. result.PriceInRobux
+				b.Text = prefix .. "R$ " .. result.PriceInRobux
 			end
 		end
 	end)
+end
+local function buyProduct(product)
+	if product.id == 0 then
+		toast("Set this Developer Product ID in Config.luau 🛠️", 3, C.gold)
+	else
+		MarketplaceService:PromptProductPurchase(player, product.id)
+	end
+end
+local function buyPass(pass)
+	if pass.id == 0 then
+		toast("Set this Game Pass ID in Config.luau 🛠️", 3, C.gold)
+	else
+		MarketplaceService:PromptGamePassPurchase(player, pass.id)
+	end
+end
+local function countDiscovered(capsule)
+	local n = 0
+	for _, drop in capsule.drops do
+		if state.discovered and state.discovered[drop.bot] then
+			n += 1
+		end
+	end
+	return n
 end
 
 local function shopCard(parent, cardOrder, name, description, color, owned, id, infoType, onBuy)
@@ -719,6 +777,13 @@ local function shopCard(parent, cardOrder, name, description, color, owned, id, 
 end
 
 local panels = {}
+local renderPanel -- khai báo trước (các bảng gọi để chuyển qua bảng khác), định nghĩa ở dưới
+local function goPanel(id)
+	return function()
+		openPanel = id
+		renderPanel(true)
+	end
+end
 
 function panels.Bots()
 	local equippedSet = {}
@@ -726,21 +791,32 @@ function panels.Bots()
 		equippedSet[i] = true
 	end
 	section("ACTIVE SQUAD", string.format("%d/%d deployed  ·  💾 %s/s  ·  ⚔ %s dps", #state.equipped, state.slots, stat(state.gather), stat(state.attack)))
-	local squad = grid(UDim2.fromOffset(150, 204))
-	-- bot đang ra trận lên trước, bot dự bị phía sau
-	local list = table.clone(state.equipped)
+	-- bot đang ra trận lên trước, bot dự bị xếp theo sức mạnh
+	local function power(i)
+		local entry = state.bots[i]
+		local bot = Config.BotById[entry.type]
+		return if bot then Config.BotStat(bot, entry.level, "gather") + Config.BotStat(bot, entry.level, "attack") else 0
+	end
+	local reserve = {}
 	for i in state.bots do
 		if not equippedSet[i] then
-			table.insert(list, i)
+			table.insert(reserve, i)
 		end
 	end
+	table.sort(reserve, function(a, b)
+		return power(a) > power(b)
+	end)
+	local list = table.clone(state.equipped)
+	table.move(reserve, 1, #reserve, #list + 1, list)
+	local squad = grid(UDim2.fromOffset(150, 204))
 	for cardOrder, i in list do
 		local entry = state.bots[i]
 		local bot = entry and Config.BotById[entry.type]
 		if bot then
 			local maxed = entry.level >= Config.BotUpgrade.MaxLevel
 			local price = Config.BotUpgradePrice(bot, entry.level)
-			local card = botCard(squad, bot, entry.level, cardOrder, if equippedSet[i] then "ACTIVE" else "RESERVE")
+			-- chỉ 12 thẻ đầu cử động để máy yếu không lag
+			local card = botCard(squad, bot, entry.level, cardOrder, if equippedSet[i] then "ACTIVE" else "RESERVE", cardOrder <= 12)
 			button({
 				Parent = card,
 				Position = UDim2.new(0, 8, 1, -38),
@@ -765,19 +841,167 @@ function panels.Bots()
 			})
 		end
 	end
-	section("BOT FORGE", "Recycle ♻ refunds 30%")
-	local forge = grid(UDim2.fromOffset(150, 186))
-	for cardOrder, bot in Config.Bots do
-		local card = botCard(forge, bot, 1, cardOrder, nil)
-		button({
-			Parent = card,
-			Position = UDim2.new(0, 8, 1, -38),
-			Size = UDim2.new(1, -16, 0, 30),
-			Text = "💳 " .. short(bot.price),
-			Color = if state.credits >= bot.price then C.lime:Lerp(C.void, 0.35) else C.off,
-			onClick = function()
-				fire("BuyBot", bot.id)
-			end,
+	section("STORAGE", string.format("%d / %d bots", #state.bots, Config.MaxBots))
+	row({
+		icon = "♻",
+		iconColor = C.off,
+		title = "Clean up reserve bots",
+		sub = "Recycle every reserve bot of one rarity. Active bots are never touched.",
+		buttons = {
+			{ text = "♻ COMMONS", color = C.glassHi, confirm = "SURE?", onClick = function()
+				fire("RecycleReserve", "Common")
+			end },
+			{ text = "♻ RARES", color = C.glassHi, confirm = "SURE?", onClick = function()
+				fire("RecycleReserve", "Rare")
+			end },
+		},
+		height = 64,
+	})
+	row({
+		icon = "🥚",
+		iconColor = C.orange,
+		title = "Need stronger bots?",
+		sub = if state.restricted then "Open capsules at the Capsule Lab to find new bots." else "Open capsules at the Capsule Lab. Mythic bots hide in the Neon Capsule!",
+		accent = C.orange,
+		buttons = { { text = "🥚 CAPSULES", color = C.orange:Lerp(C.void, 0.2), onClick = goPanel("Capsules") } },
+		height = 60,
+	})
+end
+
+local function chanceOf(capsule, botId)
+	for _, item in Config.CapsuleOdds(capsule, state and state.luck or 1) do
+		if item.bot.id == botId then
+			return item.chance
+		end
+	end
+	return 0
+end
+
+function panels.Capsules()
+	local luck = state.luck or 1
+	section("CAPSULE LAB", if luck > 1 then string.format("🍀 Luck <b>x%s</b> · odds below include it", stat(luck)) else "Each capsule gives exactly 1 bot")
+	for _, capsule in Config.Capsules do
+		local premium = capsule.premium == true
+		local locked = state.level < capsule.level
+		local card = new("Frame", { LayoutOrder = nextOrder(), Size = UDim2.new(1, 0, 0, 232), BackgroundColor3 = WHITE, BorderSizePixel = 0, Parent = content }, {
+			corner(14),
+			new("UIGradient", { Color = ColorSequence.new(capsule.color:Lerp(C.void, 0.45), C.glass) }),
+			stroke(capsule.color, if premium then 2 else 1.3, 0.15),
+		})
+		if premium then
+			sweepLayer(card, 14, 0.8)
+		end
+		text({ Position = UDim2.fromOffset(14, 8), Size = UDim2.new(1, -230, 0, 26), FontFace = DISPLAY, TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left, Text = capsule.emoji .. "  " .. string.upper(capsule.name), Parent = card })
+		local tag = if premium then "ROBUX · MYTHIC INSIDE" elseif locked then "🔒 LEVEL " .. capsule.level else "💳 " .. short(capsule.price) .. " EACH"
+		chip(card, tag, if premium then C.magenta elseif locked then C.off else C.gold, if locked then C.muted else C.void, true)
+		capsuleViewport(card, capsule, UDim2.fromOffset(120, 140), UDim2.fromOffset(10, 40))
+		-- tỉ lệ rơi từng bot (đã tính luck)
+		for i, item in Config.CapsuleOdds(capsule, luck) do
+			local bot = item.bot
+			local rarity = Config.RarityColors[bot.rarity]
+			local cell = new("Frame", { Position = UDim2.fromOffset(140 + (i - 1) * 90, 40), Size = UDim2.fromOffset(84, 134), BackgroundColor3 = C.void, BackgroundTransparency = 0.35, BorderSizePixel = 0, Parent = card }, {
+				corner(10),
+				stroke(rarity, 1.2, 0.3),
+			})
+			botViewport(cell, bot, 1, UDim2.new(1, 0, 0, 74))
+			if state.discovered and state.discovered[bot.id] then
+				text({ AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -4, 0, 4), Size = UDim2.fromOffset(16, 16), TextSize = 13, TextColor3 = C.lime, Text = "✓", Parent = cell })
+			end
+			text({ Position = UDim2.fromOffset(4, 74), Size = UDim2.new(1, -8, 0, 18), TextSize = 13, TextTruncate = Enum.TextTruncate.AtEnd, Text = bot.name, Parent = cell })
+			text({ Position = UDim2.fromOffset(4, 92), Size = UDim2.new(1, -8, 0, 14), FontFace = DISPLAY, TextSize = 7, TextColor3 = rarity, Text = string.upper(bot.rarity), Parent = cell })
+			text({ Position = UDim2.fromOffset(4, 106), Size = UDim2.new(1, -8, 0, 24), FontFace = DISPLAY, TextSize = 12, TextColor3 = rarity:Lerp(WHITE, 0.35), Text = Config.FormatChance(item.chance), Parent = cell })
+		end
+		-- nút mở: Credits cho capsule thường, Robux cho Neon
+		local specs = {}
+		if premium then
+			if state.restricted then
+				text({ Position = UDim2.fromOffset(14, 186), Size = UDim2.new(1, -28, 0, 36), TextColor3 = C.muted, TextXAlignment = Enum.TextXAlignment.Left, Text = "Neon Capsules are not available in your region.", Parent = card })
+			else
+				for _, key in Config.NeonProducts do
+					local product = Config.DevProducts[key]
+					table.insert(specs, { prefix = string.format("💎 x%d · ", product.count), product = product })
+				end
+			end
+		else
+			local function canOpen(n)
+				return not locked and state.credits >= capsule.price * n
+			end
+			table.insert(specs, { text = "🥚 OPEN · 💳 " .. short(capsule.price), color = if canOpen(1) then C.lime:Lerp(C.void, 0.35) else C.off, onClick = function()
+				fire("OpenCapsule", capsule.id, 1)
+			end })
+			if player:GetAttribute("TripleHatch") then
+				table.insert(specs, { text = "🥚 x3 · 💳 " .. short(capsule.price * 3), color = if canOpen(3) then C.lime:Lerp(C.void, 0.35) else C.off, onClick = function()
+					fire("OpenCapsule", capsule.id, 3)
+				end })
+			elseif not state.restricted then
+				table.insert(specs, { text = "🥚 x3 · Triple Hatch", color = C.violet:Lerp(C.void, 0.3), onClick = goPanel("Shop") })
+			end
+		end
+		for i, spec in specs do
+			local b = button({
+				Parent = card,
+				AnchorPoint = Vector2.new(1, 0),
+				Position = UDim2.new(1, -12 - (#specs - i) * 158, 0, 186),
+				Size = UDim2.fromOffset(150, 36),
+				Text = spec.text or (spec.prefix .. "R$ ..."),
+				Color = spec.color or C.robux,
+				onClick = spec.onClick or function()
+					buyProduct(spec.product)
+				end,
+			})
+			if spec.product then
+				fillPrice(b, spec.product.id, Enum.InfoType.Product, spec.prefix)
+			end
+		end
+	end
+	row({ icon = "ℹ", iconColor = C.off, title = "About the odds", sub = "Every capsule gives exactly 1 bot. The chances shown are exact and already include your luck.", height = 56 })
+end
+
+function panels.Database()
+	local total, found = 0, 0
+	for _, bot in Config.Bots do
+		total += 1
+		if state.discovered[bot.id] then
+			found += 1
+		end
+	end
+	section("BOT DATABASE", string.format("Discovered <b>%d / %d</b>", found, total))
+	for _, capsule in Config.Capsules do
+		local count = countDiscovered(capsule)
+		local complete = count == #capsule.drops
+		local claimed = state.claimedSets[capsule.id] == true
+		section(capsule.emoji .. " " .. string.upper(capsule.name), string.format("%d / %d", count, #capsule.drops))
+		local cells = grid(UDim2.fromOffset(118, 136))
+		for i, drop in capsule.drops do
+			local bot = Config.BotById[drop.bot]
+			local known = state.discovered[bot.id] == true
+			local rarity = Config.RarityColors[bot.rarity]
+			local cell = new("Frame", { LayoutOrder = i, BackgroundColor3 = WHITE, BorderSizePixel = 0, Parent = cells }, {
+				corner(10),
+				vgradient(if known then rarity:Lerp(C.void, 0.55) else C.glassHi, C.glass),
+				stroke(if known then rarity else C.off, 1.2, 0.25),
+			})
+			botViewport(cell, bot, 1, UDim2.new(1, 0, 0, 90), { silhouette = not known, animate = known })
+			text({ Position = UDim2.fromOffset(6, 90), Size = UDim2.new(1, -12, 0, 20), TextSize = 14, TextTruncate = Enum.TextTruncate.AtEnd, Text = if known then bot.name else "???", TextColor3 = if known then C.text else C.muted, Parent = cell })
+			text({ Position = UDim2.fromOffset(6, 112), Size = UDim2.new(1, -12, 0, 14), FontFace = DISPLAY, TextSize = 7, TextColor3 = rarity, Text = string.upper(bot.rarity), Parent = cell })
+		end
+		local reward = string.format("Reward: +%s 💳 and +%d%% gather forever", short(capsule.reward.credits), math.floor(capsule.reward.gather * 100 + 0.5))
+		row({
+			icon = if claimed then "✓" else "🎁",
+			iconColor = if claimed then C.lime:Lerp(C.void, 0.3) else C.gold,
+			title = if claimed then "Set reward claimed" elseif complete then "Set complete!" else "Discover every bot to claim",
+			sub = reward,
+			accent = if complete and not claimed then C.gold else nil,
+			buttons = {
+				{
+					text = if claimed then "✓ CLAIMED" elseif complete then "🎁 CLAIM" else string.format("%d / %d", count, #capsule.drops),
+					color = if complete and not claimed then C.gold:Lerp(C.void, 0.2) else C.off,
+					onClick = if complete and not claimed then function()
+						fire("ClaimSet", capsule.id)
+					end else nil,
+				},
+			},
+			height = 56,
 		})
 	end
 end
@@ -848,59 +1072,85 @@ function panels.Quests()
 	end
 end
 
-local PASS_COLORS = { VIP = C.gold, BotSlots = C.magenta, BigBackpack = C.cyan, AutoUpload = C.blue, TurboBoots = C.lime }
-local PRODUCT_COLORS = { MegaBoost = C.magenta, CreditBoost = C.gold, GatherBoost = C.cyan, CreditsSmall = C.gold, CreditsLarge = C.gold }
+local PASS_COLORS = { VIP = C.gold, LuckyScanner = C.lime, TripleHatch = C.orange, BotSlots = C.magenta, BigBackpack = C.cyan, AutoUpload = C.blue, TurboBoots = C.lime }
+local PRODUCT_COLORS = { MegaBoost = C.magenta, LuckBoost = C.lime, CreditBoost = C.gold, GatherBoost = C.cyan, CreditsSmall = C.gold, CreditsLarge = C.gold }
 
 function panels.Shop()
-	local hero = new("Frame", { LayoutOrder = nextOrder(), Size = UDim2.new(1, 0, 0, 76), BackgroundColor3 = WHITE, BorderSizePixel = 0, Parent = content }, {
+	if not state.restricted then
+		-- quảng cáo Neon Capsule (mua trong Capsule Lab, nơi có đầy đủ tỉ lệ)
+		local neon = Config.CapsuleById.Neon
+		local banner = new("Frame", { LayoutOrder = nextOrder(), Size = UDim2.new(1, 0, 0, 100), BackgroundColor3 = WHITE, BorderSizePixel = 0, Parent = content }, {
+			corner(12),
+			new("UIGradient", { Color = ColorSequence.new(C.magenta:Lerp(C.void, 0.25), C.violet:Lerp(C.void, 0.4)) }),
+			stroke(C.magenta, 1.5, 0.2),
+		})
+		sweepLayer(banner, 12, 0.7)
+		capsuleViewport(banner, neon, UDim2.fromOffset(96, 96), UDim2.fromOffset(6, 2))
+		text({ Position = UDim2.fromOffset(110, 12), Size = UDim2.new(1, -290, 0, 28), FontFace = DISPLAY, TextSize = 15, TextXAlignment = Enum.TextXAlignment.Left, Text = "💎 NEON CAPSULE", Parent = banner })
+		local mythics = {}
+		for _, item in Config.CapsuleOdds(neon, state.luck) do
+			if item.bot.rarity == "Mythic" then
+				table.insert(mythics, item.bot.name .. " " .. Config.FormatChance(item.chance))
+			end
+		end
+		text({ Position = UDim2.fromOffset(110, 42), Size = UDim2.new(1, -290, 0, 46), FontFace = BODY_LIGHT, TextSize = 15, TextWrapped = true, TextXAlignment = Enum.TextXAlignment.Left, TextYAlignment = Enum.TextYAlignment.Top, Text = "Mythic bots inside: " .. table.concat(mythics, " · "), Parent = banner })
+		button({ Parent = banner, AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -14, 0.5, 0), Size = UDim2.fromOffset(160, 40), Text = "VIEW ODDS & BUY", Color = C.robux, onClick = goPanel("Capsules") })
+	end
+
+	local hero = new("Frame", { LayoutOrder = nextOrder(), Size = UDim2.new(1, 0, 0, 70), BackgroundColor3 = WHITE, BorderSizePixel = 0, Parent = content }, {
 		corner(12),
-		new("UIGradient", { Color = ColorSequence.new(C.violet:Lerp(C.void, 0.2), C.magenta:Lerp(C.void, 0.35)) }),
-		stroke(C.magenta, 1.2, 0.3),
+		new("UIGradient", { Color = ColorSequence.new(C.violet:Lerp(C.void, 0.2), C.blue:Lerp(C.void, 0.45)) }),
+		stroke(C.violet, 1.2, 0.3),
 	})
-	sweepLayer(hero, 12, 0.7)
-	text({ Position = UDim2.fromOffset(18, 10), Size = UDim2.new(1, -36, 0, 30), FontFace = DISPLAY, TextSize = 16, TextXAlignment = Enum.TextXAlignment.Left, Text = "⚡ POWER UP YOUR SQUAD", Parent = hero })
-	text({ Position = UDim2.fromOffset(18, 40), Size = UDim2.new(1, -36, 0, 24), FontFace = BODY_LIGHT, TextSize = 15, TextXAlignment = Enum.TextXAlignment.Left, Text = "Every item does exactly what it says. No random rolls.", Parent = hero })
+	text({ Position = UDim2.fromOffset(18, 8), Size = UDim2.new(1, -36, 0, 30), FontFace = DISPLAY, TextSize = 15, TextXAlignment = Enum.TextXAlignment.Left, Text = "⚡ POWER UP YOUR SQUAD", Parent = hero })
+	text({ Position = UDim2.fromOffset(18, 38), Size = UDim2.new(1, -36, 0, 24), FontFace = BODY_LIGHT, TextSize = 15, TextXAlignment = Enum.TextXAlignment.Left, Text = "Game passes last forever. Boosts start instantly.", Parent = hero })
 
 	section("GAME PASSES · FOREVER")
 	local passes = grid(UDim2.fromOffset(204, 168))
 	section("BOOSTS & PACKS")
 	local products = grid(UDim2.fromOffset(204, 168))
 
-	local passOrder, productOrder = 0, 0
+	local passOrder, productOrder, hidden = 0, 0, false
 	for _, item in Config.ShopRobux do
 		local kind, key = item[1], item[2]
+		local entry = if kind == "pass" then Config.GamePasses[key] else Config.DevProducts[key]
+		if entry.paidRandom and state.restricted then
+			hidden = true
+			continue
+		end
 		if kind == "pass" then
-			local pass = Config.GamePasses[key]
 			passOrder += 1
-			shopCard(passes, passOrder, pass.name, pass.description, PASS_COLORS[key] or C.violet, player:GetAttribute(key) == true, pass.id, Enum.InfoType.GamePass, function()
-				if pass.id == 0 then
-					toast("Set this Game Pass ID in Config.luau 🛠️", 3, C.gold)
-				else
-					MarketplaceService:PromptGamePassPurchase(player, pass.id)
-				end
+			shopCard(passes, passOrder, entry.name, entry.description, PASS_COLORS[key] or C.violet, player:GetAttribute(key) == true, entry.id, Enum.InfoType.GamePass, function()
+				buyPass(entry)
 			end)
 		else
-			local product = Config.DevProducts[key]
-			local description = if product.kind == "Credits"
-				then string.format("Instant credits: about %d min of gathering in your best zone (at least %s).", product.minutes, short(product.min))
-				else "Starts instantly. The timer runs in real time."
+			local description
+			if entry.kind == "Credits" then
+				description = string.format("Instant credits: about %d min of gathering in your best zone (at least %s).", entry.minutes, short(entry.min))
+			elseif entry.boosts and entry.boosts.Luck then
+				description = "x2 chance for Epic, Legendary and Mythic bots. Timer runs in real time."
+			else
+				description = "Starts instantly. The timer runs in real time."
+			end
 			productOrder += 1
-			shopCard(products, productOrder, product.name, description, PRODUCT_COLORS[key] or C.cyan, false, product.id, Enum.InfoType.Product, function()
-				if product.id == 0 then
-					toast("Set this Developer Product ID in Config.luau 🛠️", 3, C.gold)
-				else
-					MarketplaceService:PromptProductPurchase(player, product.id)
-				end
+			shopCard(products, productOrder, entry.name, description, PRODUCT_COLORS[key] or C.cyan, false, entry.id, Enum.InfoType.Product, function()
+				buyProduct(entry)
 			end)
 		end
+	end
+	if hidden then
+		row({ icon = "ℹ", iconColor = C.off, title = "Some items are hidden", sub = "Items linked to random rewards are not available in your region.", height = 56 })
 	end
 end
 
 -- chữ ký: chỉ vẽ lại bảng khi thứ hiển thị trong bảng thật sự đổi
 local function panelSignature()
-	local parts = { openPanel, state.level, state.backpack, state.slots, #state.bots }
-	for _, bot in Config.Bots do
-		table.insert(parts, if state.credits >= bot.price then "1" else "0")
+	local parts = { openPanel, state.level, state.backpack, state.slots, #state.bots, tostring(state.luck), tostring(state.restricted) }
+	for _, capsule in Config.Capsules do
+		table.insert(parts, countDiscovered(capsule) .. (if state.claimedSets[capsule.id] then "c" else ""))
+		if capsule.price then
+			table.insert(parts, (if state.credits >= capsule.price then "1" else "0") .. (if state.credits >= capsule.price * 3 then "1" else "0"))
+		end
 	end
 	for _, entry in state.bots do
 		local bot = Config.BotById[entry.type]
@@ -918,7 +1168,7 @@ local function panelSignature()
 end
 
 local lastSig
-local function renderPanel(animate)
+function renderPanel(animate)
 	local entry = openPanel and MENU_BY_ID[openPanel]
 	if not entry or not state then
 		openPanel = nil
@@ -946,24 +1196,24 @@ end)
 
 -- ================= Menu trái =================
 
-local menu = new("Frame", { AnchorPoint = Vector2.new(0, 0.5), Position = UDim2.new(0, 10, 0.5, 40), Size = UDim2.fromOffset(200, #MENU * 64), BackgroundTransparency = 1, Parent = gui }, {
-	new("UIListLayout", { Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder }),
+local menu = new("Frame", { AnchorPoint = Vector2.new(0, 0.5), Position = UDim2.new(0, 10, 0.5, 40), Size = UDim2.fromOffset(200, #MENU * 56), BackgroundTransparency = 1, Parent = gui }, {
+	new("UIListLayout", { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }),
 })
 local badges = {}
 for i, entry in MENU do
-	local b = new("TextButton", { LayoutOrder = i, Size = UDim2.fromOffset(200, 56), AutoButtonColor = false, BackgroundColor3 = WHITE, BackgroundTransparency = 0.08, BorderSizePixel = 0, Text = "", Parent = menu }, {
+	local b = new("TextButton", { LayoutOrder = i, Size = UDim2.fromOffset(200, 50), AutoButtonColor = false, BackgroundColor3 = WHITE, BackgroundTransparency = 0.08, BorderSizePixel = 0, Text = "", Parent = menu }, {
 		corner(12),
 		new("UIGradient", { Color = ColorSequence.new(entry.color:Lerp(C.void, 0.45), C.glass) }),
 	})
 	local edge = stroke(entry.color, 1.6, 0.15)
 	edge.Parent = b
-	local tile = new("Frame", { Position = UDim2.fromOffset(6, 6), Size = UDim2.fromOffset(44, 44), BackgroundColor3 = entry.color, BorderSizePixel = 0, Parent = b }, {
+	local tile = new("Frame", { Position = UDim2.fromOffset(5, 5), Size = UDim2.fromOffset(40, 40), BackgroundColor3 = entry.color, BorderSizePixel = 0, Parent = b }, {
 		corner(10),
 		vgradient(WHITE, Color3.fromRGB(170, 170, 190)),
 		stroke(WHITE, 1, 0.5),
 	})
-	text({ Size = UDim2.fromScale(1, 1), TextSize = 24, Text = entry.icon, Parent = tile })
-	text({ Position = UDim2.fromOffset(62, 0), Size = UDim2.new(1, -70, 1, 0), FontFace = DISPLAY, TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left, Text = entry.label, Parent = b })
+	text({ Size = UDim2.fromScale(1, 1), TextSize = 22, Text = entry.icon, Parent = tile })
+	text({ Position = UDim2.fromOffset(56, 0), Size = UDim2.new(1, -70, 1, 0), FontFace = DISPLAY, TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left, Text = entry.label, Parent = b })
 	local badge = text({ AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.new(1, -4, 0, 4), Size = UDim2.fromOffset(20, 20), BackgroundColor3 = C.red, BackgroundTransparency = 0, FontFace = DISPLAY, TextSize = 11, Text = "!", Visible = false, ZIndex = 8, Parent = b })
 	corner(10).Parent = badge
 	stroke(WHITE, 1.5, 0).Parent = badge
@@ -979,21 +1229,30 @@ for i, entry in MENU do
 	end)
 end
 
--- có món mua được thì hiện chấm "!" trên menu
+-- có việc nên làm thì hiện chấm "!" trên menu
 local function anyBotDeal()
-	local owned = {}
-	for _, entry in state.bots do
-		owned[entry.type] = true
-	end
-	for _, bot in Config.Bots do
-		if not owned[bot.id] and state.credits >= bot.price then
-			return true
-		end
-	end
 	for _, i in state.equipped do
 		local entry = state.bots[i]
 		local bot = entry and Config.BotById[entry.type]
 		if bot and entry.level < Config.BotUpgrade.MaxLevel and state.credits >= Config.BotUpgradePrice(bot, entry.level) then
+			return true
+		end
+	end
+	return false
+end
+local function capsuleDeal()
+	-- đủ tiền mở capsule xịn nhất đã mở khoá
+	local best = nil
+	for _, capsule in Config.Capsules do
+		if capsule.price and state.level >= capsule.level then
+			best = capsule
+		end
+	end
+	return best ~= nil and state.credits >= best.price
+end
+local function setClaimable()
+	for _, capsule in Config.Capsules do
+		if not state.claimedSets[capsule.id] and countDiscovered(capsule) == #capsule.drops then
 			return true
 		end
 	end
@@ -1046,6 +1305,8 @@ local function renderHud()
 	end
 
 	badges.Bots.Visible = anyBotDeal()
+	badges.Capsules.Visible = capsuleDeal()
+	badges.Database.Visible = setClaimable()
 	local nextPack = Config.Backpacks[state.backpack + 1]
 	badges.Gear.Visible = nextPack ~= nil and state.credits >= nextPack.price
 	renderBoosts()
@@ -1087,8 +1348,8 @@ RunService.RenderStepped:Connect(function(dt)
 		local p = previews[i]
 		if not p.model.Parent then
 			table.remove(previews, i)
-		else
-			p.model:PivotTo(CFrame.Angles(0, math.sin(t * 1.3 + p.phase) * 0.7, 0) + Vector3.new(0, math.sin(t * 2.2 + p.phase) * p.bob, 0))
+		elseif p.animate then
+			posePreview(p, t)
 		end
 	end
 end)
@@ -1117,6 +1378,197 @@ task.spawn(function()
 	end
 end)
 
+-- ================= Hoạt cảnh mở capsule =================
+
+local hatchLayer = new("TextButton", { Size = UDim2.fromScale(1, 1), BackgroundColor3 = C.void, BackgroundTransparency = 0.15, AutoButtonColor = false, Text = "", Visible = false, ZIndex = 40, Parent = gui })
+local rays = new("Frame", { AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.42), Size = UDim2.fromOffset(760, 760), BackgroundTransparency = 1, Visible = false, Parent = hatchLayer })
+local rayFrames = {}
+for i = 1, 12 do
+	table.insert(rayFrames, new("Frame", { AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5), Size = UDim2.new(0, 56, 1, 0), Rotation = i * 15, BackgroundColor3 = C.gold, BorderSizePixel = 0, Parent = rays }, {
+		new("UIGradient", { Rotation = 90, Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.5, 0.55), NumberSequenceKeypoint.new(1, 1) }) }),
+	}))
+end
+local hatchView = new("ViewportFrame", { AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.42), Size = UDim2.fromOffset(360, 360), BackgroundTransparency = 1, Ambient = Color3.fromRGB(160, 170, 200), LightColor = WHITE, LightDirection = Vector3.new(-0.6, -1, 0.4), Parent = hatchLayer })
+local hatchScale = new("UIScale", { Parent = hatchView })
+local hatchCamera = new("Camera", { FieldOfView = 40, Parent = hatchView })
+hatchView.CurrentCamera = hatchCamera
+local hatchNew = text({ AnchorPoint = Vector2.new(0.5, 0), Position = UDim2.new(0.5, 0, 0.42, 150), Size = UDim2.fromOffset(110, 26), BackgroundColor3 = C.gold, BackgroundTransparency = 0, FontFace = DISPLAY, TextSize = 12, TextColor3 = C.void, Text = "NEW!", Visible = false, ZIndex = 2, Parent = hatchLayer })
+corner(8).Parent = hatchNew
+local hatchTitle = text({ AnchorPoint = Vector2.new(0.5, 0), Position = UDim2.new(0.5, 0, 0.42, 182), Size = UDim2.fromOffset(700, 46), FontFace = DISPLAY, TextSize = 28, TextStrokeTransparency = 0.3, Text = "", Parent = hatchLayer })
+local hatchRarity = text({ AnchorPoint = Vector2.new(0.5, 0), Position = UDim2.new(0.5, 0, 0.42, 228), Size = UDim2.fromOffset(700, 24), FontFace = DISPLAY, TextSize = 12, Text = "", Parent = hatchLayer })
+local hatchGrid = new("Frame", { AnchorPoint = Vector2.new(0.5, 1), Position = UDim2.new(0.5, 0, 1, -44), Size = UDim2.fromOffset(720, 92), BackgroundTransparency = 1, Parent = hatchLayer }, {
+	new("UIListLayout", { FillDirection = Enum.FillDirection.Horizontal, HorizontalAlignment = Enum.HorizontalAlignment.Center, Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }),
+})
+local hatchHint = text({ AnchorPoint = Vector2.new(0.5, 1), Position = UDim2.new(0.5, 0, 1, -12), Size = UDim2.fromOffset(400, 24), FontFace = DISPLAY, TextSize = 10, TextColor3 = C.muted, Text = "TAP TO CONTINUE", Visible = false, Parent = hatchLayer })
+
+local tapped = false
+hatchLayer.Activated:Connect(function()
+	tapped = true
+end)
+local hatchConn = nil
+local function stopHatchLoop()
+	if hatchConn then
+		hatchConn:Disconnect()
+		hatchConn = nil
+	end
+end
+local function clearHatchView()
+	for _, child in hatchView:GetChildren() do
+		if not child:IsA("Camera") and not child:IsA("UIScale") then
+			child:Destroy()
+		end
+	end
+end
+local function clearHatchGrid()
+	for _, child in hatchGrid:GetChildren() do
+		if child:IsA("GuiObject") then
+			child:Destroy()
+		end
+	end
+end
+-- chờ `seconds` giây; skippable = bấm vào màn hình thì thôi chờ
+local function hold(seconds, skippable)
+	tapped = false
+	local t0 = os.clock()
+	while os.clock() - t0 < seconds and not (skippable and tapped) do
+		task.wait()
+	end
+end
+
+local function playHatch(capsuleId, results)
+	local capsule = Config.CapsuleById[capsuleId]
+	if not capsule or #results == 0 then
+		return
+	end
+	-- con hiếm nhất được "lên sân khấu"
+	local best = results[1]
+	for _, r in results do
+		local a, b = Config.BotById[r.id], Config.BotById[best.id]
+		if a and b and Config.RarityOrder[a.rarity] > Config.RarityOrder[b.rarity] then
+			best = r
+		end
+	end
+	local bot = Config.BotById[best.id]
+	if not bot then
+		return
+	end
+	local rarity = Config.RarityColors[bot.rarity]
+	local rank = Config.RarityOrder[bot.rarity]
+
+	hatchLayer.Visible = true
+	rays.Visible = false
+	hatchNew.Visible = false
+	hatchHint.Visible = false
+	hatchTitle.Text = string.upper(capsule.name) .. (if #results > 1 then " x" .. #results else "")
+	hatchRarity.Text = "OPENING..."
+	hatchRarity.TextColor3 = C.muted
+	hatchScale.Scale = 1
+	clearHatchView()
+	clearHatchGrid()
+
+	-- 1) capsule rung lắc, bot càng hiếm rung càng lâu
+	local cap = BotModels.Capsule(capsule.color, 2.4)
+	cap.model.Parent = hatchView
+	hatchCamera.CFrame = CFrame.lookAt(Vector3.new(0, 1, -6.5), Vector3.new(0, 0.1, 0))
+	local shakeTime = if rank >= 4 then 2.2 elseif rank == 3 then 1.6 else 1.2
+	local start = os.clock()
+	hatchConn = RunService.RenderStepped:Connect(function()
+		local e = os.clock() - start
+		local k = math.min(1, e / shakeTime)
+		local wobble = math.sin(e * (16 + 34 * k)) * (0.06 + 0.28 * k)
+		BotModels.PoseCapsule(cap, CFrame.Angles(0, e * 1.2, wobble), 0)
+		cap.glow.Transparency = 0.7 - 0.6 * k
+	end)
+	hold(shakeTime, false)
+	stopHatchLoop()
+
+	-- 2) bung nắp
+	flashScreen(if rank >= 4 then rarity else WHITE, if rank >= 4 then 0.1 else 0.35)
+	local openStart = os.clock()
+	hatchConn = RunService.RenderStepped:Connect(function()
+		local k = math.min(1, (os.clock() - openStart) / 0.3)
+		BotModels.PoseCapsule(cap, CFrame.new(), k)
+		for _, part in cap.model:GetChildren() do
+			part.Transparency = math.max(part.Transparency, k)
+		end
+	end)
+	hold(0.3, false)
+	stopHatchLoop()
+	clearHatchView()
+
+	-- 3) bot hiện ra giữa vầng sáng màu độ hiếm
+	local rig = BotModels.Build(bot, 1)
+	local center, extent = BotModels.Bounds(rig.model)
+	rig.model.Parent = hatchView
+	local distance = (extent.Magnitude / 2) / math.tan(math.rad(20)) * 0.9
+	hatchCamera.CFrame = CFrame.lookAt(Vector3.new(0.3, 0.25, -1).Unit * distance, Vector3.zero)
+	hatchScale.Scale = 0.3
+	tween(hatchScale, 0.5, { Scale = 1 }, Enum.EasingStyle.Back)
+	rays.Visible = true
+	for _, ray in rayFrames do
+		ray.BackgroundColor3 = rarity
+	end
+	hatchTitle.Text = string.upper(bot.name)
+	hatchRarity.Text = string.format("%s  ·  %s CHANCE", string.upper(bot.rarity), Config.FormatChance(chanceOf(capsule, bot.id)))
+	hatchRarity.TextColor3 = rarity
+	hatchNew.Visible = best.new == true
+	if rank >= 4 then
+		flashScreen(rarity, 0.5)
+	end
+	local revealStart = os.clock()
+	hatchConn = RunService.RenderStepped:Connect(function()
+		local t = os.clock() - revealStart
+		BotModels.Pose(rig, CFrame.Angles(0, -0.4 + math.sin(t * 1.2) * 0.6, 0) * CFrame.new(-center), t)
+		rays.Rotation = t * 25
+	end)
+
+	-- 4) mở nhiều capsule: hiện tất cả kết quả ở hàng dưới
+	if #results > 1 then
+		for i, r in results do
+			local b = Config.BotById[r.id]
+			if b then
+				local rc = Config.RarityColors[b.rarity]
+				local cell = new("Frame", { LayoutOrder = i, Size = UDim2.fromOffset(66, 90), BackgroundColor3 = WHITE, BorderSizePixel = 0, Parent = hatchGrid }, {
+					corner(8),
+					vgradient(rc:Lerp(C.void, 0.5), C.glass),
+					stroke(rc, 1.2, 0.2),
+				})
+				botViewport(cell, b, 1, UDim2.new(1, 0, 0, 62))
+				text({ Position = UDim2.fromOffset(2, 62), Size = UDim2.new(1, -4, 0, 26), TextSize = 11, TextWrapped = true, TextColor3 = if r.new then C.gold else C.text, Text = if r.new then "NEW!" else b.name, Parent = cell })
+			end
+		end
+	end
+	hatchHint.Visible = true
+	hold(0.6, false) -- tránh bấm nhầm ngay lúc vừa hiện
+	hold(if #results > 1 then 12 else 6, true)
+	stopHatchLoop()
+	clearHatchGrid()
+	clearHatchView()
+	hatchLayer.Visible = false
+end
+
+-- capsule mở liên tục thì xếp hàng xem lần lượt
+local hatchQueue, hatching = {}, false
+remotes:WaitForChild("Hatch").OnClientEvent:Connect(function(capsuleId, results)
+	table.insert(hatchQueue, { capsuleId, results })
+	if hatching then
+		return
+	end
+	hatching = true
+	task.spawn(function()
+		while #hatchQueue > 0 do
+			local item = table.remove(hatchQueue, 1)
+			local ok, err = pcall(playHatch, item[1], item[2])
+			if not ok then
+				warn("[Hatch]", err)
+				stopHatchLoop()
+				hatchLayer.Visible = false
+			end
+		end
+		hatching = false
+	end)
+end)
+
 -- ================= Sự kiện từ server =================
 
 remotes.State.OnClientEvent:Connect(function(newState)
@@ -1124,7 +1576,7 @@ remotes.State.OnClientEvent:Connect(function(newState)
 	state = newState
 	renderHud()
 	if first then
-		toast("👋 Welcome, Bot Tamer! Enter 🌿 Byte Meadow, gather data, then upload it at the Hub 📡", 7)
+		toast("👋 Welcome, Bot Tamer! Gather data in 🌿 Byte Meadow, upload it at the Hub 📡, then open capsules at the Capsule Lab 🥚", 7)
 	end
 end)
 
@@ -1148,6 +1600,9 @@ remotes.Notify.OnClientEvent:Connect(function(message, action)
 	elseif action == "Boss" then
 		flashScreen(C.magenta, 0.7)
 		showBoss(message)
+		return
+	elseif action == "Announce" then
+		toast(message, 4, C.gold)
 		return
 	end
 	if message ~= "" then

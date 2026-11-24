@@ -1,8 +1,9 @@
--- Thế giới: nền Terrain, Hub (trạm upload, Bot Forge, robot Unit-0), 3 vùng nối nhau bằng đường,
+-- Thế giới: nền Terrain, Hub (trạm upload, Capsule Lab, Gear Shop, robot Unit-0), 3 vùng nối nhau bằng đường,
 -- cổng level, tinh thể data (thu thập tay), cây/đá/tháp neon trang trí.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local BotModels = require(ReplicatedStorage.Shared.BotModels)
 local Config = require(ReplicatedStorage.Shared.Config)
 local Visuals = require(script.Parent.Visuals)
 
@@ -196,15 +197,50 @@ local function buildHub()
 		end
 	end)
 
-	-- Bot Forge (shop)
-	local forge = Visuals.Part({ Name = "BotForge", Size = Vector3.new(18, 12, 12), CFrame = CFrame.new(c + Vector3.new(-26, 6, 6)) * CFrame.Angles(0, math.rad(60), 0), Color = Color3.fromRGB(255, 170, 60), Material = Enum.Material.SmoothPlastic, Parent = world })
-	Visuals.Part({ Name = "ForgeSign", Size = Vector3.new(18.2, 2, 12.2), CFrame = forge.CFrame * CFrame.new(0, 5, 0), Color = Color3.fromRGB(255, 120, 40), Material = Enum.Material.Neon, CanCollide = false, Parent = world })
-	Visuals.Label(forge, "🤖 BOT FORGE", UDim2.fromScale(16, 3.5), Vector3.new(0, 10, 0), Color3.fromRGB(255, 220, 140), 250)
-	prompt(forge, "Bot Forge", "Shop bots", 16).Triggered:Connect(function(player)
-		if WorldService.OnOpen then
-			WorldService.OnOpen(player, "Bots")
+	-- Capsule Lab: 4 buồng kính, capsule xoay bên trong, bệ trưng bày bot hiếm nhất phía trước
+	local lab = c + Vector3.new(-30, 0, 4)
+	local toCenter = Vector3.new(c.X - lab.X, 0, c.Z - lab.Z).Unit
+	local side = Vector3.new(-toCenter.Z, 0, toCenter.X)
+	local wallPos = lab - toCenter * 7 + Vector3.new(0, 8, 0)
+	local wall = Visuals.Part({ Name = "LabWall", Size = Vector3.new(42, 16, 1.5), CFrame = CFrame.lookAt(wallPos, wallPos + toCenter), Color = Color3.fromRGB(28, 32, 50), Material = Enum.Material.Metal, Parent = world })
+	Visuals.Part({ Name = "LabStrip", Size = Vector3.new(42.2, 0.6, 1.7), CFrame = wall.CFrame * CFrame.new(0, 6.5, 0), Color = Color3.fromRGB(255, 70, 200), Material = Enum.Material.Neon, CanCollide = false, Parent = world })
+	Visuals.Label(wall, "🥚 CAPSULE LAB", UDim2.fromScale(26, 4.5), Vector3.new(0, 11, 0), Color3.fromRGB(255, 160, 230), 260)
+	for i, capsule in Config.Capsules do
+		local pos = lab + side * ((i - 2.5) * 9.5)
+		local premium = capsule.premium == true
+		local width = if premium then 7.5 else 6.5
+		local base = Visuals.Part({ Name = capsule.id .. "Pod", Shape = Enum.PartType.Cylinder, Size = Vector3.new(1.2, width + 1, width + 1), CFrame = CFrame.new(pos + Vector3.new(0, 0.6, 0)) * CFrame.Angles(0, 0, math.pi / 2), Color = Color3.fromRGB(40, 44, 64), Material = Enum.Material.Metal, Parent = world })
+		Visuals.Part({ Name = "PodRing", Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.25, width + 1.4, width + 1.4), CFrame = CFrame.new(pos + Vector3.new(0, 1.2, 0)) * CFrame.Angles(0, 0, math.pi / 2), Color = capsule.color, Material = Enum.Material.Neon, Transparency = 0.25, CanCollide = false, Parent = world })
+		Visuals.Part({ Name = "PodGlass", Shape = Enum.PartType.Cylinder, Size = Vector3.new(8, width, width), CFrame = CFrame.new(pos + Vector3.new(0, 5.2, 0)) * CFrame.Angles(0, 0, math.pi / 2), Color = Color3.fromRGB(200, 230, 255), Material = Enum.Material.Glass, Transparency = 0.7, Parent = world })
+		local cap = Visuals.Part({ Name = "PodCap", Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.9, width + 0.6, width + 0.6), CFrame = CFrame.new(pos + Vector3.new(0, 9.6, 0)) * CFrame.Angles(0, 0, math.pi / 2), Color = Color3.fromRGB(40, 44, 64), Material = Enum.Material.Metal, Parent = world })
+		Visuals.Light(cap, capsule.color, 14, 2)
+		-- capsule bên trong: mọi part cùng trục nên Spin (xoay quanh trục Y của chính part) vẫn khớp
+		local model = BotModels.Capsule(capsule.color, if premium then 4.2 else 3.6)
+		model.model:PivotTo(CFrame.new(pos + Vector3.new(0, 5.2, 0)))
+		for _, part in model.model:GetChildren() do
+			part:SetAttribute("Spin", if premium then 1.2 else 0.8)
 		end
-	end)
+		model.model.Parent = world
+		local priceText = if capsule.price then "💳 " .. Config.Short(capsule.price) else "<font color='#7CFFB0'>ROBUX ONLY</font>"
+		local lockText = if capsule.level > 1 then string.format("  🔒 Lv.%d", capsule.level) else ""
+		Visuals.Label(cap, string.format("%s %s\n<font size='18'>%s%s</font>", capsule.emoji, string.upper(capsule.name), priceText, lockText), UDim2.fromScale(12, 3.6), Vector3.new(0, 3.2, 0), capsule.color:Lerp(Color3.new(1, 1, 1), 0.4), 160)
+		prompt(base, capsule.name, "Open Capsule Lab", 14).Triggered:Connect(function(player)
+			if WorldService.OnOpen then
+				WorldService.OnOpen(player, "Capsules")
+			end
+		end)
+		-- bệ trưng bày: bot hiếm nhất của capsule (để người chơi "săn")
+		local chase = capsule.drops[#capsule.drops]
+		local bot = Config.BotById[chase.bot]
+		local plinthPos = pos + toCenter * 6
+		local plinth = Visuals.Part({ Name = "Plinth", Shape = Enum.PartType.Cylinder, Size = Vector3.new(1, 3.4, 3.4), CFrame = CFrame.new(plinthPos + Vector3.new(0, 0.5, 0)) * CFrame.Angles(0, 0, math.pi / 2), Color = Color3.fromRGB(235, 240, 250), Material = Enum.Material.SmoothPlastic, Parent = world })
+		Visuals.Part({ Name = "PlinthRing", Shape = Enum.PartType.Cylinder, Size = Vector3.new(1.05, 3.7, 3.7), CFrame = plinth.CFrame, Color = Config.RarityColors[bot.rarity], Material = Enum.Material.Neon, Transparency = 0.4, CanCollide = false, Parent = world })
+		local rig = BotModels.Build(bot, 1)
+		local standAt = plinthPos + Vector3.new(0, 1 + rig.size * 1.1, 0)
+		BotModels.Pose(rig, CFrame.lookAt(standAt, standAt + toCenter), 0)
+		rig.model.Parent = world
+		Visuals.Label(plinth, string.format("%s\n<font size='16' color='#%s'>%s · %s</font>", bot.name, Config.RarityColors[bot.rarity]:ToHex(), bot.rarity, Config.FormatChance(chase.weight / 100)), UDim2.fromScale(8, 2.4), Vector3.new(0, 2.6 + rig.size * 2, 0), Color3.new(1, 1, 1), 90)
+	end
 
 	-- Tech Shop (nâng cấp ba lô)
 	local tech = Visuals.Part({ Name = "TechShop", Size = Vector3.new(16, 10, 10), CFrame = CFrame.new(c + Vector3.new(26, 5, 6)) * CFrame.Angles(0, math.rad(-60), 0), Color = Color3.fromRGB(90, 140, 255), Material = Enum.Material.SmoothPlastic, Parent = world })

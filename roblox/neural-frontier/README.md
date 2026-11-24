@@ -2,7 +2,7 @@
 
 Game **nhiều người chơi** thể loại *collector simulator + phiêu lưu hành động*, **giao diện tiếng Anh**, chủ đề AI. Hướng dẫn này viết bằng tiếng Việt cho người làm game.
 
-Người chơi là một **Bot Tamer**. Bạn dẫn một đội bot AI đi vào các vùng đất, thu thập **Data Shard** từ tinh thể, rồi mang về **Hub** để upload lấy **Credits** và XP. Credits dùng để mua thêm bot, nâng cấp bot, mua ba lô to hơn. Trên đường đi sẽ gặp drone nổi loạn và boss, bạn hạ chúng bằng kỹ năng **AI Core** và đội bot tự bắn.
+Người chơi là một **Bot Tamer**. Bạn dẫn một đội **thú máy AI** (mèo, cáo, bọ, cú, sứa, rồng máy...) đi vào các vùng đất, thu thập **Data Shard** từ tinh thể, rồi mang về **Hub** để upload lấy **Credits** và XP. Credits dùng để **mở Capsule ra bot mới**, nâng cấp bot, mua ba lô to hơn. Trên đường đi sẽ gặp drone nổi loạn và boss, bạn hạ chúng bằng kỹ năng **AI Core** và đội bot tự bắn.
 
 > Đây là game nguyên bản: thế giới, nhân vật, quái, tên gọi và hệ thống đều tự thiết kế. Game chỉ dùng chung *thể loại* (thu thập → bán → nâng cấp → mở vùng mới) với nhiều game simulator khác.
 
@@ -10,7 +10,7 @@ Người chơi là một **Bot Tamer**. Bạn dẫn một đội bot AI đi vào
 
 1. Đi vào vùng → đứng gần tinh thể và bấm **chuột trái / G** để thu thập. Đội bot cũng tự hút data mỗi giây.
 2. Ba lô đầy → quay về Hub, bước lên **Upload Pad** 📡 → nhận Credits + XP.
-3. Mua bot ở **Bot Forge**, mua ba lô ở **Gear Shop**, làm nhiệm vụ của **Unit-0**.
+3. Mở capsule ở **Capsule Lab** để có bot mới, sưu tầm đủ bộ trong **Bot Database**, mua ba lô ở **Gear Shop**, làm nhiệm vụ của **Unit-0**.
 4. Lên level → mở kỹ năng mới và mở cổng vùng tiếp theo.
 5. Chết thì **mất data đang mang** (Credits vẫn giữ), nên phải tính lúc nào về upload.
 
@@ -24,21 +24,28 @@ Người chơi là một **Bot Tamer**. Bạn dẫn một đội bot AI đi vào
 
 Boss hồi sinh sau 2 đến 3 phút và cả server được báo. **Ai góp sát thương đều được thưởng**, nên người chơi có lý do đánh boss cùng nhau.
 
-## 🤖 Bot (7 loại)
+## 🥚 Capsule Lab + 🤖 20 thú máy
 
-| Bot | Độ hiếm | Giá |
-|---|---|---|
-| Scout Bot | Common | 100 |
-| Miner Bot | Common | 750 |
-| Guard Bot | Rare | 1.5K |
-| Laser Bot | Rare | 6K |
-| Harvester X | Epic | 18K |
-| Titan Drone | Epic | 70K |
-| Quantum Bot | Legendary | 300K |
+Bot không mua thẳng nữa mà **mở từ Capsule**. Mỗi capsule cho đúng 1 bot, **tỉ lệ rơi luôn hiện rõ** (đã tính luck).
 
-- Mỗi bot có chỉ số **gather** (data/giây) và **attack** (sát thương/giây). Có thể nâng cấp tới Lv.10, mỗi cấp +25%.
-- Chỉ **4 bot mạnh nhất** được ra trận (Game Pass Bot Slots +3). Bot dư có thể Recycle để lấy lại 30% giá.
-- Bot ra trận **bay theo sau lưng** người chơi, có vệt sáng. Người chơi khác cũng nhìn thấy đội bot của bạn, đây là thứ để khoe.
+| Capsule | Mở bằng | Level | Bot bên trong (tỉ lệ gốc) |
+|---|---|---|---|
+| 🌿 Meadow | 120 Credits | 1 | Scout Orb 45% · Byte Kitty 30% · Miner Beetle 17% · Glitch Fox 7% · **Pixel Owl 1%** |
+| 🏜️ Canyon | 4K Credits | 6 | Guard Beetle 45% · Laser Orb 30% · Dune Kitty 17% · Harvester Jelly 7% · **Sun Drake 1%** |
+| 🌃 Spires | 90K Credits | 15 | Titan Beetle 45% · Neon Jelly 30% · Volt Fox 17% · Void Owl 7% · **Quantum Dragon 1%** |
+| 💎 **Neon** | **Robux** | 1 | Holo Kitty 50% · Prism Fox 30% · Aurora Owl 15% · **Nova Dragon 4.5%** · **Singularity 0.5%** |
+
+- Độ hiếm: Common → Rare → Epic → Legendary → **Mythic** (chỉ có trong Neon Capsule).
+- **Luck** chỉ nhân tỉ lệ của Epic, Legendary, Mythic. Nguồn luck: Game Pass 🍀 Lucky Scanner (x1.5, vĩnh viễn) và gói 🍀 x2 Luck (15 phút).
+- **Hoạt cảnh mở capsule**: capsule rung (bot càng hiếm rung càng lâu), bung nắp, bot hiện ra giữa vầng sáng màu độ hiếm, hiện chữ "NEW!" nếu là bot mới. Mở x3/x10 thì hiện cả hàng kết quả.
+- Ai mở được bot **Legendary/Mythic** thì **cả server được báo**.
+- Mỗi bot là một **thú máy dựng bằng Part**, có cử động: đập cánh, vẫy đuôi, xúc tu đung đưa, vòng hào quang quay. Bot Legendary/Mythic có vòng hào quang trên đầu.
+- Chỉ **4 bot mạnh nhất** ra trận (Game Pass Bot Slots +3). Kho tối đa 60 bot. Bot dư có thể Recycle từng con hoặc **Recycle cả loạt** bot dự bị Common/Rare.
+
+## 📚 Bot Database
+
+- Bot chưa có hiện **bóng đen "???"**, có rồi thì hiện thú máy 3D đầy màu sắc.
+- Sưu tầm đủ 5 bot của một capsule thì nhận thưởng một lần: Credits và **+% gather vĩnh viễn** (Meadow +5%, Canyon +10%, Spires +15%, Neon +25%).
 
 ## ⚡ Kỹ năng AI Core
 
@@ -51,27 +58,33 @@ Boss hồi sinh sau 2 đến 3 phút và cả server được báo. **Ai góp s�
 
 Trên điện thoại có sẵn nút bấm cho từng kỹ năng và nút 💾 thu thập.
 
-## 💎 Shop
+## 💎 Shop (Robux là nguồn thu chính)
 
-Shop **không có trứng hay hộp quay ngẫu nhiên trả bằng Robux**. Người mua luôn biết chính xác mình nhận được gì.
+| Loại | Tên | Tác dụng | Giá gợi ý |
+|---|---|---|---|
+| Dev Product | 💎 Neon Capsule x1 / x3 / x10 | Mở ngay Neon Capsule (có Mythic) | 49 / 139 / 399 R$ |
+| Dev Product | 🍀 x2 Luck | x2 tỉ lệ Epic+ trong 15 phút | 49 R$ |
+| Game Pass | 🍀 Lucky Scanner | x1.5 luck vĩnh viễn | 249 R$ |
+| Game Pass | 🥚 Triple Hatch | Mở 3 capsule Credits một lần | 199 R$ |
+| Game Pass | ⭐ VIP | x2 Credits khi upload, tag VIP | 199 R$ |
+| Game Pass | 🤖 +3 Bot Slots | Mang thêm 3 bot ra trận | 299 R$ |
+| Game Pass | 🎒 Big Backpack · 📡 Auto Upload · 👟 Turbo Boots | Ba lô x2 · tự upload · chạy nhanh | 99–149 R$ |
+| Dev Product | 🚀 Mega Boost · 💰 / 💾 Boost | x2 Credits và/hoặc Gather | 29–79 R$ |
+| Dev Product | 💳 Credit Pack S / L | Credits tự tăng theo tiến độ | 49 / 199 R$ |
 
-| Loại | Tên | Tác dụng |
-|---|---|---|
-| Game Pass | ⭐ VIP | x2 Credits khi upload, tag VIP trên đầu |
-| Game Pass | 🤖 +3 Bot Slots | Mang thêm 3 bot ra trận |
-| Game Pass | 🎒 Big Backpack | Ba lô x2 vĩnh viễn |
-| Game Pass | 📡 Auto Upload | Đầy ba lô thì tự upload, khỏi chạy về |
-| Game Pass | 👟 Turbo Boots | Chạy nhanh hơn |
-| Dev Product | 🚀 Mega Boost | x2 Credits + x2 Gather trong 30 phút |
-| Dev Product | 💰 / 💾 Boost | x2 Credits hoặc x2 Gather trong 15 phút |
-| Dev Product | 💳 Credit Pack S / L | Số Credits tự tăng theo tiến độ người chơi |
+Giá là gợi ý, anh tự đặt trên Creator Dashboard. **x3 và x10 rẻ hơn thật** so với mua lẻ, không dùng giá gạch giả.
+
+### ⚖️ Làm đúng luật Roblox về vật phẩm ngẫu nhiên trả tiền
+- **Luôn hiện tỉ lệ rơi** ở Capsule Lab, trên bệ trưng bày trong map và trong hoạt cảnh mở.
+- Game kiểm tra `PolicyService:GetPolicyInfoForPlayerAsync()`. Người chơi ở nơi luật cấm (`ArePaidRandomItemsRestricted`) sẽ **không thấy** Neon Capsule, Luck, Triple Hatch và Credit Pack (các món có `paidRandom = true` trong Config). Họ vẫn mở capsule bằng Credits kiếm được khi chơi.
+- Khi publish, trong **Maturity & Compliance Questionnaire** nhớ khai là game **có paid random items**.
 
 ## ▶️ Chạy thử trong Studio
 
 1. Mở `NeuralFrontier.rbxlx` bằng Studio (**File → Open from File**), rồi bấm **Play**. Chưa publish vẫn chơi được ở chế độ thử, nhưng data không được lưu.
 2. Muốn lưu data thì **Publish** game, rồi bật **Game Settings → Security → Enable Studio Access to API Services**.
 3. Muốn thử nhiều người chơi: tab **Test → Clients and Servers → 2 Players → Start**.
-4. Vào Creator Dashboard, tạo 5 Game Pass `VIP`, `BotSlots`, `BigBackpack`, `AutoUpload`, `TurboBoots` và 5 Developer Product `CreditBoost`, `GatherBoost`, `MegaBoost`, `CreditsSmall`, `CreditsLarge`.
+4. Vào Creator Dashboard, tạo 7 Game Pass `VIP`, `LuckyScanner`, `TripleHatch`, `BotSlots`, `BigBackpack`, `AutoUpload`, `TurboBoots` và 9 Developer Product `NeonCapsule1`, `NeonCapsule3`, `NeonCapsule10`, `LuckBoost`, `CreditBoost`, `GatherBoost`, `MegaBoost`, `CreditsSmall`, `CreditsLarge`.
 5. Dán ID vào `src/shared/Config.luau`. Khi ID còn là `0`, nút trong shop sẽ hiện "Set ID".
 
 Dùng Rojo thì chạy `rojo serve` trong thư mục này.
@@ -80,14 +93,15 @@ Dùng Rojo thì chạy `rojo serve` trong thư mục này.
 
 | File | Việc |
 |---|---|
-| `shared/Config.luau` | Toàn bộ số liệu: bot, vùng, quái, kỹ năng, nhiệm vụ, shop |
+| `shared/Config.luau` | Toàn bộ số liệu: bot, capsule + tỉ lệ, vùng, quái, kỹ năng, nhiệm vụ, shop |
+| `shared/BotModels.luau` | Dựng 7 dáng thú máy (Orb, Cat, Fox, Beetle, Owl, Jelly, Dragon) + cử động, capsule 3D |
 | `server/DataService.luau` | Lưu và tải data, retry, chế độ thử khi chưa publish |
-| `server/WorldService.luau` | Dựng map bằng code: Terrain, Hub, cổng vùng, tinh thể data |
-| `server/PlayerService.luau` | Thu thập, upload, mua và nâng cấp bot, kỹ năng, level, nhiệm vụ |
+| `server/WorldService.luau` | Dựng map bằng code: Terrain, Hub, Capsule Lab, cổng vùng, tinh thể data |
+| `server/PlayerService.luau` | Thu thập, upload, mở capsule, Database, nâng cấp/recycle bot, kỹ năng, level, nhiệm vụ |
 | `server/EnemyService.luau` | AI của quái và boss, đội bot tự bắn, chia thưởng boss |
-| `server/MonetizationService.luau` | Game Pass, Dev Product (chỉ báo đã nhận sau khi lưu xong) |
-| `client/Main.client.luau` | HUD, nút kỹ năng, các bảng Bots / Gear / Quests / Shop |
-| `client/Effects.luau` | Vẽ đội bot bay theo, laser, số sát thương, nổ, hào quang |
+| `server/MonetizationService.luau` | Game Pass, Dev Product, Neon Capsule, kiểm tra PolicyService |
+| `client/Main.client.luau` | HUD hologram, nút kỹ năng, bảng Bots / Capsules / Database / Gear / Missions / Shop, hoạt cảnh mở capsule |
+| `client/Effects.luau` | Vẽ đội thú máy bay theo, laser, số sát thương, nổ, hào quang |
 | `client/Fx.luau` | Làm tinh thể xoay, đèn nhấp nháy |
 
 Server quyết định mọi thứ (tiền, data, sát thương). Client chỉ gửi yêu cầu và hiển thị, nên khó hack tiền.
@@ -95,5 +109,5 @@ Server quyết định mọi thứ (tiền, data, sát thương). Client chỉ g
 ## 🎨 Nâng cấp đồ họa
 
 Map hiện tại dựng hoàn toàn bằng code (Part + Terrain). Muốn đẹp hơn nhiều:
-- Thay thân bot trong `client/Effects.luau` (hàm `makeBot`) bằng model tự làm trong Blender.
+- Thú máy đang dựng từ Part trong `shared/BotModels.luau`. Có model Blender thì thay vào hàm `BotModels.Build` (giữ hướng mặt trước là -Z).
 - Lấy model cây, đá, nhà từ Creator Store. **Nhớ kiểm tra model không chứa Script lạ** trước khi dùng.

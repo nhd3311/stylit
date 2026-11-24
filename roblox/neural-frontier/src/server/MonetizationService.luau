@@ -1,9 +1,13 @@
--- Kiếm Robux: Game Pass (mua 1 lần) và Developer Product (mua nhiều lần).
+-- Kiếm Robux: Game Pass (mua 1 lần) và Developer Product (mua nhiều lần, gồm Neon Capsule).
 -- Quy tắc vàng: CHỈ báo PurchaseGranted sau khi đã lưu data thành công, và nhớ PurchaseId
 -- để không cộng đồ 2 lần.
+-- Luật Roblox về vật phẩm ngẫu nhiên trả tiền (capsule): luôn hiện tỉ lệ rơi, và người chơi ở
+-- nơi bị cấm (PolicyService) thì ẩn mọi món có paidRandom = true.
 
 local MarketplaceService = game:GetService("MarketplaceService")
 local Players = game:GetService("Players")
+local PolicyService = game:GetService("PolicyService")
+local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Config = require(ReplicatedStorage.Shared.Config)
@@ -48,6 +52,16 @@ local function grantPass(player, passKey)
 end
 
 function MonetizationService.LoadPasses(player)
+	-- Không đọc được chính sách thì coi như bị cấm cho an toàn (trừ khi đang thử trong Studio)
+	local policyOk, policy = pcall(PolicyService.GetPolicyInfoForPlayerAsync, PolicyService, player)
+	local restricted
+	if policyOk and policy then
+		restricted = policy.ArePaidRandomItemsRestricted == true
+	else
+		restricted = not RunService:IsStudio()
+		warn("[Monetization] Không đọc được PolicyService", policy)
+	end
+	player:SetAttribute("PaidRandomRestricted", restricted)
 	for passKey, pass in Config.GamePasses do
 		if pass.id ~= 0 then
 			local ok, owns = pcall(MarketplaceService.UserOwnsGamePassAsync, MarketplaceService, player.UserId, pass.id)
@@ -86,6 +100,14 @@ local function grantProduct(player, profile, product)
 		local amount = math.max(product.min, math.floor(perSecond * 60 * product.minutes))
 		PlayerService.AddCredits(player, amount)
 		return true, string.format("%s (+%s credits)", product.name, Config.Short(amount))
+	elseif product.kind == "Capsule" then
+		local capsule = Config.CapsuleById[product.capsule]
+		if not capsule then
+			return false, nil
+		end
+		-- đồ đã trả tiền: cho vượt giới hạn kho bot để không mất lượt mua
+		PlayerService.Hatch(player, profile, capsule, product.count)
+		return true, product.name
 	end
 	return false, nil
 end

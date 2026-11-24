@@ -12,7 +12,7 @@ local WorldService = require(script.Parent.WorldService)
 
 local remotes = Instance.new("Folder")
 remotes.Name = "Remotes"
-for _, name in { "State", "Action", "Notify", "Fx" } do
+for _, name in { "State", "Action", "Notify", "Fx", "Hatch" } do
 	local remote = Instance.new("RemoteEvent")
 	remote.Name = name
 	remote.Parent = remotes

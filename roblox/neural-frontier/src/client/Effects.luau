@@ -1,4 +1,4 @@
--- Hiệu ứng chạy ở máy người chơi: đội bot bay theo mọi người chơi (đọc attribute "Bots"),
+-- Hiệu ứng chạy ở máy người chơi: đội thú máy bay theo mọi người chơi (đọc attribute "Bots"),
 -- tia laser bot bắn, vòng Pulse, số sát thương, nổ, hút data, lên level, hào quang kỹ năng.
 
 local Players = game:GetService("Players")
@@ -6,6 +6,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 
+local BotModels = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("BotModels"))
 local Config = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Config"))
 
 local Effects = {}
@@ -42,14 +43,11 @@ end
 
 -- ================= Đội bot =================
 
--- 1 bot: thân cầu + mắt neon + vòng cánh quạt + vệt sáng (Trail)
+-- 1 bot: thú máy dựng từ BotModels + vệt sáng (Trail), đèn, lấp lánh cho bot hiếm
 local function makeBot(bot, level)
-	local model = Instance.new("Model")
-	model.Name = bot.name
-	local size = bot.size * (1 + (level - 1) * 0.04)
-	local body = part({ Name = "Body", Shape = Enum.PartType.Ball, Size = Vector3.one * size, Color = Color3.fromRGB(240, 242, 250), Material = Enum.Material.SmoothPlastic, Parent = model })
-	local eye = part({ Name = "Eye", Shape = Enum.PartType.Ball, Size = Vector3.one * size * 0.42, Color = bot.color, Material = Enum.Material.Neon, Parent = model })
-	local ring = part({ Name = "Ring", Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.15, size * 1.7, size * 1.7), Color = bot.color, Material = Enum.Material.Neon, Transparency = 0.45, Parent = model })
+	local rig = BotModels.Build(bot, level)
+	local body = rig.body
+	local size = rig.size
 	local a0 = Instance.new("Attachment")
 	a0.Position = Vector3.new(0, 0, size * 0.3)
 	a0.Parent = body
@@ -62,26 +60,25 @@ local function makeBot(bot, level)
 	trail.Color = ColorSequence.new(bot.color)
 	trail.LightEmission = 1
 	trail.Lifetime = 0.35
-	trail.Transparency = NumberSequence.new(0.2, 1)
+	trail.Transparency = NumberSequence.new(0.3, 1)
 	trail.Parent = body
 	local light = Instance.new("PointLight")
 	light.Color = bot.color
-	light.Range = 6
+	light.Range = 6 + size * 2
 	light.Brightness = 1.2
-	light.Parent = eye
-	if bot.rarity == "Legendary" or bot.rarity == "Epic" then
+	light.Parent = body
+	if Config.RarityOrder[bot.rarity] >= Config.RarityOrder.Epic then
 		local sparkle = Instance.new("ParticleEmitter")
-		sparkle.Color = ColorSequence.new(bot.color)
+		sparkle.Color = ColorSequence.new(Config.RarityColors[bot.rarity], bot.color)
 		sparkle.LightEmission = 1
-		sparkle.Rate = 6
+		sparkle.Rate = if bot.rarity == "Mythic" then 14 else 6
 		sparkle.Lifetime = NumberRange.new(0.5, 1)
 		sparkle.Speed = NumberRange.new(0.5, 1.5)
-		sparkle.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.2), NumberSequenceKeypoint.new(1, 0) })
+		sparkle.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.2 + size * 0.05), NumberSequenceKeypoint.new(1, 0) })
 		sparkle.Parent = body
 	end
-	model.PrimaryPart = body
-	model.Parent = fxFolder
-	return { model = model, body = body, eye = eye, ring = ring, size = size, color = bot.color, pos = nil, phase = math.random() * 6 }
+	rig.model.Parent = fxFolder
+	return { rig = rig, model = rig.model, size = size, color = bot.color, pos = nil, phase = math.random() * 6 }
 end
 
 local function rebuildSquad(player)
@@ -128,15 +125,16 @@ local function updateSquads(dt)
 			local count = #squad.bots
 			for i, b in squad.bots do
 				local angle = math.rad(-70 + (i - 0.5) / math.max(count, 1) * 140)
-				local radius = 5 + (i % 2) * 1.5
-				local offset = Vector3.new(math.sin(angle) * radius, 3.5 + math.sin(t * 3 + b.phase) * 0.6, math.cos(angle) * radius)
+				local radius = 4.5 + (i % 2) * 1.8 + b.size * 0.9
+				local offset = Vector3.new(math.sin(angle) * radius, 2.5 + b.size * 0.8 + math.sin(t * 3 + b.phase) * 0.6, math.cos(angle) * radius)
 				local target = (root.CFrame * CFrame.new(offset)).Position
+				local previous = b.pos
 				b.pos = if b.pos then b.pos:Lerp(target, math.min(1, dt * 6)) else target
-				local look = root.CFrame.LookVector
-				local cf = CFrame.lookAt(b.pos, b.pos + look)
-				b.body.CFrame = cf
-				b.eye.CFrame = cf * CFrame.new(0, 0, -b.size * 0.32)
-				b.ring.CFrame = cf * CFrame.Angles(0, t * 6 + b.phase, 0) * CFrame.Angles(0, 0, math.pi / 2)
+				-- nghiêng người theo hướng bay cho sống động
+				local velocity = if previous then (b.pos - previous) / math.max(dt, 1 / 240) else Vector3.zero
+				local lean = math.clamp(root.CFrame.RightVector:Dot(velocity) * -0.03, -0.35, 0.35)
+				local cf = CFrame.lookAt(b.pos, b.pos + root.CFrame.LookVector) * CFrame.Angles(0, 0, lean)
+				BotModels.Pose(b.rig, cf, t + b.phase)
 			end
 		end
 	end

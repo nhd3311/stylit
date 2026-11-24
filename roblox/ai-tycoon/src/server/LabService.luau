@@ -1,62 +1,36 @@
 -- Mọi thứ diễn ra trong phòng lab: dựng map, chia lab cho người chơi, gõ code,
 -- lắp/nâng cấp GPU, thu token, train AI. Server là "trọng tài": client chỉ gửi
 -- yêu cầu, server tự kiểm tra tiền/quyền rồi mới làm.
+--
+-- Các service khác (Heist, Progress...) cắm vào đây qua:
+--   RegisterAction(name, fn)       thêm hành động client được gọi
+--   RegisterStateProvider(fn)      thêm field vào State gửi client
+--   RegisterTerminalHook(fn)       chạy khi người chơi bấm Máy thu token
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local TweenService = game:GetService("TweenService")
 
 local Config = require(ReplicatedStorage.Shared.Config)
 local DataService = require(script.Parent.DataService)
+local Visuals = require(script.Parent.Visuals)
 
 local TICK = 1 -- giây giữa mỗi lần GPU đào token
-
-local FLOOR_COLOR = Color3.fromRGB(28, 30, 40)
-local RACK_COLOR = Color3.fromRGB(45, 48, 60)
-local LOCKED_COLOR = Color3.fromRGB(70, 70, 70)
-local VIP_COLOR = Color3.fromRGB(200, 165, 40)
-local OFF_COLOR = Color3.fromRGB(60, 60, 70)
+local COLORS = Visuals.Colors
 
 local LabService = {}
 
 local remotes -- gán trong Start()
-local labSlots = {} -- [index] = { model, origin, owner, racks, core, coreLabel, signLabel, spawn }
+local labSlots = {} -- [index] = { model, racks, core, coreLabel, signLabel, terminal, spawn, origin, owner }
 local sessions = {} -- [player] = { lab, lastAction, lastClick }
+local actions = {}
+local stateProviders = {}
+local terminalHooks = {}
 
 -- ================= Tiện ích =================
 
-local function makePart(props)
-	local part = Instance.new("Part")
-	part.Anchored = true
-	part.TopSurface = Enum.SurfaceType.Smooth
-	part.BottomSurface = Enum.SurfaceType.Smooth
-	for key, value in props do
-		part[key] = value
-	end
-	return part
-end
-
-local function makeLabel(parent, text, size, offset)
-	local gui = Instance.new("BillboardGui")
-	gui.Size = size or UDim2.fromScale(6, 1.5)
-	gui.StudsOffset = offset or Vector3.new(0, 3, 0)
-	gui.MaxDistance = 120
-	local label = Instance.new("TextLabel")
-	label.Name = "Text"
-	label.Size = UDim2.fromScale(1, 1)
-	label.BackgroundTransparency = 1
-	label.TextScaled = true
-	label.Font = Enum.Font.BuilderSansBold
-	label.TextColor3 = Color3.new(1, 1, 1)
-	label.TextStrokeTransparency = 0.3
-	label.Text = text
-	label.Parent = gui
-	gui.Parent = parent
-	return label
-end
-
-local function notify(player, message, action)
+function LabService.Notify(player, message, action)
 	remotes.Notify:FireClient(player, message, action)
 end
+local notify = LabService.Notify
 
 local function isVip(player)
 	return player:GetAttribute("VIP") == true
@@ -66,17 +40,41 @@ local function hasAutoCollect(player)
 	return player:GetAttribute("AutoCollect") == true
 end
 
+function LabService.RegisterAction(name, handler)
+	actions[name] = handler
+end
+
+function LabService.RegisterStateProvider(provider)
+	table.insert(stateProviders, provider)
+end
+
+function LabService.RegisterTerminalHook(hook)
+	table.insert(terminalHooks, hook)
+end
+
+function LabService.GetLabs()
+	return labSlots
+end
+
+function LabService.GetLab(player)
+	local session = sessions[player]
+	return session and session.lab
+end
+
 -- ================= Hệ số nhân =================
 
--- Hệ số VIP + boost token (áp cho cả click lẫn GPU)
+-- VIP + boost + cổ phiếu IPO (áp cho cả click lẫn GPU)
 function LabService.GetTokenMultiplier(player)
 	local profile = DataService.Profiles[player]
 	local mult = 1
 	if isVip(player) then
 		mult *= Config.Multipliers.VipTokens
 	end
-	if profile and (profile.boosts.Tokens or 0) > os.time() then
-		mult *= Config.Multipliers.TokenBoost
+	if profile then
+		if (profile.boosts.Tokens or 0) > os.time() then
+			mult *= Config.Multipliers.TokenBoost
+		end
+		mult *= Config.ShareMultiplier(profile.shares)
 	end
 	return mult
 end
@@ -89,7 +87,7 @@ function LabService.GetTrainMultiplier(player)
 	return 1
 end
 
--- Token/giây của 1 kệ (đã tính level AI, VIP, boost)
+-- Token/giây của 1 kệ
 local function rackRate(player, profile, rack)
 	local gpu = Config.GpuById[rack.gpu]
 	if not gpu then
@@ -136,7 +134,7 @@ function LabService.PushState(player)
 		buffered += rack.buffer or 0
 	end
 
-	remotes.State:FireClient(player, {
+	local state = {
 		tokens = profile.tokens,
 		rate = LabService.GetRate(player),
 		buffered = buffered,
@@ -148,16 +146,21 @@ function LabService.PushState(player)
 		clickTokens = Config.ClickTokens(profile.ai.level) * LabService.GetTokenMultiplier(player),
 		vip = isVip(player),
 		autoCollect = hasAutoCollect(player),
-	})
+	}
+	for _, provider in stateProviders do
+		provider(player, profile, state)
+	end
+	remotes.State:FireClient(player, state)
 end
 
 function LabService.AddTokens(player, amount)
 	local profile = DataService.Profiles[player]
-	if not profile then
+	if not profile or amount <= 0 then
 		return
 	end
 	profile.tokens += amount
 	profile.totalEarned += amount
+	profile.runEarned += amount
 end
 
 -- ================= Hiển thị =================
@@ -169,32 +172,31 @@ local function renderRack(player, index)
 		return
 	end
 	local rackPart = session.lab.racks[index]
-	local light = rackPart.Light
 	local prompt = rackPart.Prompt
 	local label = rackPart.Info.Text
 	local rack = profile.racks[tostring(index)]
 
 	if not canUseRack(player, profile, index) then
-		rackPart.Color = LOCKED_COLOR
+		rackPart.Color = COLORS.locked
 		rackPart.Transparency = 0.6
-		light.Color = OFF_COLOR
 		label.Text = ""
 		prompt.ObjectText = "Kệ " .. index
 		if index > Config.Racks.BuyableRacks then
-			light.Color = VIP_COLOR
+			Visuals.PaintRack(rackPart, COLORS.vip)
 			prompt.ActionText = "⭐ Cần VIP"
 		else
+			Visuals.PaintRack(rackPart, nil)
 			prompt.ActionText = "🔒 Mở kệ (" .. Config.Short(Config.RackPrice(index) or 0) .. " token)"
 		end
 		return
 	end
 
-	rackPart.Color = RACK_COLOR
+	rackPart.Color = COLORS.rack
 	rackPart.Transparency = 0
 
 	if not rack then
 		local first = Config.Gpus[1]
-		light.Color = OFF_COLOR
+		Visuals.PaintRack(rackPart, nil)
 		label.Text = "Trống"
 		prompt.ObjectText = "Kệ trống"
 		prompt.ActionText = string.format("Lắp %s %s (%s)", first.emoji, first.name, Config.Short(first.price))
@@ -203,7 +205,7 @@ local function renderRack(player, index)
 
 	local gpu = Config.GpuById[rack.gpu]
 	local nextGpu = Config.Gpus[Config.GpuTier[rack.gpu] + 1]
-	light.Color = gpu.color
+	Visuals.PaintRack(rackPart, gpu.color)
 	prompt.ObjectText = string.format("%s %s • %s/s", gpu.emoji, gpu.name, Config.Short(rackRate(player, profile, rack)))
 	if not nextGpu then
 		prompt.ActionText = "Đã max cấp 🔥"
@@ -218,7 +220,7 @@ local function renderRack(player, index)
 	else
 		local cap = rackRate(player, profile, rack) * Config.Racks.BufferSeconds
 		local full = (rack.buffer or 0) >= cap
-		label.Text = string.format("%s 🪙%s%s", gpu.emoji, Config.Short(rack.buffer or 0), if full then " ĐẦY!" else "")
+		label.Text = string.format("%s 🪙%s%s", gpu.emoji, Config.Short(rack.buffer or 0), if full then " <font color='#ff5050'>ĐẦY!</font>" else "")
 	end
 end
 
@@ -235,10 +237,31 @@ local function renderCore(player)
 		return
 	end
 	local stage = Config.StageFor(profile.ai.level)
-	local core = session.lab.core
-	core.Color = stage.color
-	core.Size = Vector3.new(stage.size, stage.size, stage.size)
+	Visuals.PaintCore(session.lab.core, stage.color, stage.size)
 	session.lab.coreLabel.Text = string.format("%s %s • Lv.%d", stage.emoji, stage.name, profile.ai.level)
+end
+
+local function renderSign(player)
+	local session = sessions[player]
+	local profile = DataService.Profiles[player]
+	if not session or not profile then
+		return
+	end
+	local rank = Config.CompanyRank(profile.ipoCount)
+	local shares = if profile.shares > 0 then string.format("  📈 %d cổ phiếu", profile.shares) else ""
+	session.lab.signLabel.Text = string.format(
+		"🏢 %s Corp.\n<font size='20' color='#FFD84D'>%s%s</font>",
+		player.DisplayName,
+		rank.name,
+		shares
+	)
+end
+
+-- Vẽ lại toàn bộ lab (sau IPO, sau khi nhận Gói Khởi Nghiệp...)
+function LabService.RenderAll(player)
+	renderAllRacks(player)
+	renderCore(player)
+	renderSign(player)
 end
 
 -- ================= Hành động của người chơi =================
@@ -302,7 +325,7 @@ local function onRackPrompt(player, slot, index)
 	LabService.PushState(player)
 end
 
-local function collectAll(player, profile)
+local function collectAll(profile)
 	local total = 0
 	for _, rack in profile.racks do
 		total += rack.buffer or 0
@@ -317,18 +340,22 @@ local function onTerminalPrompt(player, slot)
 	if not session or not profile or session.lab ~= slot then
 		return
 	end
-	local total = collectAll(player, profile)
-	if total < 1 then
-		notify(player, "Chưa có token nào để thu. Lắp GPU đi anh em! 🖥️")
-		return
+	local handled = false
+	for _, hook in terminalHooks do
+		if hook(player) then
+			handled = true
+		end
 	end
-	LabService.AddTokens(player, total)
-	notify(player, "Thu được +" .. Config.Short(total) .. " token 🤑")
+	local total = collectAll(profile)
+	if total >= 1 then
+		LabService.AddTokens(player, total)
+		notify(player, "Thu được +" .. Config.Short(total) .. " token 🤑", "Collect")
+	elseif not handled then
+		notify(player, "Chưa có token nào để thu. Lắp GPU đi anh em! 🖥️")
+	end
 	renderAllRacks(player)
 	LabService.PushState(player)
 end
-
-local actions = {}
 
 function actions.Click(player, profile, session)
 	local t = os.clock()
@@ -370,9 +397,10 @@ function actions.Train(player, profile, session, fraction)
 		local oldStage = Config.StageFor(startLevel)
 		local stage = Config.StageFor(profile.ai.level)
 		if stage ~= oldStage then
-			notify(player, string.format("🎉 AI tiến hoá thành %s %s!", stage.emoji, stage.name), "LevelUp")
+			notify(player, string.format("🎉 AI tiến hoá thành %s %s!", stage.emoji, stage.name), "Evolve")
 		else
-			notify(player, string.format("🧠 AI lên Lv.%d! Token +%d%%", profile.ai.level, math.floor((Config.LevelMultiplier(profile.ai.level) - 1) * 100 + 0.5)), "LevelUp")
+			local bonus = math.floor((Config.LevelMultiplier(profile.ai.level) - 1) * 100 + 0.5)
+			notify(player, string.format("🧠 AI lên Lv.%d! Token +%d%%", profile.ai.level, bonus), "LevelUp")
 		end
 		renderCore(player)
 		renderAllRacks(player)
@@ -410,14 +438,26 @@ function LabService.Refresh(player)
 	local profile = DataService.Profiles[player]
 	if sessions[player] and profile then
 		if hasAutoCollect(player) then
-			LabService.AddTokens(player, collectAll(player, profile))
+			LabService.AddTokens(player, collectAll(profile))
 		end
-		renderAllRacks(player)
+		LabService.RenderAll(player)
 		LabService.PushState(player)
 	end
 end
 
 -- ================= Dựng map =================
+
+local function makePrompt(parent, objectText, actionText, distance)
+	local prompt = Instance.new("ProximityPrompt")
+	prompt.Name = "Prompt"
+	prompt.HoldDuration = 0
+	prompt.MaxActivationDistance = distance or 9
+	prompt.RequiresLineOfSight = false
+	prompt.ObjectText = objectText or ""
+	prompt.ActionText = actionText or "..."
+	prompt.Parent = parent
+	return prompt
+end
 
 local function buildLab(index)
 	local col = (index - 1) % 4
@@ -431,98 +471,54 @@ local function buildLab(index)
 	model.Name = "Lab" .. index
 	model:SetAttribute("OwnerUserId", 0)
 
-	makePart({
-		Name = "Floor",
-		Size = Vector3.new(85, 1, 105),
-		CFrame = origin * CFrame.new(0, -0.4, 0),
-		Color = FLOOR_COLOR,
-		Material = Enum.Material.DiamondPlate,
-	}).Parent = model
+	Visuals.BuildFloor(model, origin, 85, 105)
+	Visuals.BuildGate(model, origin * CFrame.new(0, 0, 50), COLORS.grid)
 
-	local signPost = makePart({
+	local signPost = Visuals.Part({
 		Name = "Sign",
 		Size = Vector3.new(1, 8, 1),
 		CFrame = origin * CFrame.new(0, 4, -48),
-		Color = Color3.fromRGB(60, 60, 80),
+		Color = COLORS.metal,
 		Material = Enum.Material.Metal,
 	})
 	signPost.Parent = model
-	local signLabel = makeLabel(signPost, "🏢 Lab trống", UDim2.fromScale(18, 3), Vector3.new(0, 6, 0))
+	local signLabel = Visuals.Label(signPost, "🏢 Lab trống", UDim2.fromScale(22, 5), Vector3.new(0, 8, 0))
 
 	-- 12 kệ: 2 hàng x 6
 	local racks = {}
 	for i = 1, Config.Racks.Count do
 		local r = math.floor((i - 1) / 6)
 		local c = (i - 1) % 6
-		local rackPart = makePart({
-			Name = "Rack" .. i,
-			Size = Vector3.new(5, 8, 3),
-			CFrame = origin * CFrame.new((c - 2.5) * 9, 4, -36 + r * 12),
-			Color = RACK_COLOR,
-			Material = Enum.Material.Metal,
-		})
-		makePart({
-			Name = "Light",
-			Size = Vector3.new(4.2, 0.4, 0.2),
-			CFrame = rackPart.CFrame * CFrame.new(0, 2.5, 1.55),
-			Color = OFF_COLOR,
-			Material = Enum.Material.Neon,
-			CanCollide = false,
-		}).Parent = rackPart
-		makeLabel(rackPart, "", UDim2.fromScale(7, 1.6), Vector3.new(0, 5.5, 0)).Parent.Name = "Info"
-		local prompt = Instance.new("ProximityPrompt")
-		prompt.Name = "Prompt"
-		prompt.HoldDuration = 0
-		prompt.MaxActivationDistance = 9
-		prompt.RequiresLineOfSight = false
-		prompt.ActionText = "..."
-		prompt.Parent = rackPart
+		local rackPart = Visuals.BuildRack(origin * CFrame.new((c - 2.5) * 9, 4, -36 + r * 12))
+		rackPart.Name = "Rack" .. i
+		Visuals.Label(rackPart, "", UDim2.fromScale(7, 1.6), Vector3.new(0, 5.5, 0)).Parent.Name = "Info"
+		makePrompt(rackPart)
 		rackPart.Parent = model
 		racks[i] = rackPart
 	end
 
 	-- Lõi AI ở giữa phòng
-	local core = makePart({
-		Name = "AICore",
-		Shape = Enum.PartType.Ball,
-		Size = Vector3.new(4, 4, 4),
-		CFrame = origin * CFrame.new(0, 7, 2),
-		Color = Config.AIStages[1].color,
-		Material = Enum.Material.ForceField,
-		CanCollide = false,
-	})
-	makePart({
+	Visuals.Part({
 		Name = "Pedestal",
-		Size = Vector3.new(6, 2, 6),
+		Size = Vector3.new(7, 2, 7),
 		CFrame = origin * CFrame.new(0, 1, 2),
-		Color = Color3.fromRGB(50, 50, 70),
+		Color = COLORS.metal,
 		Material = Enum.Material.Metal,
 	}).Parent = model
-	local coreLabel = makeLabel(core, "🤖 AI", UDim2.fromScale(14, 2.5), Vector3.new(0, 7, 0))
-	core.Parent = model
-	TweenService:Create(
-		core,
-		TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1),
-		{ CFrame = core.CFrame * CFrame.Angles(0, math.pi, 0) }
-	):Play()
+	local core = Visuals.BuildCore(model, origin * CFrame.new(0, 8, 2), Config.AIStages[1].color)
+	local coreLabel = Visuals.Label(core, "🤖 AI", UDim2.fromScale(14, 2.5), Vector3.new(0, 8, 0))
 
 	-- Máy thu token
-	local terminal = makePart({
+	local terminal = Visuals.Part({
 		Name = "Terminal",
 		Size = Vector3.new(4, 4, 2),
 		CFrame = origin * CFrame.new(0, 2, 20),
-		Color = Color3.fromRGB(40, 160, 110),
+		Color = Color3.fromRGB(40, 220, 140),
 		Material = Enum.Material.Neon,
 	})
-	makeLabel(terminal, "🪙 Máy thu token", UDim2.fromScale(10, 2), Vector3.new(0, 4, 0))
-	local terminalPrompt = Instance.new("ProximityPrompt")
-	terminalPrompt.Name = "Prompt"
-	terminalPrompt.HoldDuration = 0
-	terminalPrompt.MaxActivationDistance = 10
-	terminalPrompt.RequiresLineOfSight = false
-	terminalPrompt.ObjectText = "Máy thu token"
-	terminalPrompt.ActionText = "Thu tất cả"
-	terminalPrompt.Parent = terminal
+	Visuals.Light(terminal, terminal.Color, 12, 2)
+	Visuals.Label(terminal, "🪙 Máy thu token", UDim2.fromScale(10, 2), Vector3.new(0, 4, 0))
+	local terminalPrompt = makePrompt(terminal, "Máy thu token", "Thu tất cả", 10)
 	terminal.Parent = model
 
 	model.Parent = workspace:WaitForChild("Labs")
@@ -530,11 +526,13 @@ local function buildLab(index)
 	local slot = {
 		index = index,
 		model = model,
+		origin = origin,
 		spawn = origin * CFrame.new(0, 4, 42),
 		racks = racks,
 		core = core,
 		coreLabel = coreLabel,
 		signLabel = signLabel,
+		terminal = terminal,
 		owner = nil,
 	}
 	for i, rackPart in racks do
@@ -576,7 +574,6 @@ function LabService.OnPlayerLoaded(player, profile)
 	end
 	slot.owner = player
 	slot.model:SetAttribute("OwnerUserId", player.UserId)
-	slot.signLabel.Text = "🏢 " .. player.DisplayName .. " Corp."
 
 	sessions[player] = { lab = slot, lastAction = 0, lastClick = 0 }
 
@@ -609,8 +606,7 @@ function LabService.OnPlayerLoaded(player, profile)
 		end)
 	end
 
-	renderAllRacks(player)
-	renderCore(player)
+	LabService.RenderAll(player)
 	LabService.PushState(player)
 
 	player.CharacterAdded:Connect(function(character)
@@ -631,13 +627,13 @@ function LabService.OnPlayerRemoving(player)
 	slot.owner = nil
 	slot.model:SetAttribute("OwnerUserId", 0)
 	slot.signLabel.Text = "🏢 Lab trống"
-	slot.core.Color = Config.AIStages[1].color
-	slot.core.Size = Vector3.new(4, 4, 4)
+	local first = Config.AIStages[1]
+	Visuals.PaintCore(slot.core, first.color, first.size)
 	slot.coreLabel.Text = "🤖 AI"
 	for _, rackPart in slot.racks do
-		rackPart.Color = RACK_COLOR
+		rackPart.Color = COLORS.rack
 		rackPart.Transparency = 0
-		rackPart.Light.Color = OFF_COLOR
+		Visuals.PaintRack(rackPart, nil)
 		rackPart.Info.Text.Text = ""
 		rackPart.Prompt.ObjectText = ""
 		rackPart.Prompt.ActionText = "..."
@@ -669,6 +665,7 @@ end
 
 function LabService.Start(remoteFolder)
 	remotes = remoteFolder
+	Visuals.SetupWorld()
 
 	local labsFolder = Instance.new("Folder")
 	labsFolder.Name = "Labs"

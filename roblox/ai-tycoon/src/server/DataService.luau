@@ -10,6 +10,7 @@ local Config = require(ReplicatedStorage.Shared.Config)
 local STORE_NAME = "AITycoon_v1"
 local MAX_RETRIES = 5
 local MAX_PURCHASE_HISTORY = 100
+local SCHEMA_VERSION = 2
 
 local store = DataStoreService:GetDataStore(STORE_NAME)
 
@@ -18,6 +19,7 @@ DataService.Profiles = {} :: { [Player]: any }
 
 local function defaultData()
 	return {
+		schemaVersion = SCHEMA_VERSION,
 		tokens = Config.StartingTokens,
 		ai = { level = 1, xp = 0 },
 		racks = {}, -- ["1".."12"] = { gpu = id, buffer = token đang chờ thu }
@@ -25,9 +27,25 @@ local function defaultData()
 		boosts = {}, -- [tên boost] = os.time() lúc hết hạn
 		purchases = {}, -- danh sách PurchaseId đã xử lý (chống cộng 2 lần)
 		lastSave = os.time(),
-		totalEarned = 0,
+		totalEarned = 0, -- tổng từ trước tới nay (bảng xếp hạng)
+		runEarned = 0, -- kiếm được từ lần IPO gần nhất (tính cổ phiếu)
 		totalClicks = 0,
+		shares = 0, -- cổ phiếu từ IPO, +% token vĩnh viễn
+		ipoCount = 0,
+		daily = { lastClaimDay = 0, streak = 0 },
+		starterClaimed = false,
 	}
+end
+
+-- Nâng data đời cũ lên schema hiện tại. Chạy TRƯỚC reconcile.
+local function migrate(data)
+	local version = data.schemaVersion or 1
+	if version < 2 then
+		-- v1 chưa có IPO: coi toàn bộ token đã kiếm là của lượt hiện tại
+		data.runEarned = data.totalEarned or 0
+	end
+	data.schemaVersion = SCHEMA_VERSION
+	return data
 end
 
 -- Bù các field mới thêm vào sau này cho data cũ
@@ -72,7 +90,7 @@ function DataService.Load(player: Player)
 		return nil
 	end
 
-	local profile = reconcile(data or {}, defaultData())
+	local profile = if data then reconcile(migrate(data), defaultData()) else defaultData()
 	DataService.Profiles[player] = profile
 	return profile
 end

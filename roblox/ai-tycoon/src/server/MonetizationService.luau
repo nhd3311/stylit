@@ -36,6 +36,43 @@ local function addVipTag(character)
 	gui.Parent = head
 end
 
+local function addBoosts(profile, boosts)
+	for boost, seconds in boosts do
+		local current = math.max(os.time(), profile.boosts[boost] or 0)
+		profile.boosts[boost] = current + seconds
+	end
+end
+
+-- Gói Khởi Nghiệp là Game Pass nhưng quà chỉ phát 1 lần (đánh dấu trong data)
+local function grantStarterPack(player)
+	local profile = DataService.Profiles[player]
+	if not player:GetAttribute("StarterPack") or not profile or profile.starterClaimed or not LabService.GetLab(player) then
+		return
+	end
+	local pack = Config.StarterPack
+	local targetTier = Config.GpuTier[pack.gpu]
+	local installed = 0
+	for i = 1, profile.unlockedRacks do
+		if installed >= pack.gpuCount then
+			break
+		end
+		local key = tostring(i)
+		local rack = profile.racks[key]
+		if not rack or Config.GpuTier[rack.gpu] < targetTier then
+			profile.racks[key] = { gpu = pack.gpu, buffer = if rack then rack.buffer else 0 }
+			installed += 1
+		end
+	end
+	LabService.AddTokens(player, pack.tokens)
+	addBoosts(profile, pack.boosts)
+	profile.starterClaimed = true
+	task.spawn(DataService.Save, player)
+
+	remotes.Notify:FireClient(player, "🎁 Đã mở Gói Khởi Nghiệp! GPU mới, token và Mega Boost đã vào lab 🚀", "Evolve")
+	LabService.RenderAll(player)
+	LabService.PushState(player)
+end
+
 local function grantPass(player, passKey)
 	if player:GetAttribute(passKey) then
 		return
@@ -43,8 +80,15 @@ local function grantPass(player, passKey)
 	player:SetAttribute(passKey, true)
 	if passKey == "VIP" and player.Character then
 		task.spawn(addVipTag, player.Character)
+	elseif passKey == "StarterPack" then
+		grantStarterPack(player)
 	end
 	LabService.Refresh(player)
+end
+
+-- Gọi SAU khi LabService đã dựng lab (Gói Khởi Nghiệp cần lab để lắp GPU)
+function MonetizationService.AfterLoaded(player)
+	grantStarterPack(player)
 end
 
 -- Gọi khi người chơi vào game, TRƯỚC khi LabService dựng lab
@@ -71,8 +115,7 @@ end
 
 local function grantProduct(player, profile, product)
 	if product.kind == "Boost" then
-		local current = math.max(os.time(), profile.boosts[product.boost] or 0)
-		profile.boosts[product.boost] = current + product.duration
+		addBoosts(profile, product.boosts)
 		return true, product.name
 	elseif product.kind == "TimeWarp" then
 		local amount = LabService.TimeWarp(player, product.hours)

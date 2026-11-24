@@ -59,6 +59,62 @@ Config.AIStages = {
 Config.OfflineHours = 2
 Config.VipOfflineHours = 8
 
+-- ===== IPO (Rebirth) =====
+-- Bán công ty: reset token, GPU, kệ, level AI. Đổi lại nhận cổ phiếu,
+-- mỗi cổ phiếu +10% token vĩnh viễn. Cổ phiếu = sqrt(token kiếm được trong lượt này / Divisor)
+Config.Rebirth = {
+	MinLevel = 15,
+	Divisor = 100000,
+	ShareBonus = 0.1,
+	PassMultiplier = 1.5, -- Game Pass IPO+ cho thêm 50% cổ phiếu
+}
+
+-- Danh hiệu công ty theo số lần IPO (hiện trên biển tên lab)
+Config.CompanyRanks = {
+	{ ipo = 0, name = "Startup Phòng Trọ" },
+	{ ipo = 1, name = "Startup Gọi Vốn" },
+	{ ipo = 3, name = "Kỳ Lân 🦄" },
+	{ ipo = 6, name = "Big Tech" },
+	{ ipo = 10, name = "Đế Chế Công Nghệ 👑" },
+}
+
+-- ===== Quà đăng nhập 7 ngày =====
+-- Thưởng = max(min, token đào được trong `minutes` phút). Ngày 7 tặng thêm boost.
+-- Bỏ lỡ 1 ngày thì chuỗi quay về ngày 1.
+Config.Daily = {
+	{ minutes = 5, min = 100 },
+	{ minutes = 10, min = 300 },
+	{ minutes = 15, min = 800 },
+	{ minutes = 20, min = 2000 },
+	{ minutes = 30, min = 5000 },
+	{ minutes = 45, min = 12000 },
+	{ minutes = 60, min = 30000, boosts = { Tokens = 30 * 60 } },
+}
+
+-- ===== Phi vụ đánh cắp dữ liệu =====
+-- Két mỗi lab tự sinh ổ dữ liệu. Chủ lab thu để lấy token, người khác lẻn vào trộm
+-- rồi mang về Máy thu token của lab mình. Chủ lab chạm vào trộm là lấy lại được.
+Config.Heist = {
+	DriveInterval = 45, -- giây giữa 2 ổ dữ liệu
+	MaxDrives = 5,
+	DriveValueSeconds = 90, -- 1 ổ = 90 giây đào của chủ lab
+	MinDriveValue = 20,
+	StealHold = 1.5, -- giây giữ nút để trộm
+	MasterStealHold = 0.5,
+	MaxCarry = 1,
+	MasterMaxCarry = 2,
+	CarrySpeed = 11, -- tốc độ chạy khi đang ôm ổ (bình thường 16)
+	NormalSpeed = 16,
+	StealCooldown = 20, -- két vừa bị trộm thì phải chờ bấy nhiêu giây
+	NewbieLevel = 3, -- lab của người dưới level này không bị trộm
+	TagDistance = 6, -- chủ lab đứng gần trộm bấy nhiêu stud là lấy lại được
+}
+
+Config.Leaderboard = {
+	UpdateInterval = 300,
+	Size = 10,
+}
+
 -- ===== Kiếm Robux =====
 -- Tạo Game Pass / Developer Product trên Creator Dashboard rồi dán ID vào đây.
 -- ID = 0 nghĩa là chưa cấu hình: nút mua sẽ báo lỗi thay vì mở bảng mua.
@@ -73,15 +129,56 @@ Config.GamePasses = {
 		name = "🤖 Auto Thu Token",
 		description = "Token từ GPU tự bay vào ví, không cần đi thu",
 	},
+	MasterThief = {
+		id = 0,
+		name = "🕵️ Siêu Đạo Chích",
+		description = "Trộm nhanh gấp 3, ôm được 2 ổ, chạy không bị chậm",
+	},
+	IPOPlus = {
+		id = 0,
+		name = "📈 IPO+",
+		description = "+50% cổ phiếu mỗi lần IPO",
+	},
+	StarterPack = {
+		id = 0,
+		name = "🎁 Gói Khởi Nghiệp",
+		description = "Nhận 1 lần: 3 GPU Gaming lắp sẵn + 5.000 token + Mega Boost 30 phút",
+	},
 }
 
--- kind = "Boost": bật boost trong `duration` giây (mua thêm thì cộng dồn thời gian)
+-- Quà của Gói Khởi Nghiệp
+Config.StarterPack = {
+	tokens = 5000,
+	gpu = "GamingGpu",
+	gpuCount = 3,
+	boosts = { Tokens = 30 * 60, Training = 30 * 60 },
+}
+
+-- kind = "Boost": bật các boost trong `boosts` (tên = số giây, mua thêm thì cộng dồn)
 -- kind = "TimeWarp": nhận ngay số token bằng `hours` giờ đào hiện tại
 Config.DevProducts = {
-	TokenBoost = { id = 0, kind = "Boost", boost = "Tokens", duration = 15 * 60, name = "🪙 x2 Token (15 phút)" },
-	TrainBoost = { id = 0, kind = "Boost", boost = "Training", duration = 15 * 60, name = "🧠 x2 Train AI (15 phút)" },
+	TokenBoost = { id = 0, kind = "Boost", boosts = { Tokens = 15 * 60 }, name = "🪙 x2 Token (15 phút)" },
+	TrainBoost = { id = 0, kind = "Boost", boosts = { Training = 15 * 60 }, name = "🧠 x2 Train AI (15 phút)" },
+	MegaBoost = {
+		id = 0,
+		kind = "Boost",
+		boosts = { Tokens = 30 * 60, Training = 30 * 60 },
+		name = "🚀 Mega Boost: x2 Token + x2 Train (30 phút)",
+	},
 	TimeWarp1H = { id = 0, kind = "TimeWarp", hours = 1, name = "⏩ Time Warp 1 giờ" },
 	TimeWarp6H = { id = 0, kind = "TimeWarp", hours = 6, name = "⏩ Time Warp 6 giờ" },
+	TimeWarp24H = { id = 0, kind = "TimeWarp", hours = 24, name = "⏩ Time Warp 24 giờ" },
+	Shield1H = { id = 0, kind = "Boost", boosts = { Shield = 60 * 60 }, name = "🛡️ Khiên chống trộm 1 giờ" },
+	Shield8H = { id = 0, kind = "Boost", boosts = { Shield = 8 * 60 * 60 }, name = "🛡️ Khiên chống trộm 8 giờ" },
+}
+
+-- Thứ tự hiển thị trong Shop
+Config.ShopSections = {
+	{ title = "🔥 Gói hot", items = { { "pass", "StarterPack" }, { "product", "MegaBoost" }, { "pass", "VIP" } } },
+	{ title = "⭐ Game Pass (mua 1 lần, dùng mãi)", items = { { "pass", "AutoCollect" }, { "pass", "MasterThief" }, { "pass", "IPOPlus" } } },
+	{ title = "⚡ Boost (mua thêm cộng dồn thời gian)", items = { { "product", "TokenBoost" }, { "product", "TrainBoost" } } },
+	{ title = "⏩ Time Warp (nhận token ngay)", items = { { "product", "TimeWarp1H" }, { "product", "TimeWarp6H" }, { "product", "TimeWarp24H" } } },
+	{ title = "🛡️ Khiên chống trộm", items = { { "product", "Shield1H" }, { "product", "Shield8H" } } },
 }
 
 Config.Multipliers = {
@@ -136,6 +233,33 @@ function Config.RackPrice(index)
 		return nil
 	end
 	return math.floor(r.BasePrice * r.Multiplier ^ (index - r.FreeRacks - 1))
+end
+
+function Config.SharesFor(runEarned, hasIpoPlus)
+	local shares = math.sqrt(math.max(0, runEarned) / Config.Rebirth.Divisor)
+	if hasIpoPlus then
+		shares *= Config.Rebirth.PassMultiplier
+	end
+	return math.floor(shares)
+end
+
+function Config.ShareMultiplier(shares)
+	return 1 + Config.Rebirth.ShareBonus * (shares or 0)
+end
+
+function Config.CompanyRank(ipoCount)
+	local current = Config.CompanyRanks[1]
+	for _, rank in Config.CompanyRanks do
+		if (ipoCount or 0) >= rank.ipo then
+			current = rank
+		end
+	end
+	return current
+end
+
+-- Số ngày tính theo UTC, dùng cho quà đăng nhập
+function Config.DayNumber(unixTime)
+	return math.floor(unixTime / 86400)
 end
 
 -- 1234567 -> "1.23M"

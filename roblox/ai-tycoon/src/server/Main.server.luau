@@ -4,8 +4,11 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local DataService = require(script.Parent.DataService)
+local HeistService = require(script.Parent.HeistService)
 local LabService = require(script.Parent.LabService)
+local LeaderboardService = require(script.Parent.LeaderboardService)
 local MonetizationService = require(script.Parent.MonetizationService)
+local ProgressService = require(script.Parent.ProgressService)
 
 local remotes = Instance.new("Folder")
 remotes.Name = "Remotes"
@@ -17,7 +20,10 @@ end
 remotes.Parent = ReplicatedStorage
 
 DataService.Start()
-LabService.Start(remotes)
+LabService.Start(remotes) -- dựng lab trước, các service sau gắn thêm vào lab
+HeistService.Start()
+ProgressService.Start()
+LeaderboardService.Start()
 MonetizationService.Start(remotes)
 
 local function onPlayerAdded(player)
@@ -31,6 +37,7 @@ local function onPlayerAdded(player)
 		return
 	end
 	LabService.OnPlayerLoaded(player, profile)
+	MonetizationService.AfterLoaded(player)
 end
 
 Players.PlayerAdded:Connect(onPlayerAdded)

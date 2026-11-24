@@ -1,56 +1,59 @@
-# 🧠 Trùm Công Nghệ: AI Tycoon (Roblox)
+# 🧠 Trùm Công Nghệ: AI Tycoon (Roblox) — v2
 
-Từ dev quèn gõ code trong phòng trọ thành trùm công nghệ: **farm token**, lắp GPU, **nuôi AI** mạnh lên, AI càng mạnh thì token về càng nhanh.
-Kiếm Robux bằng **VIP**, **Auto Thu Token**, **boost** và **Time Warp**.
+Từ dev quèn gõ code trong phòng trọ thành **đế chế công nghệ**: farm token, lắp GPU, nuôi AI, **lẻn sang lab người khác trộm dữ liệu**, rồi **IPO** để thành Big Tech.
 
-Map (phòng lab, kệ máy chủ, lõi AI) và UI đều **dựng bằng code**. Mở Baseplate trống, nạp script vào, bấm Play là chơi.
+Map (phòng lab neon, kệ máy chủ, lõi AI, két dữ liệu, bảng xếp hạng) và UI đều **dựng bằng code**. Mở Baseplate trống, nạp script vào, bấm Play là chơi.
 
 ## Vòng lặp chính
 
 ```
-💻 Gõ code (click) ──▶ 🪙 Token ──▶ 🖥️ Lắp/nâng GPU ──▶ token tự đào
-                          │                                   │
-                          ▼                                   ▼
-                    🧠 Train AI  ◀────────────────  📦 Máy thu token
-                          │
-                          ▼
-           Level AI ↑  ⇒  +15% token/level, click mạnh hơn, mở GPU xịn hơn
+💻 Gõ code ──▶ 🪙 Token ──▶ 🖥️ GPU tự đào ──▶ 🧠 Train AI ──▶ GPU xịn hơn ──┐
+     ▲                                                                       │
+     │      🕵️ Trộm ổ dữ liệu ở lab người khác / 🛡️ giữ két nhà mình         │
+     │                                                                       ▼
+     └──────────── 📈 IPO: reset, nhận cổ phiếu = +10% token vĩnh viễn ◀─────┘
 ```
 
 | Tính năng | Chi tiết |
 |---|---|
-| 💻 Gõ code | Nút to góc phải. Mỗi click được token, AI level càng cao click càng nhiều. |
-| 🖥️ GPU | 6 tier: CPU cũ → GPU Gaming → GPU Pro → Tensor Core → Siêu máy tính → Chip Lượng Tử. Bấm **E** ở kệ để lắp/nâng cấp. |
-| 📦 Thu token | GPU đổ token vào kệ (chứa tối đa 5 phút). Đi tới **Máy thu token** bấm E để gom. |
-| 🧠 Train AI | Menu **🧠 AI** → đổ 10% / 50% / 100% token vào AI. 1 token = 1 XP. |
-| 🌐 Tiến hoá | Bot Ngáo → Trợ Lý Ảo → Coder AI → Thiên Tài Số → AGI → Siêu Trí Tuệ. Lõi AI giữa phòng to lên và đổi màu. |
-| 🔓 Mở rộng | 4 kệ miễn phí, kệ 5–8 mua bằng token, kệ 9–12 chỉ VIP. |
+| 💻 Gõ code | Nút tròn bên phải màn hình, đặt cao hơn nút nhảy để không đụng trên điện thoại. |
+| 🖥️ GPU | 6 tier: CPU cũ → GPU Gaming → GPU Pro → Tensor Core → Siêu máy tính → Chip Lượng Tử. |
+| 🧠 Train AI | Đổ token vào AI. Lên level thì +15% token, mở GPU mới. AI tiến hoá qua 6 giai đoạn. |
+| 🕵️ **Phi vụ dữ liệu** | Két ở mỗi lab tự sinh **ổ dữ liệu** (mỗi ổ = 90 giây đào). Chủ lab thu về thành token. Người khác **giữ E để trộm**, rồi ôm ổ chạy về Máy thu token của lab mình. Đang ôm thì chạy chậm, **chủ lab chạm vào là lấy lại**, trộm chết thì ổ cũng rơi lại. |
+| 🛡️ Bảo vệ | Lab có **khiên** thì không bị trộm. Lab người mới (AI dưới Lv.3) cũng không bị trộm, và két vừa bị trộm có 20 giây hồi. |
+| 📈 **IPO (Rebirth)** | Từ AI Lv.15 trở lên. Reset lab để nhận cổ phiếu: `sqrt(token kiếm được / 100K)`. Danh hiệu đi từ Startup Phòng Trọ lên tới Đế Chế Công Nghệ 👑 |
+| 🎁 **Quà 7 ngày** | Quà to dần theo tốc độ đào, ngày 7 tặng thêm x2 Token 30 phút. Bỏ lỡ 1 ngày là chuỗi về ngày 1. Bảng quà tự mở khi vào game. |
+| 🏆 **Top tỷ phú** | Bảng xếp hạng toàn game giữa map (OrderedDataStore), cập nhật mỗi 5 phút. |
+| 🌃 **Đồ họa neon** | Cảnh đêm, sương tím, bloom, sàn lưới neon, cổng phát sáng, kệ có LED nhấp nháy, lõi AI có hạt sáng và đĩa quay. |
 | 😴 Offline | GPU vẫn đào khi thoát game (tối đa 2 giờ, VIP 8 giờ). |
-| 💾 Lưu data | DataStore, tự lưu mỗi 2 phút + khi thoát + khi server tắt + ngay sau khi mua bằng Robux. |
 
-## Kiếm Robux
+## 💎 Shop (15 món)
 
-| Loại | Tên | Hiệu ứng |
-|---|---|---|
-| Game Pass | ⭐ VIP | x2 token (cả click lẫn GPU), +4 kệ VIP, offline 8 giờ, tag VIP trên đầu và trong chat |
-| Game Pass | 🤖 Auto Thu Token | Token từ GPU tự vào ví, khỏi đi thu |
-| Dev Product | 🪙 x2 Token 15 phút | Cộng dồn nếu mua nhiều lần |
-| Dev Product | 🧠 x2 Train AI 15 phút | 1 token = 2 XP |
-| Dev Product | ⏩ Time Warp 1 giờ / 6 giờ | Nhận ngay số token bằng 1 hoặc 6 giờ đào hiện tại |
+| Nhóm | Món | Hiệu ứng | Giá gợi ý |
+|---|---|---|---|
+| 🔥 Hot | 🎁 **Gói Khởi Nghiệp** (pass) | Nhận 1 lần: 3 GPU Gaming + 5.000 token + Mega Boost 30 phút | 49 R$ |
+| 🔥 Hot | 🚀 **Mega Boost** | x2 Token + x2 Train trong 30 phút | 59 R$ |
+| 🔥 Hot | ⭐ **VIP** (pass) | x2 token, +4 kệ VIP, offline 8 giờ, tag VIP | 249 R$ |
+| Pass | 🤖 Auto Thu Token | Token từ GPU tự vào ví | 149 R$ |
+| Pass | 🕵️ Siêu Đạo Chích | Trộm nhanh gấp 3, ôm 2 ổ, không bị chậm | 199 R$ |
+| Pass | 📈 IPO+ | +50% cổ phiếu mỗi lần IPO | 299 R$ |
+| Boost | 🪙 x2 Token / 🧠 x2 Train | 15 phút, mua thêm thì cộng dồn | 29 R$ |
+| Time Warp | ⏩ 1h / 6h / 24h | Nhận ngay token bằng số giờ đào đó | 25 / 99 / 299 R$ |
+| Khiên | 🛡️ 1 giờ / 8 giờ | Chống trộm | 15 / 79 R$ |
 
-Time Warp **tự scale theo tiến độ**: người chơi càng mạnh thì món này càng đáng tiền, nên bán được cả lúc đầu lẫn lúc cuối game.
-
-Giá gợi ý: VIP 249 R$, Auto Thu Token 149 R$, boost 29–39 R$, Time Warp 1h 25 R$, Time Warp 6h 99 R$.
+Có món rẻ để mua lần đầu (Gói Khởi Nghiệp, Khiên 1h), món tầm trung (boost) và món cao cấp (VIP, IPO+). Time Warp và Gói Khởi Nghiệp **tự tăng giá trị theo tiến độ**, nên lúc nào mua cũng thấy hời.
 
 ## Cài đặt
 
-### Cách 1: Rojo (khuyên dùng)
+### Rojo (khuyên dùng)
 
-1. Cài [Rojo](https://rojo.space) (plugin Studio + CLI, hoặc extension Rojo trong VS Code).
-2. Trong thư mục này chạy `rojo serve`.
-3. Mở Roblox Studio → tạo **Baseplate** → plugin Rojo → **Connect**.
+```bash
+rojo serve
+```
 
-### Cách 2: Copy tay
+Mở Studio, tạo **Baseplate**, rồi bấm **Connect** trong plugin Rojo.
+
+### Copy tay
 
 ```
 ReplicatedStorage
@@ -59,58 +62,68 @@ ReplicatedStorage
 ServerScriptService
 └── Server (Folder)
     ├── Main (Script)                      ← src/server/Main.server.luau
-    ├── DataService (ModuleScript)         ← src/server/DataService.luau
-    ├── LabService (ModuleScript)          ← src/server/LabService.luau
-    └── MonetizationService (ModuleScript) ← src/server/MonetizationService.luau
+    ├── DataService (ModuleScript)
+    ├── LabService (ModuleScript)
+    ├── HeistService (ModuleScript)
+    ├── ProgressService (ModuleScript)
+    ├── LeaderboardService (ModuleScript)
+    ├── MonetizationService (ModuleScript)
+    └── Visuals (ModuleScript)
 StarterPlayer
 └── StarterPlayerScripts
     └── Client (Folder)
-        └── Main (LocalScript)             ← src/client/Main.client.luau
+        ├── Main (LocalScript)             ← src/client/Main.client.luau
+        └── Fx (ModuleScript)              ← src/client/Fx.luau
 ```
-
-> Tên phải khớp chính xác vì code tìm nhau bằng tên.
 
 ### Cấu hình trong Studio
 
 1. **File → Publish to Roblox** (DataStore chỉ chạy khi game đã publish).
 2. **Game Settings → Security → Enable Studio Access to API Services** = ON.
-3. Đặt **Max Players = 8** (mỗi server có 8 lab, khớp `Config.MaxLabs`).
+3. Đặt **Max Players = 8** (mỗi server có 8 lab).
+4. **Lighting → Technology = Future** để đèn neon đẹp nhất. Script không tự đổi được cái này.
+5. Muốn test trộm dữ liệu thì cần 2 người chơi: **Test → Clients and Servers → 2 Players → Start**.
 
 ### Tạo Game Pass và Dev Product
 
-1. [Creator Dashboard](https://create.roblox.com/dashboard/creations) → chọn game → **Monetization**.
-2. **Passes**: tạo `VIP` và `Auto Thu Token` → bật **Item for Sale** → đặt giá.
-3. **Developer Products**: tạo `TokenBoost`, `TrainBoost`, `TimeWarp1H`, `TimeWarp6H`.
-4. Dán **ID** vào `src/shared/Config.luau` (các chỗ `id = 0`).
+Vào [Creator Dashboard](https://create.roblox.com/dashboard/creations) → **Monetization**:
 
-Mua thử trong Studio là **miễn phí**. Giá trong shop được lấy trực tiếp từ Roblox.
+- **Passes**: `VIP`, `AutoCollect`, `MasterThief`, `IPOPlus`, `StarterPack`
+- **Developer Products**: `TokenBoost`, `TrainBoost`, `MegaBoost`, `TimeWarp1H`, `TimeWarp6H`, `TimeWarp24H`, `Shield1H`, `Shield8H`
+
+Dán **ID** vào `src/shared/Config.luau` (các chỗ `id = 0`). Mua thử trong Studio là **miễn phí**.
 
 ## Cân bằng game
 
-Mọi con số nằm trong `src/shared/Config.luau`:
-
-- `Config.Gpus`: tốc độ, giá, level AI cần để mở từng GPU
-- `Config.AI`: XP cần mỗi level (`XpBase * XpGrowth^(level-1)`), % token mỗi level
-- `Config.AIStages`: tên, màu, kích thước lõi AI theo từng giai đoạn
-- `Config.Racks`: số kệ, giá mở kệ, sức chứa
-- `Config.Multipliers`: hệ số VIP và boost
+Mọi con số đều nằm trong `src/shared/Config.luau`: `Gpus`, `AI`, `AIStages`, `Racks`, `Rebirth`, `CompanyRanks`, `Daily`, `Heist`, `Multipliers`, `ShopSections`.
 
 ## Kiến trúc
 
-```
-Client (UI) ──Action──▶ Server (LabService kiểm tra tiền/quyền)
-            ◀──State───  (token, tốc độ, level, XP, boost; gửi mỗi giây)
-            ◀──Notify──  (thông báo nhỏ, level up)
-```
+| Module | Việc |
+|---|---|
+| `LabService` | Lab, GPU, click, train AI, Máy thu token, gửi State cho client. Có hook để module khác cắm vào. |
+| `HeistService` | Két, ổ dữ liệu, trộm, ôm ổ, bắt trộm, khiên |
+| `ProgressService` | Quà 7 ngày, IPO |
+| `LeaderboardService` | Bảng xếp hạng OrderedDataStore |
+| `MonetizationService` | Game Pass, ProcessReceipt, Gói Khởi Nghiệp |
+| `DataService` | DataStore, `schemaVersion` + chuyển data cũ, retry, autosave |
+| `Visuals` / `Fx` | Dựng đồ họa phía server / hiệu ứng chuyển động phía client |
 
-- Client **không bao giờ** tự cộng token. Click cũng do server đếm và có giới hạn ~14 click/giây chống auto-click.
-- `ProcessReceipt` chỉ trả `PurchaseGranted` sau khi **lưu data thành công**, và nhớ `PurchaseId` để không cộng 2 lần.
+- Server quyết định mọi thứ. Client chỉ gửi yêu cầu. Remote có chống spam và chống auto-click.
+- `ProcessReceipt` chỉ trả `PurchaseGranted` sau khi **lưu data thành công**, và nhớ `PurchaseId` để không cộng đồ hai lần.
+- Data có `schemaVersion = 2`. Data v1 (trước khi có IPO) tự được nâng cấp lúc vào game.
 
-## Ý tưởng nâng cấp
+## Lưu ý fair-play & luật Roblox
 
-- [ ] **IPO (Rebirth)**: bán công ty, reset lab, nhận cổ phiếu cho hệ số token vĩnh viễn.
-- [ ] Nhân viên: thuê intern/senior tự gõ code giúp.
-- [ ] Nhiệm vụ hằng ngày + phần thưởng đăng nhập.
-- [ ] Bảng xếp hạng "Top tỷ phú công nghệ" (OrderedDataStore theo `totalEarned`).
-- [ ] Sự kiện: "Hacker tấn công", "Mất điện", "Cơn sốt AI x3 token".
-- [ ] Dùng [ProfileStore](https://github.com/MadStudioRoblox/ProfileStore) để có session lock.
+- Không bán vật phẩm ngẫu nhiên, nên không phải công khai tỉ lệ. Nếu sau này thêm quay thưởng hoặc trứng mua bằng Robux thì **bắt buộc hiện tỉ lệ**.
+- Trộm chỉ lấy **ổ dữ liệu**, không bao giờ trừ token trong ví nạn nhân. Người mới được bảo vệ, nên người không nạp vẫn chơi vui.
+- Map, tên và ý tưởng đều tự làm, không dùng asset hay thương hiệu của game khác.
+
+## Ý tưởng tiếp theo
+
+- [ ] Nhiệm vụ hằng ngày (gõ 500 code, trộm 3 ổ, train 2 level...)
+- [ ] Sự kiện "Cơn sốt AI": x3 token toàn server 15 phút mỗi giờ
+- [ ] Bẫy laser, chó robot canh két (bán bằng token)
+- [ ] Skin lõi AI và skin kệ máy chủ (cosmetic, bán Robux)
+- [ ] Session lock bằng [ProfileStore](https://github.com/MadStudioRoblox/ProfileStore)
+- [ ] Analytics (AnalyticsService): funnel lượt chơi đầu, tỉ lệ mở shop/mua

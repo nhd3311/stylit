@@ -4,6 +4,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Config = require(ReplicatedStorage.Shared.Config)
 local CompanyService = require(script.Parent.CompanyService)
+local FactoryService = require(script.Parent.FactoryService)
+local ModelService = require(script.Parent.ModelService)
 
 local ProgressService = {}
 
@@ -25,7 +27,7 @@ end
 
 local function dailyAmount(player, day)
 	local reward = Config.Daily[day]
-	return math.max(reward.min, math.floor(CompanyService.CashRate(player) * reward.minutes * 60))
+	return math.max(reward.min, math.floor(ModelService.RevenuePerDay(player) * reward.days))
 end
 
 local function claimDaily(player, profile)
@@ -43,7 +45,7 @@ local function claimDaily(player, profile)
 	end
 	daily.lastClaimDay = today()
 	daily.streak = day
-	local extra = if reward.boosts then " + x2 Tiền 30 phút 🚀" else ""
+	local extra = if reward.boosts then " + x2 Doanh thu 30 phút 🚀" else ""
 	notify(player, string.format("🎁 Quà ngày %d: +%s%s", day, Config.Money(amount), extra), "Collect")
 	CompanyService.PushState(player)
 end
@@ -53,9 +55,9 @@ local function founderPoints(player, profile)
 end
 
 local function sellCompany(player, profile)
-	if profile.floorsBuilt < Config.Rebirth.RequiredFloor then
-		local floor = Config.Floors[Config.Rebirth.RequiredFloor]
-		notify(player, string.format("Cần xây tới %s %s mới bán công ty được 💼", floor.emoji, floor.name))
+	if profile.building < Config.Rebirth.RequiredBuilding then
+		local b = Config.Buildings[Config.Rebirth.RequiredBuilding]
+		notify(player, string.format("Cần lên %s %s mới bán công ty được 💼", b.emoji, b.name))
 		return
 	end
 	local points = founderPoints(player, profile)
@@ -68,21 +70,27 @@ local function sellCompany(player, profile)
 	profile.founderPoints += points
 	profile.sold += 1
 	profile.cash = Config.StartingCash
-	profile.tokens = 0
 	profile.runEarned = 0
-	profile.ai = { level = 1, xp = 0 }
-	profile.floorsBuilt = 1
-	profile.racks = {}
+	profile.day = 0
+	profile.building = 1
+	profile.workstations = 1
+	profile.equip = { desk = 1, chair = 1, pc = 1 }
+	profile.staff = {}
+	profile.candidates = {}
 	profile.research = { done = {}, current = nil }
-	profile.products = {}
+	profile.factory = { built = false, lines = {}, compute = 0 }
 	profile.dev = nil
+	profile.pending = nil
+	profile.models = {}
+	profile.brandCount = {}
+	profile.markets = { VN = true }
 	profile.stocks = {}
 
 	local rank = Config.CompanyRank(profile.sold)
 	notify(
 		player,
 		string.format(
-			"🤝 Bán công ty thành công! +%d Điểm Founder (tổng %d, thu nhập x%.1f). Danh hiệu: %s",
+			"🤝 Bán công ty thành công! +%d Điểm Founder (tổng %d, doanh thu và năng suất x%.1f). Danh hiệu: %s",
 			points,
 			profile.founderPoints,
 			Config.FounderMultiplier(profile.founderPoints),
@@ -90,8 +98,8 @@ local function sellCompany(player, profile)
 		),
 		"Evolve"
 	)
-	CompanyService.NotifyAll(string.format("📰 %s vừa bán công ty và trở thành %s!", player.DisplayName, rank.name))
-	CompanyService.ResetBuilding(player)
+	CompanyService.RenderBuilding(player)
+	FactoryService.Render(player)
 	CompanyService.PushState(player)
 end
 

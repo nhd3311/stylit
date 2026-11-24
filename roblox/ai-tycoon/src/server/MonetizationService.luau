@@ -8,9 +8,11 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Config = require(ReplicatedStorage.Shared.Config)
 local DataService = require(script.Parent.DataService)
+local CalendarService = require(script.Parent.CalendarService)
 local CompanyService = require(script.Parent.CompanyService)
-local ProductService = require(script.Parent.ProductService)
+local ModelService = require(script.Parent.ModelService)
 local ResearchService = require(script.Parent.ResearchService)
+local StaffService = require(script.Parent.StaffService)
 
 local MonetizationService = {}
 
@@ -48,33 +50,25 @@ end
 -- Gói Khởi Nghiệp là Game Pass nhưng quà chỉ phát 1 lần (đánh dấu trong data)
 local function grantStarterPack(player)
 	local profile = DataService.Profiles[player]
-	if not player:GetAttribute("StarterPack") or not profile or profile.starterClaimed or not CompanyService.GetLot(player) then
+	if not player:GetAttribute("StarterPack") or not profile or profile.starterClaimed or not CompanyService.IsActive(player) then
 		return
 	end
 	local pack = Config.StarterPack
-	local targetTier = Config.GpuTier[pack.gpu]
-	local installed = 0
-	for i, slot in Config.RackSlots do
-		if not CompanyService.HasFloor(player, profile, slot.floor) then
-			continue
-		end
-		if installed >= pack.gpuCount then
-			break
-		end
-		local key = tostring(i)
-		local rack = profile.racks[key]
-		if not rack or Config.GpuTier[rack.gpu] < targetTier then
-			profile.racks[key] = { gpu = pack.gpu, buffer = if rack then rack.buffer else 0 }
-			installed += 1
-		end
+	local capacity = Config.Capacity(profile.building)
+	local seats = math.min(pack.workstations, capacity - profile.workstations)
+	profile.workstations += seats
+	-- hết chỗ kê bàn thì đổi phần bàn thiếu ra tiền
+	local cash = pack.cash + (pack.workstations - seats) * Config.WorkstationPrice
+	CompanyService.AddCash(player, cash)
+	local hired = StaffService.AddStaff(player, profile, "Dev", pack.devSkill)
+	if not hired then
+		CompanyService.AddCash(player, Config.Salary(pack.devSkill, profile.day) * 6)
 	end
-	CompanyService.AddCash(player, pack.cash)
-	addBoosts(profile, pack.boosts)
 	profile.starterClaimed = true
 	task.spawn(DataService.Save, player)
 
-	remotes.Notify:FireClient(player, "🎁 Đã mở Gói Khởi Nghiệp! GPU mới, tiền và Mega Boost đã vào công ty 🚀", "Evolve")
-	CompanyService.RenderBuilding(player)
+	remotes.Notify:FireClient(player, "🎁 Đã mở Gói Khởi Nghiệp! Tiền, bàn làm việc và 1 lập trình viên giỏi đã về công ty 🚀", "Evolve")
+	CompanyService.RenderSeats(player)
 	CompanyService.PushState(player)
 end
 
@@ -88,10 +82,10 @@ local function grantPass(player, passKey)
 	elseif passKey == "StarterPack" then
 		grantStarterPack(player)
 	end
-	CompanyService.Refresh(player)
+	CompanyService.PushState(player)
 end
 
--- Gọi SAU khi CompanyService đã dựng tòa nhà (Gói Khởi Nghiệp cần kệ để lắp GPU)
+-- Gọi SAU khi CompanyService đã dựng tòa nhà (Gói Khởi Nghiệp cần chỗ để kê bàn)
 function MonetizationService.AfterLoaded(player)
 	grantStarterPack(player)
 end
@@ -122,17 +116,21 @@ local function grantProduct(player, profile, product)
 	if product.kind == "Boost" then
 		addBoosts(profile, product.boosts)
 		return true, product.name
-	elseif product.kind == "TimeWarp" then
-		local cash, tokens = CompanyService.TimeWarp(player, product.hours)
-		return true, string.format("%s (+%s, +%s 🪙)", product.name, Config.Money(cash), Config.Short(tokens))
+	elseif product.kind == "Hype" then
+		profile.viral += 1
+		return true, product.name
+	elseif product.kind == "Skip" then
+		local before = profile.cash
+		CalendarService.Skip(player, product.days)
+		return true, string.format("%s (%s%s)", product.name, if profile.cash >= before then "+" else "", Config.Money(profile.cash - before))
 	elseif product.kind == "Instant" then
-		local finish = if product.target == "Research" then ResearchService.FinishNow else ProductService.FinishNow
+		local finish = if product.target == "Research" then ResearchService.FinishNow else ModelService.FinishNow
 		if finish(player) then
 			return true, product.name
 		end
-		-- không có gì đang chạy: tặng lại bằng boost R&D để người chơi không mất Robux
-		addBoosts(profile, { Research = 30 * 60 })
-		return true, product.name .. " (chưa có gì đang chạy nên đổi thành x2 R&D 30 phút)"
+		-- không có gì đang chạy: đổi thành boost năng suất để người chơi không mất Robux
+		addBoosts(profile, { Work = 30 * 60 })
+		return true, product.name .. " (chưa có gì đang chạy nên đổi thành x2 Năng suất 30 phút)"
 	end
 	return false, nil
 end

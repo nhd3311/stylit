@@ -234,58 +234,139 @@ function Visuals.BuildRoof(parent, base, width, depth, accent)
 	return label
 end
 
--- Kệ máy chủ: thân + kính + dải đèn trên + 3 LED nhấp nháy.
--- Trả về thân kệ; các con: Light (dải đèn), Led1..3, Glow (PointLight trong Light)
-function Visuals.BuildRack(cframe)
-	local body = Visuals.Part({
-		Size = Vector3.new(5, 8, 3),
-		CFrame = cframe,
-		Color = Visuals.Colors.rack,
-		Material = Enum.Material.Metal,
+-- Chỗ làm việc: bàn + màn hình/PC + ghế. `tiers` = { desk, chair, pc } là bảng tier trong Config.
+-- `cframe` đặt ở sàn, giữa bàn; người ngồi quay mặt về -Z (nhìn vào màn hình).
+function Visuals.BuildWorkstation(parent, cframe, tiers)
+	local desk = Visuals.Part({
+		Name = "Desk",
+		Size = Vector3.new(5, 0.4, 2.6),
+		CFrame = cframe * CFrame.new(0, 2.8, 0),
+		Color = tiers.desk.color,
+		Material = Enum.Material.WoodPlanks,
+	})
+	desk.Parent = parent
+	for _, x in { -2.2, 2.2 } do
+		Visuals.Part({
+			Name = "Leg",
+			Size = Vector3.new(0.3, 2.6, 2.2),
+			CFrame = cframe * CFrame.new(x, 1.3, 0),
+			Color = Color3.fromRGB(60, 60, 66),
+			Material = Enum.Material.Metal,
+		}).Parent = parent
+	end
+	-- màn hình: PC càng xịn thì màn càng to, càng sáng
+	local pcTier = tiers.pcIndex or 1
+	local screens = if pcTier >= 3 then 2 else 1
+	for i = 1, screens do
+		local x = if screens == 2 then (i - 1.5) * 2 else 0
+		local monitor = Visuals.Part({
+			Name = "Monitor",
+			Size = Vector3.new(if pcTier >= 2 then 1.9 else 1.5, if pcTier >= 2 then 1.2 else 1.3, if pcTier >= 2 then 0.15 else 1),
+			CFrame = cframe * CFrame.new(x, 3.75, -0.8),
+			Color = tiers.pc.color or Color3.fromRGB(25, 25, 30),
+			Material = Enum.Material.SmoothPlastic,
+		})
+		Visuals.Part({
+			Name = "Screen",
+			Size = Vector3.new(monitor.Size.X - 0.2, monitor.Size.Y - 0.2, 0.05),
+			CFrame = monitor.CFrame * CFrame.new(0, 0, monitor.Size.Z / 2 + 0.03),
+			Color = if pcTier >= 4 then Color3.fromRGB(190, 120, 255) elseif pcTier >= 3 then Color3.fromRGB(90, 200, 255) else Color3.fromRGB(150, 200, 255),
+			Material = Enum.Material.Neon,
+			CanCollide = false,
+		}).Parent = monitor
+		monitor.Parent = parent
+	end
+	-- ghế
+	Visuals.Part({
+		Name = "Seat",
+		Size = Vector3.new(2, 0.4, 2),
+		CFrame = cframe * CFrame.new(0, 1.8, 2),
+		Color = tiers.chair.color,
+		Material = Enum.Material.Fabric,
+	}).Parent = parent
+	Visuals.Part({
+		Name = "Backrest",
+		Size = Vector3.new(2, 2.2, 0.3),
+		CFrame = cframe * CFrame.new(0, 3, 2.9),
+		Color = tiers.chair.color,
+		Material = Enum.Material.Fabric,
+	}).Parent = parent
+	return desk
+end
+
+-- Nhân viên dạng khối ngồi ở ghế: thân màu theo vai trò, đầu, tên nổi trên đầu.
+-- Attribute Bob để client cho nhún nhẹ như đang gõ phím.
+function Visuals.BuildPerson(parent, cframe, color, labelText)
+	local torso = Visuals.Part({
+		Name = "Torso",
+		Size = Vector3.new(1.8, 2, 1),
+		CFrame = cframe * CFrame.new(0, 3.1, 1.9),
+		Color = color,
+		Material = Enum.Material.SmoothPlastic,
+		CanCollide = false,
+	})
+	torso:SetAttribute("Bob", 0.08)
+	torso.Parent = parent
+	local head = Visuals.Part({
+		Name = "Head",
+		Shape = Enum.PartType.Ball,
+		Size = Vector3.one * 1.3,
+		CFrame = cframe * CFrame.new(0, 4.75, 1.9),
+		Color = Color3.fromRGB(234, 192, 150),
+		Material = Enum.Material.SmoothPlastic,
+		CanCollide = false,
+	})
+	head:SetAttribute("Bob", 0.08)
+	head.Parent = parent
+	local label = Visuals.Label(head, labelText, UDim2.fromScale(6, 1.2), Vector3.new(0, 1.6, 0))
+	label.Parent.MaxDistance = 45
+	return torso
+end
+
+-- Một dây chuyền xưởng: máy (màu theo tier) + băng chuyền + hộp chip chạy trên băng (client chạy).
+-- `cframe` ở sàn, băng chuyền chạy dọc trục X của thế giới.
+function Visuals.BuildFactoryLine(parent, cframe, color, length)
+	local machine = Visuals.Part({
+		Name = "Machine",
+		Size = Vector3.new(6, 6, 5),
+		CFrame = cframe * CFrame.new(-length / 2 - 3, 3, 0),
+		Color = Color3.fromRGB(70, 74, 86),
+		Material = Enum.Material.DiamondPlate,
 	})
 	Visuals.Part({
-		Name = "Glass",
-		Size = Vector3.new(4.4, 6.6, 0.15),
-		CFrame = body.CFrame * CFrame.new(0, -0.3, 1.55),
-		Color = Visuals.Colors.glass,
-		Material = Enum.Material.Glass,
-		Transparency = 0.7,
-		CanCollide = false,
-	}).Parent = body
-	local light = Visuals.Part({
-		Name = "Light",
-		Size = Vector3.new(4.6, 0.35, 0.2),
-		CFrame = body.CFrame * CFrame.new(0, 3.6, 1.6),
-		Color = Visuals.Colors.off,
+		Name = "MachineLight",
+		Size = Vector3.new(6.2, 0.5, 5.2),
+		CFrame = machine.CFrame * CFrame.new(0, 2.6, 0),
+		Color = color,
 		Material = Enum.Material.Neon,
 		CanCollide = false,
+	}).Parent = machine
+	Visuals.Light(machine, color, 14, 1.5)
+	machine.Parent = parent
+	local belt = Visuals.Part({
+		Name = "Belt",
+		Size = Vector3.new(length, 0.6, 3),
+		CFrame = cframe * CFrame.new(0, 1.8, 0),
+		Color = Color3.fromRGB(35, 35, 40),
+		Material = Enum.Material.Rubber,
 	})
-	Visuals.Light(light, Visuals.Colors.off, 8, 1.2).Name = "Glow"
-	light.Parent = body
-	for i = 1, 3 do
-		local led = Visuals.Part({
-			Name = "Led" .. i,
-			Size = Vector3.new(0.35, 0.35, 0.1),
-			CFrame = body.CFrame * CFrame.new(-1.6 + (i - 1) * 0.6, -3.3, 1.62),
-			Color = Visuals.Colors.off,
+	belt.Parent = parent
+	local x0 = belt.Position.X - length / 2
+	for i = 1, 4 do
+		local chip = Visuals.Part({
+			Name = "Chip",
+			Size = Vector3.new(1.4, 0.6, 1.4),
+			CFrame = cframe * CFrame.new(-length / 2 + i * length / 4 - length / 8, 2.4, 0),
+			Color = color,
 			Material = Enum.Material.Neon,
 			CanCollide = false,
 		})
-		led:SetAttribute("Blink", true)
-		led.Parent = body
+		chip:SetAttribute("Drive", 4)
+		chip:SetAttribute("DriveMin", x0)
+		chip:SetAttribute("DriveMax", x0 + length)
+		chip.Parent = parent
 	end
-	return body
-end
-
--- Đổi màu kệ theo tier GPU (nil = tắt)
-function Visuals.PaintRack(body, color)
-	local c = color or Visuals.Colors.off
-	body.Light.Color = c
-	body.Light.Glow.Color = c
-	body.Light.Glow.Enabled = color ~= nil
-	for i = 1, 3 do
-		body["Led" .. i].Color = c
-	end
+	return machine
 end
 
 -- Lõi AI: quả cầu ngoài (ForceField) + lõi trong (Neon) + 2 vòng quay + hạt sáng

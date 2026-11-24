@@ -1,141 +1,118 @@
-# 🏙️ Trùm Công Nghệ: Thung Lũng AI (Roblox) — v3
+# 🏚️➡️🌆 Trùm Công Nghệ: Từ Garage Đến AGI (Roblox) — v4
 
-Từ cái gara nhỏ ở **Thung Lũng AI**, xây dần lên **tòa trụ sở chọc trời**: lắp GPU đào token, nghiên cứu R&D, **ra mắt sản phẩm AI** để kiếm tiền, chơi **chứng khoán**, lẻn sang nhà khác trộm dữ liệu, rồi **bán công ty** để làm lại mạnh hơn.
+Game **quản lý công ty AI**, mỗi server 1 người chơi. Bắt đầu từ một cái **garage** năm 2015: thuê nhân sự, sắm bàn ghế máy tính, nghiên cứu R&D, xây xưởng sản xuất compute, **thiết kế và ra mắt model AI**, rồi chờ **báo chí chấm điểm** và nhìn doanh số chạy. Đủ doanh thu thì chuyển lên trụ sở lớn hơn, mở rộng ra thị trường thế giới, mua cổ phần các công ty đối thủ.
 
-Toàn bộ map (thành phố, đồi núi, tòa nhà, nội thất) và UI đều **dựng bằng code**. Mở Baseplate trống, nạp script vào, bấm Play là chơi.
-
-## Hai loại tiền
-
-| | Kiếm từ | Dùng để |
-|---|---|---|
-| 🪙 **Token** (sức mạnh tính toán) | GPU trong các kệ máy chủ → **Máy thu token** ở sảnh | Train AI, nghiên cứu R&D, phát triển sản phẩm |
-| 💵 **Tiền ($)** | Nút **CODE DẠO**, **sản phẩm AI đã ra mắt** ($/giây), ổ dữ liệu, quà | Xây tầng, mua GPU, mua cổ phiếu |
+Thành phố, tòa nhà, nhân viên, xưởng và UI đều **dựng bằng code**. Mở file place, bấm Play là chơi.
 
 ## Vòng lặp chính
 
 ```
-💻 Code dạo ($) ──▶ 🖥️ Mua GPU ──▶ 🪙 Token ──▶ 🔬 R&D mở khoá ──▶ 🚀 Ra mắt sản phẩm ──▶ 💵 $/giây
-        ▲                                                                                │
-        │            🏗️ Xây tầng mới  •  🧠 Train AI  •  📈 Chứng khoán  •  🕵️ Trộm dữ liệu  │
-        │                                                                                ▼
-        └──────────────── 💼 Bán công ty → 🏅 Điểm Founder (+10% thu nhập vĩnh viễn) ◀──────┘
+👥 Thuê nhân sự + 🪑 bàn ghế máy tính ─▶ 🔬 R&D mở tính năng / linh kiện / kênh marketing
+          ▲                                              │
+          │                                              ▼
+🏢 Đủ doanh thu: lên tòa nhà mới        🏭 Xưởng sản xuất ⚡ compute
+🌏 Mở thị trường • 📈 Mua cổ phần                         │
+          ▲                                              ▼
+💵 Người dùng & doanh thu mỗi ngày ◀─ 📰 Báo chấm điểm ◀─ 🧠 Thiết kế model ─▶ 🚀 Ra mắt (giá + marketing)
 ```
 
-## Tòa nhà
+## Thời gian
 
-| Tầng | Giá | Có gì |
-|---|---|---|
-| 1. 🚪 Sảnh & Gara | có sẵn | 4 kệ máy, Máy thu token, két dữ liệu, quầy lễ tân (xây tầng) |
-| 2. 🖥️ Phòng Server A | $400 | 4 kệ máy |
-| 3. 🔬 Lab R&D | $2.5K | Bàn nghiên cứu, lõi AI phát sáng, bàn train AI |
-| 4. 🚀 Studio Sản Phẩm | $12K | Bàn phát triển, màn hình ra mắt |
-| 5. 🖥️ Phòng Server B | $50K | 4 kệ máy |
-| 6. 🧠 Trung Tâm AI | $200K | Train AI hiệu quả x1.5 |
-| 7. 🏭 Data Center | $900K | 4 kệ máy |
-| 8. 👔 Văn Phòng CEO | $4M | +25% thu nhập, mở khoá **Bán công ty**, bảng chứng khoán |
-| ⭐ Penthouse VIP | VIP | 4 kệ máy, luôn nằm trên cùng |
+- Lịch **ngày/tháng/năm**, bắt đầu từ 01/01/2015 (1 tháng = 30 ngày).
+- Nút **⏸ ▶ ⏩ ⏭** để chọn tốc độ. Ở tốc độ x1, 1 ngày = 3 giây; tốc độ ⏭ x5 cần VIP hoặc Game Pass Cỗ Máy Thời Gian.
+- **Lương trả ngày 1** mỗi tháng. Ứng viên mới cũng xuất hiện đầu mỗi tháng.
+- Mỗi công nghệ có **năm ra đời**, ví dụ Transformer từ 2017, Tạo video từ 2021, AGI từ 2027. Sang năm mới sẽ có thông báo công nghệ vừa mở.
+- Thời gian chỉ trôi khi đang online.
 
-Đi lại giữa các tầng bằng **🛗 thang máy** (bấm E ở thang máy, hoặc dùng nút Thang máy trên màn hình). Nóc nhà có sân trực thăng và biển tên công ty phát sáng.
+## Tòa nhà (đạt doanh thu mới được nâng cấp)
 
-## Cây nghiên cứu (13 công nghệ)
+| Cấp | Cần doanh thu | Giá | Chỗ ngồi |
+|---|---|---|---|
+| 🏚️ Garage | – | có sẵn | 4 |
+| 🏠 Văn phòng nhỏ | $25K | $15K | 8 |
+| 🏢 Văn phòng lớn | $250K | $120K | 16 |
+| 🏬 Tòa nhà 2 tầng | $2.5M | $1.2M | 32 |
+| 🏙️ Trụ sở 3 tầng | $25M | $10M | 48 |
+| 🌆 Campus 4 tầng | $250M | $80M | 64 |
 
-```
-💧 Làm mát ─▶ ⚙️ Song song ─▶ 🤖 Tự động hoá ─▶ 🔷 Chip tự thiết kế ─┐
-🕸️ Mạng Nơ-ron ─▶ 🔁 Transformer ─▶ 🎨 Khuếch tán ─▶ 🎮 Học tăng cường ─▶ 🌈 Đa phương thức ─┼▶ ✨ AGI
-        └─▶ 📣 Marketing ─▶ 💼 Đội Sales ─────────────────────────────▶ 🌍 Thương hiệu toàn cầu
-```
+**Chỗ làm việc** = 1 bàn + 1 ghế + 1 máy tính. Mỗi nhân viên cần 1 chỗ. **Nâng cấp trang bị** áp dụng cho cả công ty: Bàn gỗ → Bàn đứng → Bàn thông minh, Ghế nhựa → Ghế công thái học, PC cũ → Máy trạm AI → Siêu máy trạm. Hiệu suất nhân viên cao nhất được tới **x3.7**.
 
-## Sản phẩm AI (mỗi cái nâng cấp được tới v10)
+## Nhân sự
 
-💬 Chatbot CSKH → 🌐 AI Dịch Thuật → 🎨 AI Vẽ Tranh → 🚗 Xe Tự Lái → 🩺 AI Bác Sĩ → ✨ Siêu AI (AGI)
+| Vai trò | Việc |
+|---|---|
+| 💻 Lập trình viên | Điểm phát triển model. Kỹ năng trung bình của đội ảnh hưởng điểm báo chí. |
+| 🔬 Nhà nghiên cứu | Điểm R&D |
+| 📣 Marketing | Tăng độ hot khi ra mắt và người dùng mỗi ngày |
+| 🔧 Kỹ sư | Tăng sản lượng xưởng |
 
-Khi ra mắt: nhận **tiền ra mắt** ngay + **thu nhập $/giây** mãi mãi. Phiên bản mới thì thu nhập x1.7. Ra mắt v1 còn được báo cho cả server.
+Bạn (Founder) làm cả lập trình lẫn nghiên cứu và không ăn lương. Nhân viên có **kỹ năng** và **lương**, đào tạo được (+5 kỹ năng), sa thải được. Họ hiện thành nhân vật ngồi ở bàn, nhún nhún như đang gõ phím.
 
-## Chứng khoán
+## R&D (24 công nghệ, 4 nhóm)
 
-6 công ty ảo (NeuroSoft, ChipViet, CloudMây, RoboFarm, QuantumLeap, AutoDrive). Giá chung cả server, cập nhật mỗi 8 giây, có **tin tức** làm giá tăng giảm mạnh. Xem được ở **bảng điện tử trên nóc Sàn Chứng Khoán** tại quảng trường, hoặc trong bảng 📈 Cổ phiếu (có biểu đồ mini). Phí 1% mỗi lệnh. Chỉ giao dịch bằng $ trong game.
+- 🧠 **Tính năng model:** Xử lý ngôn ngữ, Dịch máy, Nhận diện ảnh, Giọng nói, Transformer, Tạo ảnh, Sinh code, Tạo video, Lập luận, Đa phương thức, Tác tử AI, AGI
+- 🏭 **Linh kiện xưởng:** Cụm GPU, Chip TPU, Chip 3nm, Máy tính lượng tử
+- 🪑 **Văn phòng:** Ghế công thái học, Máy trạm AI, Văn phòng thông minh, Siêu máy trạm
+- 📣 **Marketing:** KOL, Quảng cáo TV, Sự kiện ra mắt, Chiến dịch toàn cầu
 
-## Bản đồ
+## Xưởng compute
 
-Đại lộ có vạch kẻ, đường ngang, đường vành đai, đèn đường (tự bật ban đêm), cây xanh, **xe chạy**, dãy **nhà chọc trời** phía xa, **đồi núi** bao quanh thung lũng, biển chữ "THUNG LŨNG AI" trên đồi, và **ngày/đêm** (1 ngày = 20 phút). **Quảng trường Công Nghệ** có Sàn Chứng Khoán và bảng Top Tỷ Phú.
+Xây xưởng ở lô đất bên cạnh. Có tối đa 4 dây chuyền, và **băng chuyền chở chip chạy thật**. Nâng cấp dây chuyền: Server CPU → Cụm GPU → TPU → Chip 3nm → Lượng tử. Model càng lớn càng cần nhiều ⚡, **thiếu thì bị trừ điểm**.
 
-## Vẫn giữ từ v2
+## Model AI
 
-🕵️ Trộm ổ dữ liệu ở sảnh nhà khác • 🛡️ Khiên • 🎁 Quà 7 ngày • 🏆 Top tỷ phú • 📱 UI hợp mobile
+1. **Thiết kế:** chọn **loại** (Chatbot, Dịch thuật, Trợ lý giọng nói, AI vẽ tranh, AI lập trình, AI làm video, Trợ lý đa năng, Siêu AI), **kích thước** (Mini / Vừa / Lớn / Siêu lớn) và **tính năng**. Tính năng có ⭐ là hợp với loại đó.
+2. **Phát triển:** chạy bằng điểm dev mỗi ngày.
+3. **Ra mắt:** chọn **giá** (Miễn phí, Rẻ, Vừa, Cao cấp) và **chiến dịch marketing** (Không quảng cáo → Chiến dịch toàn cầu; chiến dịch càng đắt thì độ hot càng cao).
+4. **Báo chí chấm điểm:** 4 tờ báo lần lượt lật điểm. Điểm phụ thuộc vào: tính năng có hợp loại không, công nghệ còn mới không, kỹ năng lập trình viên, đủ compute không, kích thước model, và có ra cùng loại quá dày không.
+5. **Doanh số:** người dùng tăng dần tới đỉnh trong 7 ngày đầu, rồi giảm dần; sau 300 ngày thì ngừng bán. Model bán đắt mà chất lượng kém thì ít người mua.
+
+## Thị trường & cổ phần
+
+- 🌏 Mở rộng thị trường: Việt Nam → Đông Nam Á → Châu Á → Châu Âu → Bắc Mỹ → Toàn cầu, tối đa **x25 người dùng**.
+- 📈 Mua cổ phần **6 công ty công nghệ đối thủ**. Trụ sở của họ có thật trên các lô đất xung quanh. Giá có lên có xuống và có tin tức. Bảng điện tử ở Quảng trường.
+
+## Khác
+
+🎁 Quà đăng nhập 7 ngày • 💼 Bán công ty (từ Campus) đổi lấy Điểm Founder, mỗi điểm +10% doanh thu và năng suất vĩnh viễn • 🏆 Top tỷ phú • 🌆 Thành phố có ngày/đêm, xe chạy, đồi núi
 
 ## 💎 Shop
 
 | Nhóm | Món |
 |---|---|
-| 🔥 Hot | 🎁 Gói Khởi Nghiệp (pass, nhận 1 lần) • 🚀 Mega Boost (x2 $, token, R&D 30 phút) • ⭐ VIP |
-| Pass | 🤖 Auto Thu Token • 🕵️ Siêu Đạo Chích • 🏅 Founder+ (+50% Điểm Founder) |
-| Boost | 💵 x2 Tiền • 🪙 x2 Token • 🔬 x2 R&D |
-| Xong ngay | ⚡ Xong ngay nghiên cứu • ⚡ Ra mắt ngay sản phẩm (không có gì đang chạy thì tự đổi thành x2 R&D 30 phút, không mất Robux oan) |
-| Time Warp | ⏩ 1h / 6h / 24h ($ + token) |
-| Khiên | 🛡️ 1h / 8h |
+| 🔥 Hot | 🎁 Gói Khởi Nghiệp (nhận 1 lần: $25K + 2 chỗ + 1 lập trình viên giỏi) • 🚀 Mega Boost • ⭐ VIP (x1.5 doanh thu + tua x5) |
+| Pass | ⏭️ Cỗ Máy Thời Gian (tua x5) • 🎯 Săn Đầu Người (ứng viên +15 kỹ năng) • 🏅 Founder+ |
+| Boost | 💵 x2 Doanh thu • ⚡ x2 Năng suất • 🔥 Viral (lần ra mắt tới x2 độ hot) |
+| Xong ngay | ⚡ R&D đang chạy • ⚡ Model đang làm (nếu không có gì đang chạy thì tự đổi thành x2 Năng suất, không mất Robux oan) |
+| Tua | ⏩ 1 tháng • ⏩ 1 quý (vẫn trả lương như bình thường) |
 
 ## Cài đặt
 
-### Mở file place (dễ nhất)
+1. Mở `AITycoon.rbxlx` bằng Studio (**File → Open from File**), rồi bấm **Play**. Chưa publish cũng chơi được ở chế độ thử (không lưu data).
+2. Muốn lưu data: **Publish** game, rồi bật **Game Settings → Security → Enable Studio Access to API Services**.
+3. Đặt **Max Players = 1** (mỗi server 1 người).
+4. Tạo Game Pass `VIP`, `TimeMachine`, `Headhunter`, `FounderPlus`, `StarterPack` và Developer Product `CashBoost`, `WorkBoost`, `MegaBoost`, `Viral`, `InstantResearch`, `InstantDev`, `SkipMonth`, `SkipQuarter`, rồi dán ID vào `src/shared/Config.luau`.
 
-Dùng file `AITycoon.rbxlx` đã đóng gói sẵn: **File → Open from File** trong Studio, rồi bấm Play.
-
-### Rojo
-
-```bash
-rojo serve
-```
-
-Mở Studio, tạo **Baseplate**, rồi bấm **Connect** trong plugin Rojo.
-
-### Cấu trúc
-
-```
-ReplicatedStorage/Shared/Config (ModuleScript)
-ServerScriptService/Server/
-    Main (Script), DataService, WorldService, CompanyService, ResearchService,
-    ProductService, StockService, HeistService, ProgressService, LeaderboardService,
-    MonetizationService, Visuals (ModuleScript)
-StarterPlayer/StarterPlayerScripts/Client/
-    Main (LocalScript), Fx (ModuleScript)
-```
-
-### Cấu hình
-
-1. Chưa publish cũng chơi được ở **chế độ thử** (không lưu data).
-2. Muốn lưu data thì **Publish**, rồi bật **Game Settings → Security → Enable Studio Access to API Services**.
-3. Đặt **Max Players = 8** (8 lô đất).
-4. **Lighting → Technology = Future** để kính và đèn đẹp nhất (file place đóng gói sẵn đã đặt).
-5. Muốn test trộm dữ liệu: **Test → Clients and Servers → 2 Players**.
-
-### Game Pass và Dev Product
-
-- **Passes**: `VIP`, `AutoCollect`, `MasterThief`, `FounderPlus`, `StarterPack`
-- **Developer Products**: `CashBoost`, `TokenBoost`, `ResearchBoost`, `MegaBoost`, `InstantResearch`, `InstantDev`, `TimeWarp1H`, `TimeWarp6H`, `TimeWarp24H`, `Shield1H`, `Shield8H`
-
-Dán ID vào `src/shared/Config.luau`.
+Dùng Rojo thì chạy `rojo serve` trong thư mục này.
 
 ## Kiến trúc
 
 | Module | Việc |
 |---|---|
-| `WorldService` | Thành phố, đồi núi Terrain, xe, ngày/đêm, quảng trường |
-| `CompanyService` | Lô đất, tòa nhà theo tầng, thang máy, kệ GPU, code dạo, Máy thu token, train AI, các hệ số $/token |
-| `ResearchService` | Cây nghiên cứu, chạy theo thời gian |
-| `ProductService` | Phát triển, ra mắt, nâng cấp sản phẩm |
-| `StockService` | Giá cổ phiếu chung server, tin tức, mua/bán |
-| `HeistService` | Két dữ liệu, trộm, bắt trộm, khiên |
-| `ProgressService` | Quà 7 ngày, Bán công ty |
-| `LeaderboardService` | Top tỷ phú (OrderedDataStore) |
-| `MonetizationService` | Game Pass, ProcessReceipt, Gói Khởi Nghiệp |
-| `DataService` | DataStore `schemaVersion = 3`, chế độ thử khi chưa publish |
+| `CalendarService` | Ngày/tháng/năm, tốc độ, tua; gọi "day hook" mỗi ngày |
+| `CompanyService` | Tòa nhà 6 cấp, chỗ làm việc, trang bị, nhân viên ngồi bàn, thang máy, tiền, các hệ số |
+| `StaffService` | Ứng viên, tuyển, đào tạo, sa thải, trả lương, điểm làm việc |
+| `ResearchService` | Cây R&D theo năm |
+| `FactoryService` | Xưởng, dây chuyền, compute |
+| `ModelService` | Thiết kế, phát triển, ra mắt, chấm điểm, doanh số, thị trường |
+| `StockService` | Cổ phần 6 công ty đối thủ + trụ sở của họ trong thành phố |
+| `WorldService` | Thành phố, đồi núi, xe, ngày/đêm |
+| `ProgressService` / `LeaderboardService` / `MonetizationService` | Quà + bán công ty / top tỷ phú / Robux |
+| `DataService` | DataStore `schemaVersion = 4` (data cũ tự nâng cấp), chế độ thử |
 
-- Server quyết định mọi thứ, client chỉ gửi yêu cầu. Remote có chống spam và chống auto-click.
-- `ProcessReceipt` chỉ trả `PurchaseGranted` sau khi **lưu data thành công**, và nhớ `PurchaseId`.
-- Data v1/v2 tự nâng lên v3: giữ quà, đồ đã mua, thành tích, và đổi cổ phiếu IPO cũ thành Điểm Founder.
-- Bán cổ phiếu là đổi tài sản, không tính vào "$ kiếm được", nên không thể dùng để thổi phồng Điểm Founder.
+Mọi con số cân bằng game nằm trong `src/shared/Config.luau`.
 
 ## Lưu ý
 
-- Thiết kế, tên và đồ họa đều là của game mình, không sao chép game khác.
-- Không bán vật phẩm ngẫu nhiên bằng Robux. Chứng khoán chỉ dùng $ trong game, không đổi ra Robux.
+- Thiết kế, tên, nội dung đều là của game mình, không sao chép game khác. Tên model đặt tự động nên không cần lọc chữ người chơi gõ.
+- Không bán vật phẩm ngẫu nhiên bằng Robux. Cổ phần chỉ mua bán bằng $ trong game.

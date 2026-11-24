@@ -1,20 +1,17 @@
--- Cây nghiên cứu (R&D). Mỗi lúc chỉ nghiên cứu 1 công nghệ: trả token, chờ hết thời gian
--- (nhanh hơn nhờ boost / nghiên cứu Tự động hoá), xong thì được hiệu ứng vĩnh viễn trong lượt chơi.
--- Cần tầng Lab R&D.
+-- Cây nghiên cứu (R&D). Mỗi lúc chỉ nghiên cứu 1 công nghệ, chạy bằng điểm R&D mỗi ngày
+-- (từ Founder + nhà nghiên cứu). Có công nghệ phải tới đúng năm mới được nghiên cứu.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Config = require(ReplicatedStorage.Shared.Config)
+local CalendarService = require(script.Parent.CalendarService)
 local CompanyService = require(script.Parent.CompanyService)
+local Config = require(ReplicatedStorage.Shared.Config)
 local DataService = require(script.Parent.DataService)
+local StaffService = require(script.Parent.StaffService)
 
 local ResearchService = {}
 
 local notify = CompanyService.Notify
-
-local function labIndex()
-	return CompanyService.FloorIndexOf("Lab")
-end
 
 local function requirementsMet(profile, node)
 	for _, req in node.requires do
@@ -33,10 +30,8 @@ local function complete(player, profile)
 		return
 	end
 	profile.research.done[node.id] = true
-	local unlock = node.effect.unlock and Config.ProductById[node.effect.unlock]
-	local extra = if unlock then string.format(" Mở khoá sản phẩm %s %s!", unlock.emoji, unlock.name) else ""
-	notify(player, string.format("🔬 Nghiên cứu xong %s %s!%s", node.emoji, node.name, extra), "Evolve")
-	CompanyService.Refresh(player)
+	notify(player, string.format("🔬 Nghiên cứu xong %s %s!", node.emoji, node.name), "Evolve")
+	CompanyService.PushState(player)
 end
 
 local function start(player, profile, nodeId)
@@ -44,27 +39,22 @@ local function start(player, profile, nodeId)
 	if not node then
 		return
 	end
-	if not CompanyService.HasFloor(player, profile, labIndex()) then
-		notify(player, "Cần xây tầng 🔬 Lab R&D trước đã!", "Open:Build")
-		return
-	end
 	if profile.research.done[node.id] then
 		notify(player, "Cái này nghiên cứu xong rồi nha ✅")
 		return
 	end
 	if profile.research.current then
-		notify(player, "Lab đang bận nghiên cứu cái khác, chờ xíu! ⏳")
+		notify(player, "Đội R&D đang bận nghiên cứu cái khác ⏳")
+		return
+	end
+	if Config.YearOf(profile.day) < node.year then
+		notify(player, string.format("Công nghệ này phải tới năm %d mới có 📅", node.year))
 		return
 	end
 	if not requirementsMet(profile, node) then
 		notify(player, "Phải nghiên cứu các công nghệ trước đó đã 🔒")
 		return
 	end
-	if profile.tokens < node.cost then
-		notify(player, string.format("Cần %s 🪙 token để nghiên cứu %s", Config.Short(node.cost), node.name))
-		return
-	end
-	profile.tokens -= node.cost
 	profile.research.current = { id = node.id, progress = 0 }
 	notify(player, string.format("🔬 Bắt đầu nghiên cứu %s %s", node.emoji, node.name))
 	CompanyService.PushState(player)
@@ -85,34 +75,43 @@ function ResearchService.Start()
 		start(player, profile, nodeId)
 	end)
 
-	CompanyService.RegisterStateProvider(function(player, profile, state)
+	CalendarService.RegisterDayHook(function(player, profile, day)
 		local current = profile.research.current
-		local node = current and Config.ResearchById[current.id]
-		state.research = {
-			done = profile.research.done,
-			current = if node then current.id else nil,
-			progress = if node then math.clamp(current.progress / node.time, 0, 1) else 0,
-			remaining = if node then math.max(0, (node.time - current.progress) / CompanyService.ResearchSpeed(player, "research")) else 0,
-			hasLab = CompanyService.HasFloor(player, profile, labIndex()),
-		}
-	end)
-
-	task.spawn(function()
-		while true do
-			task.wait(1)
-			for player, profile in DataService.Profiles do
-				local current = profile.research.current
-				local node = current and Config.ResearchById[current.id]
-				if current and not node then
-					profile.research.current = nil -- nghiên cứu đã bị xoá khỏi Config
-				elseif node and CompanyService.GetLot(player) then
-					current.progress += CompanyService.ResearchSpeed(player, "research")
-					if current.progress >= node.time then
-						complete(player, profile)
-					end
+		if current then
+			local node = Config.ResearchById[current.id]
+			if not node then
+				profile.research.current = nil
+			else
+				current.progress += StaffService.Points(player, profile, "Research")
+				if current.progress >= node.cost then
+					complete(player, profile)
 				end
 			end
 		end
+		-- sang năm mới: báo các công nghệ vừa mở
+		if day % 360 == 0 then
+			local year = Config.YearOf(day)
+			local names = {}
+			for _, node in Config.Research do
+				if node.year == year then
+					table.insert(names, node.emoji .. " " .. node.name)
+				end
+			end
+			local extra = if #names > 0 then " Công nghệ mới: " .. table.concat(names, ", ") else ""
+			notify(player, string.format("🎆 Chúc mừng năm mới %d!%s", year, extra), "Evolve")
+		end
+	end)
+
+	CompanyService.RegisterStateProvider(function(player, profile, state)
+		local current = profile.research.current
+		local node = current and Config.ResearchById[current.id]
+		local rp = StaffService.Points(player, profile, "Research")
+		state.research = {
+			current = if node then current.id else nil,
+			progress = if node then math.clamp(current.progress / node.cost, 0, 1) else 0,
+			eta = if node and rp > 0 then math.ceil((node.cost - current.progress) / rp) else 0,
+			perDay = rp,
+		}
 	end)
 end
 

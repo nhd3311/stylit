@@ -1,4 +1,4 @@
--- Sàn chứng khoán: 6 công ty ảo, giá chung cho cả server.
+-- Sàn chứng khoán: cổ phần 6 công ty công nghệ đối thủ (có trụ sở trong thành phố).
 -- Giá đi ngẫu nhiên (log-normal) và bị kéo nhẹ về quanh giá gốc nên không bay mãi lên hay rơi mãi xuống.
 -- Thỉnh thoảng có tin tức làm 1 mã nhảy mạnh. Mua/bán bằng $ trong game, phí 1% mỗi lệnh.
 
@@ -151,9 +151,14 @@ end
 
 function StockService.Start(remoteFolder)
 	remotes = remoteFolder
-	for _, stock in Config.Stocks do
+	for i, stock in Config.Stocks do
 		prices[stock.id] = stock.base
 		history[stock.id] = { stock.base }
+		-- mỗi mã cổ phiếu có trụ sở thật trên 1 lô đất trong thành phố
+		local lotIndex = WorldService.RivalLots[i]
+		if lotIndex then
+			WorldService.BuildRival(lotIndex, stock.name, stock.emoji, stock.color, 50 + (stock.base ^ 0.5) * 3)
+		end
 	end
 
 	-- Bảng điện tử ở Sàn Chứng Khoán

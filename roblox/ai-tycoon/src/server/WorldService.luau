@@ -20,6 +20,11 @@ local CONCRETE = Color3.fromRGB(150, 150, 155)
 local city -- Folder chứa mọi thứ của thành phố
 local streetLights = {}
 
+-- Server 1 người: lô 2 là trụ sở của người chơi, lô 3 là xưởng, các lô còn lại là công ty đối thủ
+WorldService.HQLot = 2
+WorldService.FactoryLot = 3
+WorldService.RivalLots = { 1, 4, 5, 6, 7, 8 }
+
 -- Vị trí dành cho các service khác
 WorldService.Plaza = CFrame.new(-228, 0, 0) -- giữa Quảng trường Công Nghệ
 WorldService.LeaderboardCFrame = CFrame.new(-210, 13, -30) * CFrame.Angles(0, math.pi / 2, 0)
@@ -346,6 +351,49 @@ local function buildPlaza()
 	for _, z in { -45, -15, 15, 45 } do
 		tree(Vector3.new(-205, 0, z), 1)
 	end
+end
+
+-- Trụ sở công ty đối thủ trên 1 lô đất: tháp kính màu thương hiệu + biển tên phát sáng
+function WorldService.BuildRival(lotIndex, name, emoji, color, height)
+	local origin = WorldService.LotOrigin(lotIndex)
+	local folder = Instance.new("Folder")
+	folder.Name = "Rival_" .. name
+	Visuals.Part({
+		Name = "Ground",
+		Size = Vector3.new(85, 0.6, 105),
+		CFrame = origin * CFrame.new(0, -0.15, 0),
+		Color = Color3.fromRGB(165, 165, 170),
+		Material = Enum.Material.Concrete,
+	}).Parent = folder
+	local tower = Visuals.Part({
+		Name = "Tower",
+		Size = Vector3.new(40, height, 34),
+		CFrame = origin * CFrame.new(0, height / 2, -22),
+		Color = color,
+		Material = Enum.Material.Glass,
+		Reflectance = 0.2,
+		Transparency = 0.1,
+	})
+	tower.Parent = folder
+	for y = 10, height - 6, 14 do
+		Visuals.Part({
+			Name = "Floor",
+			Size = Vector3.new(40.4, 0.8, 34.4),
+			CFrame = tower.CFrame * CFrame.new(0, y - height / 2, 0),
+			Color = Color3.fromRGB(40, 42, 50),
+			Material = Enum.Material.Metal,
+		}).Parent = folder
+	end
+	local sign = Visuals.Part({
+		Name = "Sign",
+		Size = Vector3.new(30, 1, 1),
+		CFrame = origin * CFrame.new(0, height + 1, -6),
+		Transparency = 1,
+		CanCollide = false,
+	})
+	Visuals.Label(sign, emoji .. " " .. string.upper(name), UDim2.fromScale(40, 8), Vector3.new(0, 4, 0), color).Parent.MaxDistance = 700
+	sign.Parent = folder
+	folder.Parent = city
 end
 
 -- ================= Ngày / đêm =================

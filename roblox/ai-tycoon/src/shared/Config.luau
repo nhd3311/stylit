@@ -1,249 +1,393 @@
 -- Toàn bộ số liệu cân bằng game + ID kiếm Robux nằm ở đây.
--- Muốn chỉnh giá, thời gian, thêm nghiên cứu/loại model/thị trường thì chỉ cần sửa file này.
+-- Chữ người chơi nhìn thấy (name, desc, text...) là tiếng Anh; chú thích code là tiếng Việt.
 --
 -- Vòng lặp: thuê nhân sự + mua bàn ghế máy tính → nghiên cứu R&D → xưởng sản xuất ⚡ compute
 -- → thiết kế & phát triển model AI → ra mắt (giá + marketing) → báo chấm điểm → doanh số
--- → đủ tiền thì nâng cấp tòa nhà, thuê thêm người, mở rộng thị trường, mua cổ phần.
+-- → leo hạng AI Arena, xử lý sự kiện, nâng cấp tòa nhà, mở thị trường, mua cổ phần.
 
 local Config = {}
 
-Config.GameName = "Trùm Công Nghệ: Từ Garage Đến AGI"
+Config.GameName = "AI Empire: Garage to AGI"
 Config.StartingCash = 8000
 Config.AutosaveInterval = 120
 
 -- ===== Thời gian trong game =====
--- 1 tháng = 30 ngày, 1 năm = 360 ngày cho dễ tính. Ngày 0 = 01/01/StartYear.
+-- 1 tháng = 30 ngày, 1 năm = 360 ngày. Ngày 0 = 01/01/StartYear.
 Config.Calendar = {
 	StartYear = 2015,
 	SecondsPerDay = 3, -- ở tốc độ x1
-	Speeds = { 0, 1, 2, 5 }, -- ⏸ ▶ ⏩ ⏭ (x5 cần Game Pass Cỗ Máy Thời Gian hoặc VIP)
+	Speeds = { 0, 1, 2, 5 }, -- ⏸ ▶ ⏩ ⏭ (x5 cần VIP hoặc Time Machine)
 	FastSpeedIndex = 4,
 }
+Config.MonthNames = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
 
--- ===== Gõ code dạo (click) =====
-Config.Click = {
-	BaseCash = 5,
-	MinInterval = 0.07, -- chống auto-click
-}
+Config.Click = { BaseCash = 5, MinInterval = 0.07 }
 
--- ===== Tòa nhà =====
--- requireEarned: tổng doanh thu từ trước tới nay phải đạt mốc này mới được mua cấp đó.
--- cols x rows chỗ ngồi mỗi tầng.
+-- ===== Tòa nhà (requireEarned: doanh thu lượt này phải đạt mốc) =====
 Config.FloorHeight = 14
 Config.Buildings = {
 	{ name = "Garage", emoji = "🏚️", price = 0, requireEarned = 0, w = 30, d = 24, floors = 1, cols = 2, rows = 2 },
-	{ name = "Văn phòng nhỏ", emoji = "🏠", price = 15000, requireEarned = 25000, w = 44, d = 32, floors = 1, cols = 4, rows = 2 },
-	{ name = "Văn phòng lớn", emoji = "🏢", price = 120000, requireEarned = 250000, w = 56, d = 44, floors = 1, cols = 4, rows = 4 },
-	{ name = "Tòa nhà 2 tầng", emoji = "🏬", price = 1200000, requireEarned = 2500000, w = 56, d = 44, floors = 2, cols = 4, rows = 4 },
-	{ name = "Trụ sở 3 tầng", emoji = "🏙️", price = 10000000, requireEarned = 25000000, w = 56, d = 44, floors = 3, cols = 4, rows = 4 },
-	{ name = "Campus 4 tầng", emoji = "🌆", price = 80000000, requireEarned = 250000000, w = 56, d = 44, floors = 4, cols = 4, rows = 4 },
+	{ name = "Small Office", emoji = "🏠", price = 15000, requireEarned = 25000, w = 44, d = 32, floors = 1, cols = 4, rows = 2 },
+	{ name = "Big Office", emoji = "🏢", price = 120000, requireEarned = 250000, w = 56, d = 44, floors = 1, cols = 4, rows = 4 },
+	{ name = "2-Floor Building", emoji = "🏬", price = 1200000, requireEarned = 2500000, w = 64, d = 50, floors = 2, cols = 5, rows = 4 },
+	{ name = "3-Floor HQ", emoji = "🏙️", price = 10000000, requireEarned = 25000000, w = 64, d = 50, floors = 3, cols = 5, rows = 4 },
+	{ name = "4-Floor Campus", emoji = "🌆", price = 80000000, requireEarned = 250000000, w = 72, d = 56, floors = 4, cols = 6, rows = 4 },
+	{ name = "Tech Tower", emoji = "🗼", price = 600000000, requireEarned = 2500000000, w = 76, d = 60, floors = 6, cols = 6, rows = 5 },
+	{ name = "Global HQ", emoji = "🌐", price = 5000000000, requireEarned = 25000000000, w = 76, d = 60, floors = 8, cols = 6, rows = 5 },
 }
 
--- ===== Bàn ghế, máy tính =====
--- Mỗi chỗ làm việc = 1 bàn + 1 ghế + 1 PC. Nâng cấp là áp cho cả công ty.
--- mult: nhân hiệu suất làm việc; price: tiền nâng cấp MỖI chỗ; research: nghiên cứu cần trước.
+-- ===== Bàn ghế, máy tính (nâng cấp áp cho cả công ty; price = tiền MỖI chỗ) =====
 Config.WorkstationPrice = 800
 Config.Equipment = {
 	desk = {
-		name = "Bàn",
+		name = "Desks",
 		tiers = {
-			{ name = "Bàn gỗ", mult = 1, price = 0, color = Color3.fromRGB(150, 110, 70) },
-			{ name = "Bàn đứng", mult = 1.1, price = 400, color = Color3.fromRGB(235, 235, 235) },
-			{ name = "Bàn thông minh", mult = 1.25, price = 3000, color = Color3.fromRGB(40, 40, 50), research = "SmartOffice" },
+			{ name = "Wooden Desk", mult = 1, price = 0, color = Color3.fromRGB(150, 110, 70) },
+			{ name = "Standing Desk", mult = 1.1, price = 400, color = Color3.fromRGB(235, 235, 235) },
+			{ name = "Smart Desk", mult = 1.25, price = 3000, color = Color3.fromRGB(40, 40, 50), research = "SmartOffice" },
 		},
 	},
 	chair = {
-		name = "Ghế",
+		name = "Chairs",
 		tiers = {
-			{ name = "Ghế nhựa", mult = 1, price = 0, color = Color3.fromRGB(60, 120, 200) },
-			{ name = "Ghế văn phòng", mult = 1.15, price = 300, color = Color3.fromRGB(30, 30, 35) },
-			{ name = "Ghế công thái học", mult = 1.3, price = 2000, color = Color3.fromRGB(200, 60, 60), research = "Ergonomics" },
+			{ name = "Plastic Chair", mult = 1, price = 0, color = Color3.fromRGB(60, 120, 200) },
+			{ name = "Office Chair", mult = 1.15, price = 300, color = Color3.fromRGB(30, 30, 35) },
+			{ name = "Ergonomic Chair", mult = 1.3, price = 2000, color = Color3.fromRGB(200, 60, 60), research = "Ergonomics" },
 		},
 	},
 	pc = {
-		name = "Máy tính",
+		name = "Computers",
 		tiers = {
-			{ name = "PC cũ", mult = 1, price = 0, color = Color3.fromRGB(220, 210, 180) },
-			{ name = "PC văn phòng", mult = 1.3, price = 1000 },
-			{ name = "Máy trạm AI", mult = 1.7, price = 8000, research = "Workstation" },
-			{ name = "Siêu máy trạm", mult = 2.3, price = 60000, research = "SuperWorkstation" },
+			{ name = "Old PC", mult = 1, price = 0, color = Color3.fromRGB(220, 210, 180) },
+			{ name = "Office PC", mult = 1.3, price = 1000 },
+			{ name = "AI Workstation", mult = 1.7, price = 8000, research = "Workstation" },
+			{ name = "Super Workstation", mult = 2.3, price = 60000, research = "SuperWorkstation" },
 		},
 	},
 }
 
 -- ===== Nhân sự =====
--- Điểm/ngày = kỹ năng / 10 x hiệu suất chỗ ngồi. Lương trả ngày 1 mỗi tháng.
 Config.Roles = {
-	Dev = { name = "Lập trình viên", emoji = "💻", color = Color3.fromRGB(60, 140, 255), desc = "Tạo điểm phát triển model" },
-	Research = { name = "Nhà nghiên cứu", emoji = "🔬", color = Color3.fromRGB(170, 100, 255), desc = "Tạo điểm R&D" },
-	Marketing = { name = "Marketing", emoji = "📣", color = Color3.fromRGB(255, 120, 60), desc = "Tăng độ hot khi ra mắt + doanh số" },
-	Engineer = { name = "Kỹ sư", emoji = "🔧", color = Color3.fromRGB(60, 200, 120), desc = "Tăng sản lượng xưởng" },
+	Dev = { name = "Engineer", emoji = "💻", color = Color3.fromRGB(60, 140, 255), desc = "Builds models (dev points)" },
+	Research = { name = "Researcher", emoji = "🔬", color = Color3.fromRGB(170, 100, 255), desc = "Unlocks tech (R&D points)" },
+	Marketing = { name = "Marketer", emoji = "📣", color = Color3.fromRGB(255, 120, 60), desc = "More hype & users" },
+	Engineer = { name = "Hardware Tech", emoji = "🔧", color = Color3.fromRGB(60, 200, 120), desc = "Boosts factory output" },
 }
 Config.RoleOrder = { "Dev", "Research", "Marketing", "Engineer" }
-Config.Founder = { name = "Bạn (Founder)", skill = 40 } -- làm cả lập trình lẫn nghiên cứu, không lương
+Config.Founder = { name = "You (Founder)", skill = 40 }
 Config.Staff = {
 	CandidatesPerRole = 2,
-	RefreshPrice = 500, -- tìm ứng viên mới ngay (không thì tự đổi đầu mỗi tháng)
+	RefreshPrice = 500,
 	SalaryBase = 300,
-	SalaryPerSkill = 12, -- lương/tháng = SalaryBase + kỹ năng x SalaryPerSkill (x hệ số theo năm)
+	SalaryPerSkill = 12,
 	SalaryGrowthPerYear = 0.06,
-	TrainCostPerSkill = 25, -- đào tạo +5 kỹ năng = kỹ năng hiện tại x giá này
+	TrainCostPerSkill = 25,
 	TrainAmount = 5,
 	MaxSkill = 100,
 	HeadhunterBonus = 15,
+	LegendSkill = 90,
 }
-Config.FirstNames = { "An", "Bình", "Châu", "Dũng", "Giang", "Hà", "Hải", "Hiếu", "Hoa", "Huy", "Khánh", "Lan", "Linh", "Long", "Mai", "Minh", "Nam", "Ngọc", "Phong", "Phúc", "Quân", "Quỳnh", "Sơn", "Tâm", "Thảo", "Thắng", "Trang", "Trung", "Tú", "Vy" }
-Config.LastNames = { "Nguyễn", "Trần", "Lê", "Phạm", "Hoàng", "Huỳnh", "Phan", "Vũ", "Võ", "Đặng", "Bùi", "Đỗ" }
+Config.FirstNames = { "Alex", "Sam", "Jordan", "Taylor", "Riley", "Casey", "Morgan", "Jamie", "Avery", "Quinn", "Kai", "Noah", "Mia", "Leo", "Zoe", "Liam", "Emma", "Yuki", "Minh", "Linh", "Arjun", "Priya", "Diego", "Sofia", "Omar", "Lena", "Hana", "Ivan", "Chen", "Amara" }
+Config.LastNames = { "Smith", "Nguyen", "Park", "Garcia", "Kim", "Patel", "Tanaka", "Silva", "Müller", "Chen", "Lopez", "Brown", "Tran", "Sato", "Khan", "Rossi" }
+-- màu da / màu quần ngẫu nhiên cho avatar nhân viên
+Config.SkinTones = {
+	Color3.fromRGB(255, 220, 185),
+	Color3.fromRGB(234, 192, 150),
+	Color3.fromRGB(198, 145, 105),
+	Color3.fromRGB(141, 95, 65),
+	Color3.fromRGB(92, 60, 40),
+}
+Config.PantsColors = { Color3.fromRGB(40, 45, 60), Color3.fromRGB(30, 30, 35), Color3.fromRGB(90, 70, 55), Color3.fromRGB(60, 80, 120) }
 
 -- ===== Xưởng sản xuất compute =====
 Config.Factory = {
 	BuildPrice = 10000,
 	RequireBuilding = 2,
-	LinePrices = { 5000, 30000, 200000, 1500000 }, -- giá mua dây chuyền thứ 1..4
-	EngineerBonus = 1 / 200, -- mỗi điểm kỹ năng kỹ sư +0.5% sản lượng
+	LinePrices = { 5000, 30000, 200000, 1500000 },
+	EngineerBonus = 1 / 200,
 }
--- price: tiền nâng 1 dây chuyền lên tier này; rate: ⚡/ngày
 Config.FactoryTiers = {
-	{ name = "Server CPU", emoji = "🧮", rate = 10, price = 0, color = Color3.fromRGB(150, 150, 160) },
-	{ name = "Cụm GPU", emoji = "🎮", rate = 50, price = 12000, research = "GpuCluster", color = Color3.fromRGB(80, 200, 255) },
-	{ name = "Chip TPU tự thiết kế", emoji = "🔷", rate = 250, price = 120000, research = "CustomTpu", color = Color3.fromRGB(255, 210, 60) },
-	{ name = "Chip 3nm", emoji = "💠", rate = 1200, price = 1200000, research = "Chip3nm", color = Color3.fromRGB(120, 255, 160) },
-	{ name = "Máy tính lượng tử", emoji = "⚛️", rate = 6000, price = 12000000, research = "Quantum", color = Color3.fromRGB(200, 80, 255) },
+	{ name = "CPU Servers", emoji = "🧮", rate = 10, price = 0, color = Color3.fromRGB(150, 150, 160) },
+	{ name = "GPU Cluster", emoji = "🎮", rate = 50, price = 12000, research = "GpuCluster", color = Color3.fromRGB(80, 200, 255) },
+	{ name = "Custom TPU", emoji = "🔷", rate = 250, price = 120000, research = "CustomTpu", color = Color3.fromRGB(255, 210, 60) },
+	{ name = "3nm Chips", emoji = "💠", rate = 1200, price = 1200000, research = "Chip3nm", color = Color3.fromRGB(120, 255, 160) },
+	{ name = "Quantum Core", emoji = "⚛️", rate = 6000, price = 12000000, research = "Quantum", color = Color3.fromRGB(200, 80, 255) },
 }
 
--- ===== Cây nghiên cứu =====
--- cost: điểm R&D, year: năm sớm nhất được nghiên cứu, requires: nghiên cứu trước đó.
--- category: Feature (tính năng model) | Component (linh kiện xưởng) | Office | Marketing
+-- ===== Cây nghiên cứu (cost: điểm R&D, year: năm sớm nhất) =====
 Config.Research = {
-	-- Tính năng model
-	{ id = "Text", category = "Feature", name = "Xử lý ngôn ngữ", emoji = "📝", cost = 30, year = 2015, requires = {} },
-	{ id = "Translate", category = "Feature", name = "Dịch máy", emoji = "🌐", cost = 120, year = 2015, requires = { "Text" } },
-	{ id = "Vision", category = "Feature", name = "Nhận diện ảnh", emoji = "👁️", cost = 250, year = 2016, requires = {} },
-	{ id = "Voice", category = "Feature", name = "Giọng nói", emoji = "🎙️", cost = 450, year = 2017, requires = { "Text" } },
-	{ id = "Transformer", category = "Feature", name = "Kiến trúc Transformer", emoji = "🔁", cost = 900, year = 2017, requires = { "Text" } },
-	{ id = "ImageGen", category = "Feature", name = "Tạo ảnh", emoji = "🎨", cost = 1600, year = 2018, requires = { "Vision", "Transformer" } },
-	{ id = "Code", category = "Feature", name = "Sinh code", emoji = "⌨️", cost = 3000, year = 2019, requires = { "Transformer" } },
-	{ id = "Video", category = "Feature", name = "Tạo video", emoji = "🎬", cost = 9000, year = 2021, requires = { "ImageGen" } },
-	{ id = "Reasoning", category = "Feature", name = "Lập luận", emoji = "🧩", cost = 16000, year = 2022, requires = { "Code" } },
-	{ id = "Multimodal", category = "Feature", name = "Đa phương thức", emoji = "🌈", cost = 30000, year = 2023, requires = { "Voice", "Video" } },
-	{ id = "Agent", category = "Feature", name = "Tác tử AI", emoji = "🤖", cost = 60000, year = 2024, requires = { "Reasoning" } },
+	{ id = "Text", category = "Feature", name = "Language Processing", emoji = "📝", cost = 30, year = 2015, requires = {} },
+	{ id = "Translate", category = "Feature", name = "Machine Translation", emoji = "🌐", cost = 120, year = 2015, requires = { "Text" } },
+	{ id = "Vision", category = "Feature", name = "Computer Vision", emoji = "👁️", cost = 250, year = 2016, requires = {} },
+	{ id = "Voice", category = "Feature", name = "Speech", emoji = "🎙️", cost = 450, year = 2017, requires = { "Text" } },
+	{ id = "Transformer", category = "Feature", name = "Transformer", emoji = "🔁", cost = 900, year = 2017, requires = { "Text" } },
+	{ id = "ImageGen", category = "Feature", name = "Image Generation", emoji = "🎨", cost = 1600, year = 2018, requires = { "Vision", "Transformer" } },
+	{ id = "Code", category = "Feature", name = "Code Generation", emoji = "⌨️", cost = 3000, year = 2019, requires = { "Transformer" } },
+	{ id = "Video", category = "Feature", name = "Video Generation", emoji = "🎬", cost = 9000, year = 2021, requires = { "ImageGen" } },
+	{ id = "Reasoning", category = "Feature", name = "Reasoning", emoji = "🧩", cost = 16000, year = 2022, requires = { "Code" } },
+	{ id = "Multimodal", category = "Feature", name = "Multimodal", emoji = "🌈", cost = 30000, year = 2023, requires = { "Voice", "Video" } },
+	{ id = "Agent", category = "Feature", name = "AI Agents", emoji = "🤖", cost = 60000, year = 2024, requires = { "Reasoning" } },
 	{ id = "AGI", category = "Feature", name = "AGI", emoji = "✨", cost = 250000, year = 2027, requires = { "Multimodal", "Agent" } },
-	-- Linh kiện cho xưởng
-	{ id = "GpuCluster", category = "Component", name = "Cụm GPU", emoji = "🎮", cost = 300, year = 2016, requires = {} },
-	{ id = "CustomTpu", category = "Component", name = "Chip TPU tự thiết kế", emoji = "🔷", cost = 4000, year = 2019, requires = { "GpuCluster" } },
-	{ id = "Chip3nm", category = "Component", name = "Chip 3nm", emoji = "💠", cost = 25000, year = 2023, requires = { "CustomTpu" } },
-	{ id = "Quantum", category = "Component", name = "Máy tính lượng tử", emoji = "⚛️", cost = 150000, year = 2028, requires = { "Chip3nm" } },
-	-- Văn phòng
-	{ id = "Ergonomics", category = "Office", name = "Ghế công thái học", emoji = "🪑", cost = 200, year = 2015, requires = {} },
-	{ id = "Workstation", category = "Office", name = "Máy trạm AI", emoji = "🖥️", cost = 700, year = 2016, requires = {} },
-	{ id = "SmartOffice", category = "Office", name = "Văn phòng thông minh", emoji = "🏢", cost = 2500, year = 2018, requires = { "Ergonomics" } },
-	{ id = "SuperWorkstation", category = "Office", name = "Siêu máy trạm", emoji = "⚡", cost = 20000, year = 2022, requires = { "Workstation" } },
-	-- Marketing
-	{ id = "Influencer", category = "Marketing", name = "Hợp tác KOL", emoji = "🤳", cost = 250, year = 2016, requires = {} },
-	{ id = "TvAds", category = "Marketing", name = "Quảng cáo TV", emoji = "📺", cost = 600, year = 2017, requires = {} },
-	{ id = "LaunchEvent", category = "Marketing", name = "Sự kiện ra mắt", emoji = "🎤", cost = 2000, year = 2018, requires = { "Influencer" } },
-	{ id = "GlobalCampaign", category = "Marketing", name = "Chiến dịch toàn cầu", emoji = "🌍", cost = 20000, year = 2022, requires = { "LaunchEvent", "TvAds" } },
+	{ id = "GpuCluster", category = "Component", name = "GPU Cluster", emoji = "🎮", cost = 300, year = 2016, requires = {} },
+	{ id = "CustomTpu", category = "Component", name = "Custom TPU", emoji = "🔷", cost = 4000, year = 2019, requires = { "GpuCluster" } },
+	{ id = "Chip3nm", category = "Component", name = "3nm Chips", emoji = "💠", cost = 25000, year = 2023, requires = { "CustomTpu" } },
+	{ id = "Quantum", category = "Component", name = "Quantum Core", emoji = "⚛️", cost = 150000, year = 2028, requires = { "Chip3nm" } },
+	{ id = "Ergonomics", category = "Office", name = "Ergonomics", emoji = "🪑", cost = 200, year = 2015, requires = {} },
+	{ id = "Workstation", category = "Office", name = "AI Workstations", emoji = "🖥️", cost = 700, year = 2016, requires = {} },
+	{ id = "SmartOffice", category = "Office", name = "Smart Office", emoji = "🏢", cost = 2500, year = 2018, requires = { "Ergonomics" } },
+	{ id = "SuperWorkstation", category = "Office", name = "Super Workstations", emoji = "⚡", cost = 20000, year = 2022, requires = { "Workstation" } },
+	{ id = "Influencer", category = "Marketing", name = "Influencer Deals", emoji = "🤳", cost = 250, year = 2016, requires = {} },
+	{ id = "TvAds", category = "Marketing", name = "TV Ads", emoji = "📺", cost = 600, year = 2017, requires = {} },
+	{ id = "LaunchEvent", category = "Marketing", name = "Launch Events", emoji = "🎤", cost = 2000, year = 2018, requires = { "Influencer" } },
+	{ id = "GlobalCampaign", category = "Marketing", name = "Global Campaigns", emoji = "🌍", cost = 20000, year = 2022, requires = { "LaunchEvent", "TvAds" } },
 }
 Config.ResearchCategories = {
-	{ id = "Feature", name = "🧠 Tính năng model" },
-	{ id = "Component", name = "🏭 Linh kiện xưởng" },
-	{ id = "Office", name = "🪑 Văn phòng" },
+	{ id = "Feature", name = "🧠 Model Features" },
+	{ id = "Component", name = "🏭 Factory Components" },
+	{ id = "Office", name = "🪑 Office" },
 	{ id = "Marketing", name = "📣 Marketing" },
 }
 
 -- ===== Model AI =====
--- requires: nghiên cứu cần để làm loại này; good: tính năng hợp; users: lượng người dùng gốc lúc đỉnh
 Config.ModelTypes = {
-	{ id = "Chatbot", name = "Chatbot", emoji = "💬", requires = "Text", good = { "Text", "Translate", "Transformer", "Reasoning", "Agent" }, users = 2000, brand = "ChatViet" },
-	{ id = "Translator", name = "Dịch thuật", emoji = "🌐", requires = "Translate", good = { "Translate", "Text", "Voice", "Transformer" }, users = 5000, brand = "DịchNhanh" },
-	{ id = "VoiceAssistant", name = "Trợ lý giọng nói", emoji = "🎙️", requires = "Voice", good = { "Voice", "Text", "Translate", "Agent" }, users = 15000, brand = "AloAI" },
-	{ id = "ImageAI", name = "AI vẽ tranh", emoji = "🎨", requires = "ImageGen", good = { "ImageGen", "Vision", "Transformer" }, users = 40000, brand = "VẽVời" },
-	{ id = "CodeAI", name = "AI lập trình", emoji = "⌨️", requires = "Code", good = { "Code", "Reasoning", "Text", "Agent" }, users = 100000, brand = "CodeMate" },
-	{ id = "VideoAI", name = "AI làm video", emoji = "🎬", requires = "Video", good = { "Video", "ImageGen", "Voice", "Multimodal" }, users = 250000, brand = "PhimAI" },
-	{ id = "Assistant", name = "Trợ lý đa năng", emoji = "🌈", requires = "Multimodal", good = { "Multimodal", "Reasoning", "Agent", "Voice", "Vision" }, users = 800000, brand = "Nova" },
-	{ id = "AGI", name = "Siêu AI (AGI)", emoji = "✨", requires = "AGI", good = { "AGI", "Agent", "Reasoning", "Multimodal" }, users = 5000000, brand = "Genesis" },
+	{ id = "Chatbot", name = "Chatbot", emoji = "💬", requires = "Text", good = { "Text", "Translate", "Transformer", "Reasoning", "Agent" }, users = 2000, brand = "Chatty" },
+	{ id = "Translator", name = "Translator", emoji = "🌐", requires = "Translate", good = { "Translate", "Text", "Voice", "Transformer" }, users = 5000, brand = "Lingo" },
+	{ id = "VoiceAssistant", name = "Voice Assistant", emoji = "🎙️", requires = "Voice", good = { "Voice", "Text", "Translate", "Agent" }, users = 15000, brand = "Echo" },
+	{ id = "ImageAI", name = "Image AI", emoji = "🎨", requires = "ImageGen", good = { "ImageGen", "Vision", "Transformer" }, users = 40000, brand = "Pixie" },
+	{ id = "CodeAI", name = "Coding AI", emoji = "⌨️", requires = "Code", good = { "Code", "Reasoning", "Text", "Agent" }, users = 100000, brand = "CodeWing" },
+	{ id = "VideoAI", name = "Video AI", emoji = "🎬", requires = "Video", good = { "Video", "ImageGen", "Voice", "Multimodal" }, users = 250000, brand = "Reel" },
+	{ id = "Assistant", name = "Super Assistant", emoji = "🌈", requires = "Multimodal", good = { "Multimodal", "Reasoning", "Agent", "Voice", "Vision" }, users = 800000, brand = "Nova" },
+	{ id = "AGI", name = "AGI", emoji = "✨", requires = "AGI", good = { "AGI", "Agent", "Reasoning", "Multimodal" }, users = 5000000, brand = "Genesis" },
 }
--- devPoints: điểm phát triển cần, compute: ⚡ cần (thiếu thì trừ điểm), slots: số tính năng tối đa
 Config.ModelSizes = {
-	{ id = "Mini", name = "Mini", devPoints = 60, compute = 0, slots = 2, quality = 0, users = 0.6 },
-	{ id = "Standard", name = "Vừa", devPoints = 250, compute = 300, slots = 3, quality = 0.5, users = 1 },
-	{ id = "Large", name = "Lớn", devPoints = 1200, compute = 3000, slots = 4, quality = 1, users = 1.8 },
-	{ id = "Ultra", name = "Siêu lớn", devPoints = 6000, compute = 30000, slots = 6, quality = 1.5, users = 3 },
+	{ id = "Mini", name = "Mini", devPoints = 60, compute = 0, slots = 2, quality = 0, users = 0.6, arena = 0 },
+	{ id = "Standard", name = "Standard", devPoints = 250, compute = 300, slots = 3, quality = 0.5, users = 1, arena = 40 },
+	{ id = "Large", name = "Large", devPoints = 1200, compute = 3000, slots = 4, quality = 1, users = 1.8, arena = 90 },
+	{ id = "Ultra", name = "Ultra", devPoints = 6000, compute = 30000, slots = 6, quality = 1.5, users = 3, arena = 150 },
 }
--- Giá bán: perUser = $/người dùng/ngày, users = hệ số lượng người dùng
 Config.PriceTiers = {
-	{ id = "Free", name = "Miễn phí (quảng cáo)", perUser = 0.01, users = 2.2 },
-	{ id = "Cheap", name = "Giá rẻ", perUser = 0.04, users = 1.4 },
-	{ id = "Normal", name = "Giá vừa", perUser = 0.08, users = 1 },
-	{ id = "Premium", name = "Cao cấp", perUser = 0.18, users = 0.5 },
+	{ id = "Free", name = "Free (ads)", perUser = 0.01, users = 2.2 },
+	{ id = "Cheap", name = "Budget", perUser = 0.04, users = 1.4 },
+	{ id = "Normal", name = "Standard", perUser = 0.08, users = 1 },
+	{ id = "Premium", name = "Premium", perUser = 0.18, users = 0.5 },
 }
--- Chiến dịch marketing khi ra mắt
 Config.Campaigns = {
-	{ id = "None", name = "Không quảng cáo", emoji = "🤐", price = 0, hype = 1 },
-	{ id = "Social", name = "Mạng xã hội", emoji = "📱", price = 500, hype = 1.3 },
-	{ id = "Influencer", name = "KOL review", emoji = "🤳", price = 3000, hype = 1.6, research = "Influencer" },
-	{ id = "TvAds", name = "Quảng cáo TV", emoji = "📺", price = 8000, hype = 1.8, research = "TvAds" },
-	{ id = "LaunchEvent", name = "Sự kiện ra mắt", emoji = "🎤", price = 40000, hype = 2.3, research = "LaunchEvent" },
-	{ id = "GlobalCampaign", name = "Chiến dịch toàn cầu", emoji = "🌍", price = 400000, hype = 3.2, research = "GlobalCampaign" },
+	{ id = "None", name = "No marketing", emoji = "🤐", price = 0, hype = 1 },
+	{ id = "Social", name = "Social media", emoji = "📱", price = 500, hype = 1.3 },
+	{ id = "Influencer", name = "Influencers", emoji = "🤳", price = 3000, hype = 1.6, research = "Influencer" },
+	{ id = "TvAds", name = "TV ads", emoji = "📺", price = 8000, hype = 1.8, research = "TvAds" },
+	{ id = "LaunchEvent", name = "Launch event", emoji = "🎤", price = 40000, hype = 2.3, research = "LaunchEvent" },
+	{ id = "GlobalCampaign", name = "Global campaign", emoji = "🌍", price = 400000, hype = 3.2, research = "GlobalCampaign" },
 }
-Config.Reviewers = { "TechVN", "AI Weekly", "Báo Số", "Góc Công Nghệ" }
+Config.Reviewers = { "TechPulse", "AI Weekly", "ByteReview", "FutureLab" }
+Config.ReviewComments = {
+	{ 9, "Masterpiece. The whole industry is on notice 🔥" },
+	{ 8, "Seriously impressive. Try it today." },
+	{ 7, "Solid release with real highlights." },
+	{ 5.5, "Okay, but nothing groundbreaking." },
+	{ 4, "Disappointing and buggy." },
+	{ 0, "A disaster. Back to the drawing board 😬" },
+}
 Config.Sales = {
-	RampDays = 7, -- số ngày đạt đỉnh
-	DecayDays = 70, -- sau đỉnh giảm dần theo e^(-t / DecayDays)
-	MaxDays = 300, -- quá ngày này thì ngừng bán
-	RepeatPenaltyDays = 180, -- ra cùng loại quá dày thì bị trừ điểm
-	MarketingBonus = 1 / 150, -- mỗi điểm kỹ năng marketing +0.67% người dùng
+	RampDays = 7,
+	DecayDays = 70,
+	MaxDays = 300,
+	RepeatPenaltyDays = 180,
+	MarketingBonus = 1 / 150,
 	HistorySize = 30,
+}
+
+-- ===== AI Arena: model của bạn đấu với model của 6 công ty đối thủ =====
+-- Điểm Arena model của bạn = điểm báo x ScorePoints + bonus kích thước + bonus tính năng hợp + bonus năm.
+-- Đối thủ ra model mới mỗi ReleaseDays ngày (ngẫu nhiên ±), điểm tăng theo năm.
+Config.Arena = {
+	ScorePoints = 80,
+	GoodFeaturePoints = 15,
+	YearPoints = 12,
+	ReleaseDays = { 120, 240 },
+	ChampionBonus = 0.25, -- đứng #1: +25% người dùng mọi model
+	PodiumBonus = 0.1, -- top 3: +10%
+	StockJump = { 0.06, 0.18 }, -- đối thủ ra model mới: cổ phiếu của họ nhảy
+}
+-- arena: điểm khởi đầu năm 2015, growth: điểm tăng mỗi năm, brand: tên model của họ
+Config.Stocks = {
+	{ id = "NRS", name = "NeuroSoft", emoji = "🧠", base = 120, vol = 0.035, color = Color3.fromRGB(90, 140, 255), brand = "Synapse", arena = 380, growth = 70 },
+	{ id = "SPK", name = "SiliconPeak", emoji = "🔷", base = 45, vol = 0.05, color = Color3.fromRGB(60, 200, 220), brand = "Summit", arena = 330, growth = 62 },
+	{ id = "CLN", name = "CloudNine", emoji = "☁️", base = 300, vol = 0.025, color = Color3.fromRGB(220, 220, 240), brand = "Cirrus", arena = 400, growth = 66 },
+	{ id = "RBF", name = "RoboFarm", emoji = "🤖", base = 18, vol = 0.07, color = Color3.fromRGB(120, 220, 90), brand = "Harvest", arena = 280, growth = 55 },
+	{ id = "QLP", name = "QuantumLeap", emoji = "⚛️", base = 900, vol = 0.04, color = Color3.fromRGB(190, 90, 255), brand = "Q", arena = 350, growth = 80 },
+	{ id = "DRV", name = "AutoDrive", emoji = "🚗", base = 75, vol = 0.06, color = Color3.fromRGB(255, 130, 60), brand = "Pilot", arena = 300, growth = 60 },
+}
+Config.Market = { Tick = 8, Fee = 0.01, History = 40, NewsChance = 0.05, Reversion = 0.04 }
+Config.StockNews = {
+	up = { "beats earnings", "lands a billion-dollar deal", "posts record profits", "raises a mega round" },
+	down = { "gets hacked", "loses its CEO", "recalls a buggy product", "is fined for antitrust" },
+}
+
+-- ===== Hype Feed: bình luận ảo trên mạng xã hội khi ra mắt ({m} = tên model) =====
+Config.FeedHandles = { "@techbro", "@ai_daily", "@pixelqueen", "@devlife", "@nerdalert", "@gadgetguru", "@cryptokid", "@momof3", "@startupsam", "@prof_ml", "@gamerzz", "@newsbot" }
+Config.FeedPosts = {
+	good = { "{m} just wrote my whole essay 🤯", "ok {m} is actually insane", "switching to {m} today, no regrets", "{m} > everything else. fight me", "my boss thinks I'm a genius thanks to {m}", "{m} is the future fr 🚀" },
+	mid = { "{m} is fine I guess", "tried {m}, it's... decent?", "{m} has potential, needs work", "not bad {m}, not bad", "{m} hallucinated my birthday lol" },
+	bad = { "{m} told me 2+2=5 💀", "uninstalling {m}", "who approved {m}??", "{m} is a scam bro", "{m} crashed 3 times in 1 minute" },
+}
+
+-- ===== Sự kiện ngẫu nhiên (game tạm dừng chờ bạn chọn) =====
+-- cost: tính theo số ngày doanh thu (tối thiểu minCost). effect: modifier tạm thời / tiền / nhân viên.
+-- modifier kinds: Users, Compute, Research, Dev (nhân), days: số ngày hiệu lực
+Config.Events = {
+	Chance = 1 / 75, -- mỗi ngày (sau ngày 30)
+	List = {
+		{
+			id = "GpuShortage", emoji = "🔥", title = "Global GPU shortage!", text = "Chip supply collapses worldwide.",
+			choices = {
+				{ label = "Wait it out", effect = { modifier = "Compute", mult = 0.5, days = 60 } },
+				{ label = "Pay premium suppliers", costDays = 20, minCost = 3000 },
+			},
+		},
+		{
+			id = "ViralMeme", emoji = "😂", title = "Your AI became a meme!", text = "Everyone is posting screenshots of your model.",
+			choices = {
+				{ label = "Ride the wave", effect = { modifier = "Users", mult = 1.5, days = 30 } },
+				{ label = "Sell meme merch", effect = { cashDays = 12, minCash = 2000 } },
+			},
+		},
+		{
+			id = "DataLeak", emoji = "🕳️", title = "Security hole found!", text = "A hacker reports a bug that could leak user chats.",
+			bad = true,
+			choices = {
+				{ label = "Pay the bug bounty", costDays = 6, minCost = 1500 },
+				{ label = "Ignore it", effect = { modifier = "Users", mult = 0.7, days = 45 } },
+			},
+		},
+		{
+			id = "StarResearcher", emoji = "🌟", title = "A star researcher wants in!", text = "A famous professor offers to join your lab.",
+			choices = {
+				{ label = "Hire them (skill 90)", effect = { hire = "Research", skill = 90 } },
+				{ label = "Not now" },
+			},
+		},
+		{
+			id = "VcOffer", emoji = "💼", title = "VC wants to invest", text = "A big fund offers cash, but expects fast growth.",
+			choices = {
+				{ label = "Take the money", effect = { cashDays = 40, minCash = 20000, modifier = "Users", mult = 0.9, days = 90 } },
+				{ label = "Stay independent" },
+			},
+		},
+		{
+			id = "Hackathon", emoji = "🧑‍🔬", title = "Host a hackathon?", text = "Students want to hack on your models for a weekend.",
+			choices = {
+				{ label = "Host it", costDays = 4, minCost = 1000, effect = { modifier = "Research", mult = 1.5, days = 30 } },
+				{ label = "Skip" },
+			},
+		},
+		{
+			id = "Lawsuit", emoji = "⚖️", title = "Patent lawsuit!", text = "A rival claims you copied their tech.",
+			bad = true,
+			choices = {
+				{ label = "Settle quietly", costDays = 10, minCost = 2500 },
+				{ label = "Fight in court", effect = { gamble = true, costDays = 25, minCost = 6000 } },
+			},
+		},
+		{
+			id = "Crunch", emoji = "☕", title = "Crunch time?", text = "Your team offers to work overtime before the next launch.",
+			choices = {
+				{ label = "Order pizza & crunch", costDays = 3, minCost = 800, effect = { modifier = "Dev", mult = 1.6, days = 20 } },
+				{ label = "Protect work-life balance" },
+			},
+		},
+	},
+}
+
+-- ===== Phòng ban (1 phòng ban cho mỗi vai trò) =====
+-- Mỗi cấp +BonusPerLevel năng suất cho vai trò đó. requireBuilding: cấp tòa nhà cần để mua cấp này.
+Config.Departments = {
+	Dev = { name = "Engineering", emoji = "💻" },
+	Research = { name = "Research Lab", emoji = "🔬" },
+	Marketing = { name = "Marketing", emoji = "📣" },
+	Engineer = { name = "Hardware", emoji = "🔧" },
+}
+Config.DepartmentLevels = {
+	{ price = 0, requireBuilding = 1 },
+	{ price = 20000, requireBuilding = 2 },
+	{ price = 150000, requireBuilding = 3 },
+	{ price = 1500000, requireBuilding = 4 },
+	{ price = 15000000, requireBuilding = 6 },
+}
+Config.DepartmentBonusPerLevel = 0.15
+function Config.DepartmentMult(level)
+	return 1 + Config.DepartmentBonusPerLevel * ((level or 1) - 1)
+end
+
+-- ===== Tinh thần nhân viên =====
+-- Điểm làm việc nhân thêm hệ số theo tinh thần: 50% tinh thần → x0.85, 100% → x1.2.
+-- Mỗi tháng tụt MonthlyDrop; nợ lương tụt thêm; dưới QuitBelow thì nghỉ việc.
+Config.Morale = {
+	Start = 75,
+	MonthlyDrop = 6,
+	UnpaidDrop = 15,
+	TrainGain = 5,
+	PartyGain = 25,
+	PartyBase = 1000,
+	PartyPerStaff = 200,
+	PartyCooldownDays = 30,
+	QuitBelow = 20,
+}
+function Config.MoraleMult(morale)
+	return 0.55 + (morale or 75) / 100 * 0.65
+end
+
+-- ===== Chuỗi mục tiêu (hướng dẫn + thưởng) =====
+-- check: tên điều kiện, server kiểm tra trong GoalService. target: con số cần đạt.
+Config.Goals = {
+	{ text = "Research Language Processing", check = "research", target = "Text", reward = 2000 },
+	{ text = "Start building your first model", check = "devStarted", reward = 2000 },
+	{ text = "Launch your first AI model", check = "launches", target = 1, reward = 4000 },
+	{ text = "Buy a second desk", check = "workstations", target = 2, reward = 2000 },
+	{ text = "Hire your first employee", check = "staff", target = 1, reward = 3000 },
+	{ text = "Throw a team party", check = "party", reward = 3000 },
+	{ text = "Earn $25K in revenue", check = "earned", target = 25000, reward = 5000 },
+	{ text = "Move into a Small Office", check = "building", target = 2, reward = 10000 },
+	{ text = "Build your compute factory", check = "factory", reward = 10000 },
+	{ text = "Launch a Standard (or bigger) model", check = "sizeLaunched", target = 2, reward = 15000 },
+	{ text = "Get a 7+ review score", check = "bestScore", target = 7, reward = 20000 },
+	{ text = "Expand to Southeast Asia", check = "market", target = "SEA", reward = 30000 },
+	{ text = "Reach top 3 in the AI Arena", check = "arenaRank", target = 3, reward = 50000 },
+	{ text = "Grow your team to 8 people", check = "staff", target = 7, reward = 60000 },
+	{ text = "Move into a Big Office", check = "building", target = 3, reward = 100000 },
+	{ text = "Launch a Large model", check = "sizeLaunched", target = 3, reward = 200000 },
+	{ text = "Become #1 in the AI Arena", check = "arenaRank", target = 1, reward = 400000 },
+	{ text = "Get a perfect 9+ review", check = "bestScore", target = 9, reward = 800000 },
+	{ text = "Move into a 2-Floor Building", check = "building", target = 4, reward = 1500000 },
+	{ text = "Research Multimodal AI", check = "research", target = "Multimodal", reward = 3000000 },
+	{ text = "Open a 3-Floor HQ", check = "building", target = 5, reward = 8000000 },
+	{ text = "Build the 4-Floor Campus", check = "building", target = 6, reward = 30000000 },
+	{ text = "Launch AGI", check = "typeLaunched", target = "AGI", reward = 100000000 },
+	{ text = "Raise the Tech Tower", check = "building", target = 7, reward = 500000000 },
+	{ text = "Open your Global HQ", check = "building", target = 8, reward = 3000000000 },
 }
 
 -- ===== Thị trường =====
 Config.Markets = {
-	{ id = "VN", name = "Việt Nam", emoji = "🇻🇳", price = 0, mult = 1, requireBuilding = 1 },
-	{ id = "SEA", name = "Đông Nam Á", emoji = "🌴", price = 50000, mult = 1.5, requireBuilding = 2 },
-	{ id = "Asia", name = "Châu Á", emoji = "🏯", price = 600000, mult = 3, requireBuilding = 3 },
-	{ id = "Europe", name = "Châu Âu", emoji = "🏰", price = 4000000, mult = 4, requireBuilding = 4 },
-	{ id = "NorthAmerica", name = "Bắc Mỹ", emoji = "🗽", price = 15000000, mult = 6, requireBuilding = 5 },
-	{ id = "Global", name = "Toàn cầu", emoji = "🌍", price = 80000000, mult = 10, requireBuilding = 6 },
-}
-
--- ===== Cổ phần công ty công nghệ =====
--- Các công ty đối thủ, có trụ sở thật trong thành phố. Giá chỉ là $ trong game.
-Config.Stocks = {
-	{ id = "NRS", name = "NeuroSoft", emoji = "🧠", base = 120, vol = 0.035, color = Color3.fromRGB(90, 140, 255) },
-	{ id = "CVT", name = "ChipViet", emoji = "🔷", base = 45, vol = 0.05, color = Color3.fromRGB(60, 200, 220) },
-	{ id = "CLM", name = "CloudMây", emoji = "☁️", base = 300, vol = 0.025, color = Color3.fromRGB(220, 220, 240) },
-	{ id = "RBF", name = "RoboFarm", emoji = "🤖", base = 18, vol = 0.07, color = Color3.fromRGB(120, 220, 90) },
-	{ id = "QLP", name = "QuantumLeap", emoji = "⚛️", base = 900, vol = 0.04, color = Color3.fromRGB(190, 90, 255) },
-	{ id = "DRV", name = "AutoDrive", emoji = "🚗", base = 75, vol = 0.06, color = Color3.fromRGB(255, 130, 60) },
-}
-Config.Market = {
-	Tick = 8,
-	Fee = 0.01,
-	History = 40,
-	NewsChance = 0.05,
-	Reversion = 0.04,
-}
-Config.StockNews = {
-	up = { "ra mắt sản phẩm đột phá", "ký hợp đồng tỷ đô", "lãi kỷ lục quý này", "được quỹ lớn rót vốn" },
-	down = { "bị hacker tấn công", "CEO bất ngờ từ chức", "sản phẩm bị lỗi hàng loạt", "bị phạt vì độc quyền" },
+	{ id = "Home", name = "Home Country", emoji = "🏠", price = 0, mult = 1, requireBuilding = 1 },
+	{ id = "SEA", name = "Southeast Asia", emoji = "🌴", price = 50000, mult = 1.5, requireBuilding = 2 },
+	{ id = "Asia", name = "Asia", emoji = "🏯", price = 600000, mult = 3, requireBuilding = 3 },
+	{ id = "Europe", name = "Europe", emoji = "🏰", price = 4000000, mult = 4, requireBuilding = 4 },
+	{ id = "NorthAmerica", name = "North America", emoji = "🗽", price = 15000000, mult = 6, requireBuilding = 5 },
+	{ id = "Global", name = "Worldwide", emoji = "🌍", price = 80000000, mult = 10, requireBuilding = 6 },
 }
 
 -- ===== Bán công ty (Rebirth) =====
-Config.Rebirth = {
-	RequiredBuilding = 6,
-	Divisor = 1000000,
-	FounderBonus = 0.1, -- mỗi Điểm Founder +10% doanh thu, +10% điểm làm việc
-	PassMultiplier = 1.5,
-}
+Config.Rebirth = { RequiredBuilding = 6, Divisor = 1000000, FounderBonus = 0.1, PassMultiplier = 1.5 }
 Config.CompanyRanks = {
-	{ sold = 0, name = "Startup Garage" },
-	{ sold = 1, name = "Startup Gọi Vốn" },
-	{ sold = 3, name = "Kỳ Lân 🦄" },
+	{ sold = 0, name = "Garage Startup" },
+	{ sold = 1, name = "Funded Startup" },
+	{ sold = 3, name = "Unicorn 🦄" },
 	{ sold = 6, name = "Big Tech" },
-	{ sold = 10, name = "Đế Chế Công Nghệ 👑" },
+	{ sold = 10, name = "Tech Empire 👑" },
 }
 
--- ===== Quà đăng nhập 7 ngày ($ = max(min, doanh thu trung bình x số ngày game)) =====
+-- ===== Quà đăng nhập 7 ngày ($ = max(min, doanh thu/ngày x days)) =====
 Config.Daily = {
 	{ days = 3, min = 1000 },
 	{ days = 5, min = 2500 },
@@ -257,66 +401,64 @@ Config.Daily = {
 Config.Leaderboard = { UpdateInterval = 300, Size = 10 }
 
 -- ===== Kiếm Robux =====
--- ID = 0 nghĩa là chưa cấu hình: nút mua sẽ báo lỗi thay vì mở bảng mua.
+-- ID = 0 nghĩa là chưa cấu hình.
 Config.GamePasses = {
-	VIP = { id = 0, name = "⭐ VIP", description = "x1.5 doanh thu, mở tua x5, tag VIP" },
-	TimeMachine = { id = 0, name = "⏭️ Cỗ Máy Thời Gian", description = "Mở khoá tua nhanh x5" },
-	Headhunter = { id = 0, name = "🎯 Săn Đầu Người", description = "Ứng viên giỏi hơn +15 kỹ năng, thêm 1 ứng viên mỗi vai trò" },
-	FounderPlus = { id = 0, name = "🏅 Founder+", description = "+50% Điểm Founder mỗi lần bán công ty" },
-	StarterPack = { id = 0, name = "🎁 Gói Khởi Nghiệp", description = "Nhận 1 lần: $25.000 + 2 chỗ làm việc + 1 lập trình viên giỏi" },
+	VIP = { id = 0, name = "⭐ VIP", description = "x1.5 revenue, x5 time speed, VIP chat tag" },
+	TimeMachine = { id = 0, name = "⏭️ Time Machine", description = "Unlock x5 time speed" },
+	Headhunter = { id = 0, name = "🎯 Headhunter", description = "Candidates +15 skill, +1 candidate per role" },
+	GoldenOffice = { id = 0, name = "🏆 Golden Office", description = "+20% staff efficiency and golden furniture" },
+	MegaFactory = { id = 0, name = "🏭 Mega Factory", description = "x2 compute production forever" },
+	PRAgency = { id = 0, name = "📣 PR Agency", description = "+30% hype on every launch" },
+	FounderPlus = { id = 0, name = "🏅 Founder+", description = "+50% Founder Points when you sell" },
+	StarterPack = { id = 0, name = "🎁 Starter Pack", description = "One-time: $25K, 2 desks and a skilled engineer" },
 }
 Config.StarterPack = { cash = 25000, workstations = 2, devSkill = 65 }
+Config.PassBonus = { GoldenOffice = 1.2, MegaFactory = 2, PRAgency = 1.3 }
 
--- kind = "Boost": bật boost (tên = số giây thật, cộng dồn) | "Skip": tua ngay `days` ngày
--- kind = "Instant": xong ngay R&D ("Research") hoặc model đang làm ("Dev") | "Hype": lần ra mắt tới x2 độ hot
+-- kind: Boost (boosts = { tên = giây thật }) | Hype | Skip (days) | Instant (target) |
+--       Funding (cashDays, minCash) | Legend (thuê nhân viên kỹ năng 90) | Shield (chặn 1 sự kiện xấu)
 Config.DevProducts = {
-	CashBoost = { id = 0, kind = "Boost", boosts = { Cash = 15 * 60 }, name = "💵 x2 Doanh thu (15 phút)" },
-	WorkBoost = { id = 0, kind = "Boost", boosts = { Work = 30 * 60 }, name = "⚡ x2 Năng suất nhân viên (30 phút)" },
-	MegaBoost = { id = 0, kind = "Boost", boosts = { Cash = 30 * 60, Work = 30 * 60 }, name = "🚀 Mega Boost: x2 Doanh thu + Năng suất (30 phút)" },
-	Viral = { id = 0, kind = "Hype", name = "🔥 Viral: lần ra mắt tới x2 độ hot" },
-	InstantResearch = { id = 0, kind = "Instant", target = "Research", name = "⚡ Xong ngay nghiên cứu đang chạy" },
-	InstantDev = { id = 0, kind = "Instant", target = "Dev", name = "⚡ Xong ngay model đang phát triển" },
-	SkipMonth = { id = 0, kind = "Skip", days = 30, name = "⏩ Tua ngay 1 tháng" },
-	SkipQuarter = { id = 0, kind = "Skip", days = 90, name = "⏩ Tua ngay 1 quý" },
+	CashBoost = { id = 0, kind = "Boost", boosts = { Cash = 15 * 60 }, name = "💵 x2 Revenue (15 min)" },
+	WorkBoost = { id = 0, kind = "Boost", boosts = { Work = 30 * 60 }, name = "⚡ x2 Staff Output (30 min)" },
+	ComputeBoost = { id = 0, kind = "Boost", boosts = { Compute = 30 * 60 }, name = "🏭 x2 Compute (30 min)" },
+	MegaBoost = { id = 0, kind = "Boost", boosts = { Cash = 30 * 60, Work = 30 * 60, Compute = 30 * 60 }, name = "🚀 Mega Boost: x2 everything (30 min)" },
+	Viral = { id = 0, kind = "Hype", name = "🔥 Go Viral: next launch x2 hype" },
+	InstantResearch = { id = 0, kind = "Instant", target = "Research", name = "⚡ Finish current research" },
+	InstantDev = { id = 0, kind = "Instant", target = "Dev", name = "⚡ Finish current model" },
+	SkipMonth = { id = 0, kind = "Skip", days = 30, name = "⏩ Skip 1 month" },
+	SkipQuarter = { id = 0, kind = "Skip", days = 90, name = "⏩ Skip 1 quarter" },
+	SeedRound = { id = 0, kind = "Funding", cashDays = 10, minCash = 10000, name = "🌱 Seed Round" },
+	SeriesA = { id = 0, kind = "Funding", cashDays = 40, minCash = 50000, name = "💼 Series A" },
+	SeriesB = { id = 0, kind = "Funding", cashDays = 120, minCash = 250000, name = "🏦 Series B" },
+	HireLegend = { id = 0, kind = "Legend", name = "🦸 Hire a Legend (skill 90)" },
+	CrisisShield = { id = 0, kind = "Shield", name = "🛡️ Crisis Shield (auto-solve next bad event)" },
 }
-Config.ShopSections = {
-	{ title = "🔥 Gói hot", items = { { "pass", "StarterPack" }, { "product", "MegaBoost" }, { "pass", "VIP" } } },
-	{ title = "⭐ Game Pass (mua 1 lần, dùng mãi)", items = { { "pass", "TimeMachine" }, { "pass", "Headhunter" }, { "pass", "FounderPlus" } } },
-	{ title = "⚡ Boost (mua thêm cộng dồn thời gian)", items = { { "product", "CashBoost" }, { "product", "WorkBoost" }, { "product", "Viral" } } },
-	{ title = "⏱️ Xong ngay", items = { { "product", "InstantResearch" }, { "product", "InstantDev" } } },
-	{ title = "⏩ Tua thời gian", items = { { "product", "SkipMonth" }, { "product", "SkipQuarter" } } },
+Config.ShopTabs = {
+	{ id = "Featured", name = "🔥 Hot", items = { { "pass", "StarterPack" }, { "product", "MegaBoost" }, { "pass", "VIP" }, { "product", "SeriesA" } } },
+	{ id = "Passes", name = "⭐ Passes", items = { { "pass", "TimeMachine" }, { "pass", "GoldenOffice" }, { "pass", "MegaFactory" }, { "pass", "PRAgency" }, { "pass", "Headhunter" }, { "pass", "FounderPlus" } } },
+	{ id = "Boosts", name = "⚡ Boosts", items = { { "product", "CashBoost" }, { "product", "WorkBoost" }, { "product", "ComputeBoost" }, { "product", "Viral" } } },
+	{ id = "Funding", name = "💰 Funding", items = { { "product", "SeedRound" }, { "product", "SeriesA" }, { "product", "SeriesB" } } },
+	{ id = "Time", name = "⏩ Time", items = { { "product", "InstantResearch" }, { "product", "InstantDev" }, { "product", "SkipMonth" }, { "product", "SkipQuarter" } } },
+	{ id = "Team", name = "🦸 Team", items = { { "product", "HireLegend" }, { "product", "CrisisShield" } } },
 }
-Config.Multipliers = { Vip = 1.5, CashBoost = 2, WorkBoost = 2 }
+Config.Multipliers = { Vip = 1.5, CashBoost = 2, WorkBoost = 2, ComputeBoost = 2 }
 
 -- ===== Tra cứu nhanh =====
-Config.ResearchById = {}
-for _, node in Config.Research do
-	Config.ResearchById[node.id] = node
+local function index(list)
+	local map = {}
+	for _, item in list do
+		map[item.id] = item
+	end
+	return map
 end
-Config.ModelTypeById = {}
-for _, t in Config.ModelTypes do
-	Config.ModelTypeById[t.id] = t
-end
-Config.ModelSizeById = {}
-for _, s in Config.ModelSizes do
-	Config.ModelSizeById[s.id] = s
-end
-Config.PriceTierById = {}
-for _, p in Config.PriceTiers do
-	Config.PriceTierById[p.id] = p
-end
-Config.CampaignById = {}
-for _, c in Config.Campaigns do
-	Config.CampaignById[c.id] = c
-end
-Config.MarketById = {}
-for _, m in Config.Markets do
-	Config.MarketById[m.id] = m
-end
-Config.StockById = {}
-for _, stock in Config.Stocks do
-	Config.StockById[stock.id] = stock
-end
+Config.ResearchById = index(Config.Research)
+Config.ModelTypeById = index(Config.ModelTypes)
+Config.ModelSizeById = index(Config.ModelSizes)
+Config.PriceTierById = index(Config.PriceTiers)
+Config.CampaignById = index(Config.Campaigns)
+Config.MarketById = index(Config.Markets)
+Config.StockById = index(Config.Stocks)
+Config.EventById = index(Config.Events.List)
 Config.DevProductById = {}
 for key, product in Config.DevProducts do
 	if product.id ~= 0 then
@@ -331,11 +473,15 @@ function Config.Capacity(level)
 	return b.floors * b.cols * b.rows
 end
 
--- "12/03/2016"
+-- "Mar 12, 2016"
 function Config.DateText(day)
 	local year = Config.Calendar.StartYear + day // 360
 	local month = (day % 360) // 30 + 1
-	return string.format("%02d/%02d/%d", day % 30 + 1, month, year)
+	return string.format("%s %d, %d", Config.MonthNames[month], day % 30 + 1, year)
+end
+
+function Config.MonthText(day)
+	return string.format("%s %d", Config.MonthNames[(day % 360) // 30 + 1], Config.Calendar.StartYear + day // 360)
 end
 
 function Config.YearOf(day)
@@ -386,7 +532,6 @@ function Config.MarketMultiplier(markets)
 	return math.max(1, total)
 end
 
--- Số người dùng của model ở ngày thứ `age` kể từ ra mắt (tăng tới đỉnh rồi giảm dần)
 function Config.UsersAt(peak, age)
 	local s = Config.Sales
 	if age < 0 or age > s.MaxDays then
@@ -397,11 +542,23 @@ function Config.UsersAt(peak, age)
 	return peak * ramp * decay
 end
 
+-- Điểm Arena của model người chơi
+function Config.ArenaScore(score, sizeId, goodFeatures, day)
+	local a = Config.Arena
+	local size = Config.ModelSizeById[sizeId]
+	return math.floor(score * a.ScorePoints + size.arena + goodFeatures * a.GoodFeaturePoints + (Config.YearOf(day) - Config.Calendar.StartYear) * a.YearPoints)
+end
+
+-- Điểm Arena của model đối thủ ra mắt ở ngày `day`
+function Config.RivalArena(rival, day, roll)
+	local years = (day / 360)
+	return math.floor(rival.arena + rival.growth * years + (roll or 0))
+end
+
 function Config.DayNumber(unixTime)
 	return math.floor(unixTime / 86400)
 end
 
--- 1234567 -> "1.23M"
 function Config.Short(n)
 	n = math.floor(n)
 	local sign = if n < 0 then "-" else ""

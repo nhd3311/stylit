@@ -43,7 +43,7 @@ local function defaultData()
 		pending = nil, -- model làm xong chờ ra mắt (giống dev)
 		models = {}, -- lịch sử model đã ra mắt
 		brandCount = {}, -- [type] = số phiên bản đã ra (đặt tên ChatViet 1, 2...)
-		markets = { VN = true },
+		markets = { Home = true },
 		viral = 0, -- số lần ra mắt được x2 độ hot (mua gói Viral)
 		stocks = {}, -- [mã] = { qty, cost }
 		boosts = {}, -- [tên boost] = os.time() lúc hết hạn
@@ -56,6 +56,13 @@ local function defaultData()
 		sold = 0,
 		daily = { lastClaimDay = 0, streak = 0 },
 		starterClaimed = false,
+		goal = 1, -- mục tiêu hiện tại trong Config.Goals
+		lastParty = -999, -- ngày tổ chức team party gần nhất
+		rivals = {}, -- [mã đối thủ] = { name, arena, nextDay }
+		event = nil, -- sự kiện đang chờ người chơi chọn: { id }
+		modifiers = {}, -- hiệu ứng tạm thời: { kind, mult, untilDay }
+		shields = 0, -- số Crisis Shield còn lại
+		departments = { Dev = 1, Research = 1, Marketing = 1, Engineer = 1 }, -- cấp từng phòng ban
 	}
 end
 
@@ -126,7 +133,7 @@ function DataService.Load(player: Player)
 			return DataService.Load(player)
 		end
 		-- Trên server thật: không tải được thì KHÔNG cho chơi, tránh ghi đè data thật bằng data trống
-		player:Kick("Không tải được dữ liệu, vào lại sau ít phút nha 🙏")
+		player:Kick("Could not load your data. Please rejoin in a minute 🙏")
 		return nil
 	end
 	if not player.Parent then

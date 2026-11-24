@@ -116,7 +116,10 @@ end
 
 -- Một tầng nhà kính: sàn, 4 vách kính (mặt trước chừa cửa nếu `door`), cột khung, đèn trần.
 -- `base` là CFrame ở tâm mặt sàn. Trả về sàn.
-function Visuals.BuildFloorShell(parent, base, width, depth, height, door, accent)
+-- style = "garage": tường gạch kín, cửa cuốn rộng phía trước, sàn bê tông.
+-- Mặc định: văn phòng kính, sàn gỗ.
+function Visuals.BuildFloorShell(parent, base, width, depth, height, door, accent, style)
+	local garage = style == "garage"
 	local floor = Visuals.Part({
 		Name = "Slab",
 		Size = Vector3.new(width, 1, depth),
@@ -126,24 +129,24 @@ function Visuals.BuildFloorShell(parent, base, width, depth, height, door, accen
 	})
 	floor.Parent = parent
 	Visuals.Part({
-		Name = "Carpet",
-		Size = Vector3.new(width - 4, 0.1, depth - 4),
+		Name = "FloorFinish",
+		Size = Vector3.new(width - 1, 0.1, depth - 1),
 		CFrame = base * CFrame.new(0, 0.05, 0),
-		Color = Color3.fromRGB(45, 48, 62),
-		Material = Enum.Material.Fabric,
+		Color = if garage then Color3.fromRGB(120, 120, 125) else Color3.fromRGB(150, 105, 70),
+		Material = if garage then Enum.Material.Concrete else Enum.Material.WoodPlanks,
 		CanCollide = false,
 	}).Parent = parent
 
 	local glassColor = Color3.fromRGB(140, 190, 230)
 	local function glass(size, cf)
 		Visuals.Part({
-			Name = "Glass",
+			Name = if garage then "Wall" else "Glass",
 			Size = size,
 			CFrame = cf,
-			Color = glassColor,
-			Material = Enum.Material.Glass,
-			Transparency = 0.55,
-			Reflectance = 0.15,
+			Color = if garage then Color3.fromRGB(160, 85, 65) else glassColor,
+			Material = if garage then Enum.Material.Brick else Enum.Material.Glass,
+			Transparency = if garage then 0 else 0.55,
+			Reflectance = if garage then 0 else 0.15,
 		}).Parent = parent
 	end
 	local h = height - 1
@@ -151,8 +154,21 @@ function Visuals.BuildFloorShell(parent, base, width, depth, height, door, accen
 	glass(Vector3.new(width, h, 0.4), base * CFrame.new(0, h / 2, -depth / 2))
 	glass(Vector3.new(0.4, h, depth), base * CFrame.new(-width / 2, h / 2, 0))
 	glass(Vector3.new(0.4, h, depth), base * CFrame.new(width / 2, h / 2, 0))
-	-- vách trước, chừa cửa 12 stud ở giữa nếu có
-	if door then
+	-- vách trước: garage chừa cửa cuốn rộng, văn phòng chừa cửa 12 stud ở giữa
+	if garage then
+		local opening = width - 8
+		glass(Vector3.new(4, h, 0.4), base * CFrame.new(-width / 2 + 2, h / 2, depth / 2))
+		glass(Vector3.new(4, h, 0.4), base * CFrame.new(width / 2 - 2, h / 2, depth / 2))
+		glass(Vector3.new(opening, h - 9, 0.4), base * CFrame.new(0, 9 + (h - 9) / 2, depth / 2))
+		-- cửa cuốn đang kéo lên
+		Visuals.Part({
+			Name = "RollerDoor",
+			Size = Vector3.new(opening, 1.6, 1.6),
+			CFrame = base * CFrame.new(0, 8.4, depth / 2 - 0.6),
+			Color = Color3.fromRGB(170, 175, 180),
+			Material = Enum.Material.CorrodedMetal,
+		}).Parent = parent
+	elseif door then
 		local side = (width - 12) / 2
 		glass(Vector3.new(side, h, 0.4), base * CFrame.new(-(6 + side / 2), h / 2, depth / 2))
 		glass(Vector3.new(side, h, 0.4), base * CFrame.new(6 + side / 2, h / 2, depth / 2))
@@ -232,6 +248,264 @@ function Visuals.BuildRoof(parent, base, width, depth, accent)
 	local label = Visuals.Label(signPost, "", UDim2.fromScale(width * 0.9, 10), Vector3.new(0, 9, 0), accent)
 	label.Parent.MaxDistance = 600
 	return label
+end
+
+-- ================= Nội thất & trang trí =================
+
+function Visuals.Plant(parent, cframe, scale)
+	scale = scale or 1
+	Visuals.Part({
+		Name = "Pot",
+		Shape = Enum.PartType.Cylinder,
+		Size = Vector3.new(1.6, 1.8, 1.8) * scale,
+		CFrame = cframe * CFrame.new(0, 0.8 * scale, 0) * CFrame.Angles(0, 0, math.pi / 2),
+		Color = Color3.fromRGB(230, 230, 230),
+		Material = Enum.Material.Ceramic,
+		Parent = parent,
+	})
+	for i, offset in { Vector3.new(0, 2.6, 0), Vector3.new(0.5, 2.1, 0.3), Vector3.new(-0.5, 2.2, -0.3) } do
+		Visuals.Part({
+			Name = "Leaves",
+			Shape = Enum.PartType.Ball,
+			Size = Vector3.one * (if i == 1 then 1.8 else 1.4) * scale,
+			CFrame = cframe * CFrame.new(offset * scale),
+			Color = Color3.fromRGB(70, 150, 70),
+			Material = Enum.Material.Grass,
+			CanCollide = false,
+			Parent = parent,
+		})
+	end
+end
+
+-- Màn hình treo tường có chữ. Trả về TextLabel. Mặt chữ quay về -Z của `cframe`.
+function Visuals.Screen(parent, cframe, width, height, color)
+	local screen = Visuals.Part({
+		Name = "Screen",
+		Size = Vector3.new(width, height, 0.3),
+		CFrame = cframe,
+		Color = Color3.fromRGB(12, 12, 20),
+		Material = Enum.Material.SmoothPlastic,
+	})
+	local gui = Instance.new("SurfaceGui")
+	gui.Face = Enum.NormalId.Front
+	gui.LightInfluence = 0
+	gui.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
+	gui.PixelsPerStud = 40
+	local label = Instance.new("TextLabel")
+	label.Size = UDim2.new(1, -20, 1, -20)
+	label.Position = UDim2.fromOffset(10, 10)
+	label.BackgroundTransparency = 1
+	label.Font = Enum.Font.BuilderSansBold
+	label.TextScaled = true
+	label.RichText = true
+	label.TextWrapped = true
+	label.TextColor3 = color or Color3.fromRGB(120, 220, 255)
+	label.Parent = gui
+	gui.Parent = screen
+	screen.Parent = parent
+	return label
+end
+
+function Visuals.Whiteboard(parent, cframe)
+	local board = Visuals.Part({
+		Name = "Whiteboard",
+		Size = Vector3.new(8, 4, 0.2),
+		CFrame = cframe,
+		Color = Color3.fromRGB(245, 245, 245),
+		Material = Enum.Material.SmoothPlastic,
+		Parent = parent,
+	})
+	-- vài nét "sơ đồ" vẽ trên bảng
+	for i, c in { Color3.fromRGB(40, 90, 220), Color3.fromRGB(220, 60, 60), Color3.fromRGB(40, 160, 90) } do
+		Visuals.Part({
+			Name = "Scribble",
+			Size = Vector3.new(2.2, 0.15, 0.05),
+			CFrame = board.CFrame * CFrame.new(-2.5 + (i - 1) * 2.5, 0.8 - (i % 2) * 1.2, -0.13) * CFrame.Angles(0, 0, math.rad((i - 2) * 18)),
+			Color = c,
+			Material = Enum.Material.SmoothPlastic,
+			CanCollide = false,
+			Parent = board,
+		})
+	end
+end
+
+function Visuals.CoffeeBar(parent, cframe)
+	Visuals.Part({
+		Name = "Counter",
+		Size = Vector3.new(8, 3.4, 2.4),
+		CFrame = cframe * CFrame.new(0, 1.7, 0),
+		Color = Color3.fromRGB(60, 45, 35),
+		Material = Enum.Material.Wood,
+		Parent = parent,
+	})
+	Visuals.Part({
+		Name = "Top",
+		Size = Vector3.new(8.4, 0.3, 2.8),
+		CFrame = cframe * CFrame.new(0, 3.55, 0),
+		Color = Color3.fromRGB(235, 235, 235),
+		Material = Enum.Material.Marble,
+		Parent = parent,
+	})
+	local machine = Visuals.Part({
+		Name = "CoffeeMachine",
+		Size = Vector3.new(1.4, 1.6, 1.2),
+		CFrame = cframe * CFrame.new(-2.5, 4.5, 0),
+		Color = Color3.fromRGB(40, 40, 45),
+		Material = Enum.Material.Metal,
+		Parent = parent,
+	})
+	Visuals.Label(machine, "☕", UDim2.fromScale(2, 2), Vector3.new(0, 2, 0)).Parent.MaxDistance = 40
+end
+
+function Visuals.Sofa(parent, cframe, color)
+	Visuals.Part({
+		Name = "SofaSeat",
+		Size = Vector3.new(7, 1.6, 3),
+		CFrame = cframe * CFrame.new(0, 0.8, 0),
+		Color = color,
+		Material = Enum.Material.Fabric,
+		Parent = parent,
+	})
+	Visuals.Part({
+		Name = "SofaBack",
+		Size = Vector3.new(7, 2.4, 0.8),
+		CFrame = cframe * CFrame.new(0, 2, 1.1),
+		Color = color,
+		Material = Enum.Material.Fabric,
+		Parent = parent,
+	})
+end
+
+function Visuals.Workbench(parent, cframe)
+	Visuals.Part({
+		Name = "Workbench",
+		Size = Vector3.new(7, 3, 2.6),
+		CFrame = cframe * CFrame.new(0, 1.5, 0),
+		Color = Color3.fromRGB(120, 85, 55),
+		Material = Enum.Material.WoodPlanks,
+		Parent = parent,
+	})
+	for i = 1, 3 do
+		Visuals.Part({
+			Name = "Box",
+			Size = Vector3.new(1.4, 1.2, 1.4),
+			CFrame = cframe * CFrame.new(-2.4 + i * 1.5, 3.6, 0) * CFrame.Angles(0, math.rad(i * 17), 0),
+			Color = Color3.fromRGB(190, 150, 100),
+			Material = Enum.Material.Cardboard,
+			Parent = parent,
+		})
+	end
+end
+
+-- Sảnh đón ngoài cửa: mái che + 2 bồn cây + 2 cột cờ màu công ty
+function Visuals.Entrance(parent, cframe, accent)
+	Visuals.Part({
+		Name = "Canopy",
+		Size = Vector3.new(16, 0.6, 6),
+		CFrame = cframe * CFrame.new(0, 10, 3),
+		Color = Color3.fromRGB(40, 42, 50),
+		Material = Enum.Material.Metal,
+		Parent = parent,
+	})
+	Visuals.Part({
+		Name = "CanopyLight",
+		Size = Vector3.new(16.2, 0.2, 6.2),
+		CFrame = cframe * CFrame.new(0, 9.65, 3),
+		Color = accent,
+		Material = Enum.Material.Neon,
+		CanCollide = false,
+		Parent = parent,
+	})
+	for _, x in { -11, 11 } do
+		Visuals.Part({
+			Name = "Planter",
+			Size = Vector3.new(4, 1.6, 4),
+			CFrame = cframe * CFrame.new(x, 0.8, 4),
+			Color = Color3.fromRGB(110, 110, 115),
+			Material = Enum.Material.Concrete,
+			Parent = parent,
+		})
+		Visuals.Plant(parent, cframe * CFrame.new(x, 1.6, 4), 1.4)
+		local pole = Visuals.Part({
+			Name = "FlagPole",
+			Size = Vector3.new(0.4, 16, 0.4),
+			CFrame = cframe * CFrame.new(x * 1.6, 8, 10),
+			Color = Color3.fromRGB(200, 200, 205),
+			Material = Enum.Material.Metal,
+			Parent = parent,
+		})
+		Visuals.Part({
+			Name = "Flag",
+			Size = Vector3.new(0.1, 2.4, 4),
+			CFrame = pole.CFrame * CFrame.new(0, 6.6, 2.1),
+			Color = accent,
+			Material = Enum.Material.Fabric,
+			CanCollide = false,
+			Parent = parent,
+		})
+	end
+end
+
+-- ================= Nhân viên =================
+
+-- Avatar Roblox thật (R15) ngồi ở ghế, tên hiện trên đầu. Tạo mất chút thời gian nên gọi trong task.spawn.
+-- Không tạo được (lỗi API) thì trả về nil để dùng BuildPerson thay thế.
+function Visuals.BuildAvatar(name, shirt, pants, skin)
+	local ok, model = pcall(function()
+		local desc = Instance.new("HumanoidDescription")
+		desc.HeadColor = skin
+		desc.LeftArmColor = shirt
+		desc.RightArmColor = shirt
+		desc.TorsoColor = shirt
+		desc.LeftLegColor = pants
+		desc.RightLegColor = pants
+		return game:GetService("Players"):CreateHumanoidModelFromDescription(desc, Enum.HumanoidRigType.R15)
+	end)
+	if not ok or not model then
+		return nil
+	end
+	model.Name = name
+	for _, inst in model:GetDescendants() do
+		if inst:IsA("BaseScript") then
+			inst:Destroy() -- bỏ script Animate: tư thế ngồi chỉnh tay bên dưới
+		elseif inst:IsA("BasePart") then
+			inst.CanCollide = false
+			inst.CanQuery = false
+		end
+	end
+	-- tư thế ngồi: gập hông ra trước, gập gối xuống
+	for _, joint in { "LeftHip", "RightHip" } do
+		local motor = model:FindFirstChild(joint, true)
+		if motor then
+			motor.C0 *= CFrame.Angles(math.rad(90), 0, 0)
+		end
+	end
+	for _, joint in { "LeftKnee", "RightKnee" } do
+		local motor = model:FindFirstChild(joint, true)
+		if motor then
+			motor.C0 *= CFrame.Angles(math.rad(-90), 0, 0)
+		end
+	end
+	-- tay đưa ra trước như đang gõ phím
+	for _, joint in { "LeftShoulder", "RightShoulder" } do
+		local motor = model:FindFirstChild(joint, true)
+		if motor then
+			motor.C0 *= CFrame.Angles(math.rad(70), 0, 0)
+		end
+	end
+	local humanoid = model:FindFirstChildOfClass("Humanoid")
+	if humanoid then
+		humanoid.DisplayName = name
+		humanoid.NameDisplayDistance = 40
+		humanoid.HealthDisplayType = Enum.HumanoidHealthDisplayType.AlwaysOff
+	end
+	model.HumanoidRootPart.Anchored = true
+	return model
+end
+
+-- Đặt avatar ngồi ở ghế của chỗ làm việc `seatCFrame` (cùng quy ước với BuildWorkstation)
+function Visuals.SeatAvatar(model, seatCFrame)
+	model:PivotTo(seatCFrame * CFrame.new(0, 3.15, 2))
 end
 
 -- Chỗ làm việc: bàn + màn hình/PC + ghế. `tiers` = { desk, chair, pc } là bảng tier trong Config.

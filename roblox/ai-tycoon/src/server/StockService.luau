@@ -69,7 +69,7 @@ local function step()
 		local list = if up then Config.StockNews.up else Config.StockNews.down
 		local move = random:NextNumber(0.1, 0.25)
 		prices[stock.id] = math.max(0.5, round(prices[stock.id] * (if up then 1 + move else 1 - move)))
-		news = string.format("📰 %s %s %s! Cổ phiếu %s %d%%", stock.emoji, stock.name, list[random:NextInteger(1, #list)], if up then "tăng" else "giảm", math.floor(move * 100))
+		news = string.format("📰 %s %s %s! Stock %s%d%%", stock.emoji, stock.name, list[random:NextInteger(1, #list)], if up then "+" else "-", math.floor(move * 100))
 	end
 	for id, h in history do
 		table.insert(h, prices[id])
@@ -85,6 +85,22 @@ local function step()
 end
 
 -- ================= Lệnh mua/bán =================
+
+-- Đối thủ ra model mới: cổ phiếu của họ nhảy `pct` (VD 0.1 = +10%)
+function StockService.Jump(id, pct)
+	if prices[id] then
+		prices[id] = round(prices[id] * (1 + pct))
+		local h = history[id]
+		table.insert(h, prices[id])
+		while #h > M.History do
+			table.remove(h, 1)
+		end
+		renderTicker()
+		if remotes then
+			remotes.Market:FireAllClients(snapshot())
+		end
+	end
+end
 
 local function parseQty(qty)
 	if qty == "max" or qty == "all" then
@@ -107,12 +123,12 @@ local function buy(player, profile, id, qty)
 		qty = math.floor(profile.cash / unit)
 	end
 	if qty < 1 then
-		notify(player, "Không đủ $ để mua cổ phiếu này 💸")
+		notify(player, "Not enough cash for this stock 💸")
 		return
 	end
 	local cost = unit * qty
 	if profile.cash < cost then
-		notify(player, string.format("Cần %s để mua %d cổ phiếu %s", Config.Money(cost), qty, id))
+		notify(player, string.format("You need %s to buy %d %s shares", Config.Money(cost), qty, id))
 		return
 	end
 	profile.cash -= cost
@@ -120,7 +136,7 @@ local function buy(player, profile, id, qty)
 	holding.qty += qty
 	holding.cost += cost
 	profile.stocks[id] = holding
-	notify(player, string.format("📈 Đã mua %d %s giá $%.2f", qty, id, price), "Collect")
+	notify(player, string.format("📈 Bought %d %s at $%.2f", qty, id, price), "Collect")
 	CompanyService.PushState(player)
 end
 
@@ -145,7 +161,7 @@ local function sell(player, profile, id, qty)
 	-- Bán cổ phiếu là đổi tài sản, không tính vào "$ kiếm được" (không làm phồng Điểm Founder)
 	profile.cash += revenue
 	local pnl = revenue - costPart
-	notify(player, string.format("💰 Đã bán %d %s: %s (%s%s)", qty, id, Config.Money(revenue), if pnl >= 0 then "+" else "", Config.Money(pnl)), if pnl >= 0 then "Collect" else nil)
+	notify(player, string.format("💰 Sold %d %s for %s (%s%s)", qty, id, Config.Money(revenue), if pnl >= 0 then "+" else "", Config.Money(pnl)), if pnl >= 0 then "Collect" else nil)
 	CompanyService.PushState(player)
 end
 
@@ -185,7 +201,7 @@ function StockService.Start(remoteFolder)
 	title.Font = Enum.Font.BuilderSansExtraBold
 	title.TextScaled = true
 	title.TextColor3 = Color3.fromRGB(255, 210, 80)
-	title.Text = "📈 BẢNG ĐIỆN TỬ"
+	title.Text = "📈 STOCK TICKER"
 	title.Parent = gui
 	for i in Config.Stocks do
 		local row = Instance.new("TextLabel")

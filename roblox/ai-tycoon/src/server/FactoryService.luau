@@ -28,7 +28,14 @@ function FactoryService.ComputePerDay(player, profile)
 	for _, tier in profile.factory.lines do
 		rate += Config.FactoryTiers[tier].rate
 	end
-	return rate * (1 + StaffService.SkillSum(profile, "Engineer") * F.EngineerBonus)
+	rate *= 1 + StaffService.SkillSum(profile, "Engineer") * F.EngineerBonus
+	if player:GetAttribute("MegaFactory") then
+		rate *= Config.PassBonus.MegaFactory
+	end
+	if CompanyService.BoostOn(profile, "Compute") then
+		rate *= Config.Multipliers.ComputeBoost
+	end
+	return rate * CompanyService.Modifier(profile, "Compute")
 end
 
 -- Lấy `amount` compute ra khỏi kho (thiếu thì lấy hết). Trả về số lấy được.
@@ -50,11 +57,11 @@ local function render(profile)
 	hall.Name = "Factory"
 	local base = origin * CFrame.new(0, 0.6, -18)
 	Visuals.BuildFloorShell(hall, base, 64, 52, 16, true, Color3.fromRGB(255, 170, 40))
-	Visuals.BuildRoof(hall, origin * CFrame.new(0, 15.6, -18), 64, 52, Color3.fromRGB(255, 170, 40)).Text = "🏭 XƯỞNG COMPUTE"
+	Visuals.BuildRoof(hall, origin * CFrame.new(0, 15.6, -18), 64, 52, Color3.fromRGB(255, 170, 40)).Text = "🏭 COMPUTE FACTORY"
 	for i, tier in profile.factory.lines do
 		local t = Config.FactoryTiers[tier]
 		local machine = Visuals.BuildFactoryLine(hall, base * CFrame.new(4, 0, -18 + (i - 1) * 11), t.color, 36)
-		Visuals.Label(machine, string.format("%s %s • %s⚡/ngày", t.emoji, t.name, Config.Short(t.rate)), UDim2.fromScale(12, 2), Vector3.new(0, 5, 0))
+		Visuals.Label(machine, string.format("%s %s • %s⚡/day", t.emoji, t.name, Config.Short(t.rate)), UDim2.fromScale(12, 2), Vector3.new(0, 5, 0))
 	end
 	hall.Parent = workspace:WaitForChild("Lots")
 end
@@ -85,7 +92,7 @@ function FactoryService.Start()
 		Material = Enum.Material.Metal,
 		Parent = yard,
 	})
-	Visuals.Label(sign, "🏭 Đất xây xưởng", UDim2.fromScale(14, 3), Vector3.new(0, 6, 0))
+	Visuals.Label(sign, "🏭 Factory lot", UDim2.fromScale(14, 3), Vector3.new(0, 6, 0))
 	yard.Parent = workspace:WaitForChild("Lots")
 
 	CompanyService.RegisterAction("BuildFactory", function(player, profile)
@@ -93,15 +100,15 @@ function FactoryService.Start()
 			return
 		end
 		if profile.building < F.RequireBuilding then
-			notify(player, "Cần lên " .. Config.Buildings[F.RequireBuilding].name .. " mới xây được xưởng 🏭")
+			notify(player, "Move into a " .. Config.Buildings[F.RequireBuilding].name .. " to build a factory 🏭")
 			return
 		end
-		if not CompanyService.Spend(player, F.BuildPrice, "xây xưởng") then
+		if not CompanyService.Spend(player, F.BuildPrice, "build the factory") then
 			return
 		end
 		profile.factory.built = true
 		profile.factory.lines = { 1 }
-		notify(player, "🏭 Xưởng đã xây xong với 1 dây chuyền CPU!", "Evolve")
+		notify(player, "🏭 Factory built with one CPU line!", "Evolve")
 		render(profile)
 		CompanyService.PushState(player)
 	end)
@@ -110,14 +117,14 @@ function FactoryService.Start()
 		local count = #profile.factory.lines
 		local price = F.LinePrices[count + 1]
 		if not profile.factory.built or not price then
-			notify(player, "Xưởng đã đủ dây chuyền rồi 🔥")
+			notify(player, "The factory is full of lines already 🔥")
 			return
 		end
-		if not CompanyService.Spend(player, price, "mua dây chuyền mới") then
+		if not CompanyService.Spend(player, price, "buy a new line") then
 			return
 		end
 		table.insert(profile.factory.lines, 1)
-		notify(player, "⚙️ Đã lắp thêm dây chuyền mới!", "Collect")
+		notify(player, "⚙️ New production line installed!", "Collect")
 		render(profile)
 		CompanyService.PushState(player)
 	end)
@@ -129,18 +136,18 @@ function FactoryService.Start()
 		end
 		local nextTier = Config.FactoryTiers[tier + 1]
 		if not nextTier then
-			notify(player, "Dây chuyền này đã max cấp ⚛️")
+			notify(player, "This line is maxed out ⚛️")
 			return
 		end
 		if nextTier.research and not profile.research.done[nextTier.research] then
-			notify(player, "Cần nghiên cứu " .. Config.ResearchById[nextTier.research].name .. " trước 🔬", "Open:Research")
+			notify(player, "Research " .. Config.ResearchById[nextTier.research].name .. " first 🔬", "Open:Research")
 			return
 		end
-		if not CompanyService.Spend(player, nextTier.price, "nâng cấp lên " .. nextTier.name) then
+		if not CompanyService.Spend(player, nextTier.price, "upgrade to " .. nextTier.name) then
 			return
 		end
 		profile.factory.lines[index] = tier + 1
-		notify(player, string.format("%s Dây chuyền %d lên %s!", nextTier.emoji, index, nextTier.name), "Evolve")
+		notify(player, string.format("%s Line %d upgraded to %s!", nextTier.emoji, index, nextTier.name), "Evolve")
 		render(profile)
 		CompanyService.PushState(player)
 	end)

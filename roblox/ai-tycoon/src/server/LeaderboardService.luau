@@ -25,7 +25,7 @@ local function nameFor(userId)
 		return nameCache[userId]
 	end
 	local ok, name = pcall(Players.GetNameFromUserIdAsync, Players, userId)
-	nameCache[userId] = if ok then name else "Người chơi"
+	nameCache[userId] = if ok then name else "Player"
 	return nameCache[userId]
 end
 
@@ -66,7 +66,7 @@ local function buildBoard()
 		title.Font = Enum.Font.BuilderSansExtraBold
 		title.TextScaled = true
 		title.TextColor3 = Color3.fromRGB(255, 215, 80)
-		title.Text = "🏆 TOP TỶ PHÚ CÔNG NGHỆ"
+		title.Text = "🏆 RICHEST TECH FOUNDERS"
 		title.Parent = gui
 		for i = 1, Config.Leaderboard.Size do
 			local row = Instance.new("TextLabel")
@@ -92,7 +92,7 @@ local MEDALS = { "🥇", "🥈", "🥉" }
 local function refresh()
 	if not store or DataService.Offline then
 		for _, faceRows in rows do
-			faceRows[1].Text = "⚠️ Publish game + bật API Services để xem bảng xếp hạng"
+			faceRows[1].Text = "⚠️ Publish the game + enable API Services to see the leaderboard"
 		end
 		return
 	end

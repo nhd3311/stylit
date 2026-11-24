@@ -33,7 +33,7 @@ end
 local function claimDaily(player, profile)
 	local daily = profile.daily
 	if daily.lastClaimDay >= today() then
-		notify(player, "Hôm nay nhận quà rồi, mai quay lại nha 🎁")
+		notify(player, "Already claimed today. Come back tomorrow 🎁")
 		return
 	end
 	local day = nextStreak(daily)
@@ -45,8 +45,8 @@ local function claimDaily(player, profile)
 	end
 	daily.lastClaimDay = today()
 	daily.streak = day
-	local extra = if reward.boosts then " + x2 Doanh thu 30 phút 🚀" else ""
-	notify(player, string.format("🎁 Quà ngày %d: +%s%s", day, Config.Money(amount), extra), "Collect")
+	local extra = if reward.boosts then " + x2 revenue for 30 min 🚀" else ""
+	notify(player, string.format("🎁 Day %d reward: +%s%s", day, Config.Money(amount), extra), "Collect")
 	CompanyService.PushState(player)
 end
 
@@ -57,12 +57,12 @@ end
 local function sellCompany(player, profile)
 	if profile.building < Config.Rebirth.RequiredBuilding then
 		local b = Config.Buildings[Config.Rebirth.RequiredBuilding]
-		notify(player, string.format("Cần lên %s %s mới bán công ty được 💼", b.emoji, b.name))
+		notify(player, string.format("Reach the %s %s before you can sell 💼", b.emoji, b.name))
 		return
 	end
 	local points = founderPoints(player, profile)
 	if points < 1 then
-		notify(player, "Công ty chưa đủ giá trị để bán, kiếm thêm tiền đã!")
+		notify(player, "Your company isn't worth enough yet. Earn more first!")
 		return
 	end
 
@@ -83,14 +83,25 @@ local function sellCompany(player, profile)
 	profile.pending = nil
 	profile.models = {}
 	profile.brandCount = {}
-	profile.markets = { VN = true }
+	profile.markets = { Home = true }
 	profile.stocks = {}
+	profile.departments = { Dev = 1, Research = 1, Marketing = 1, Engineer = 1 }
+	profile.rivals = {}
+	profile.modifiers = {}
+	profile.event = nil
+	profile.goal = 1
+	profile.lastParty = -999
+	profile.launchCount = 0
+	profile.bestScore = 0
+	profile.maxSize = 0
+	profile.typesLaunched = {}
+	profile.feed = nil
 
 	local rank = Config.CompanyRank(profile.sold)
 	notify(
 		player,
 		string.format(
-			"🤝 Bán công ty thành công! +%d Điểm Founder (tổng %d, doanh thu và năng suất x%.1f). Danh hiệu: %s",
+			"🤝 Company sold! +%d Founder Points (total %d, revenue & output x%.1f). New title: %s",
 			points,
 			profile.founderPoints,
 			Config.FounderMultiplier(profile.founderPoints),

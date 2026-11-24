@@ -30,7 +30,7 @@ local function complete(player, profile)
 		return
 	end
 	profile.research.done[node.id] = true
-	notify(player, string.format("🔬 Nghiên cứu xong %s %s!", node.emoji, node.name), "Evolve")
+	notify(player, string.format("🔬 Research complete: %s %s!", node.emoji, node.name), "Evolve")
 	CompanyService.PushState(player)
 end
 
@@ -40,23 +40,23 @@ local function start(player, profile, nodeId)
 		return
 	end
 	if profile.research.done[node.id] then
-		notify(player, "Cái này nghiên cứu xong rồi nha ✅")
+		notify(player, "Already researched ✅")
 		return
 	end
 	if profile.research.current then
-		notify(player, "Đội R&D đang bận nghiên cứu cái khác ⏳")
+		notify(player, "Your lab is busy with another project ⏳")
 		return
 	end
 	if Config.YearOf(profile.day) < node.year then
-		notify(player, string.format("Công nghệ này phải tới năm %d mới có 📅", node.year))
+		notify(player, string.format("This tech won't exist until %d 📅", node.year))
 		return
 	end
 	if not requirementsMet(profile, node) then
-		notify(player, "Phải nghiên cứu các công nghệ trước đó đã 🔒")
+		notify(player, "Research the earlier tech first 🔒")
 		return
 	end
 	profile.research.current = { id = node.id, progress = 0 }
-	notify(player, string.format("🔬 Bắt đầu nghiên cứu %s %s", node.emoji, node.name))
+	notify(player, string.format("🔬 Started researching %s %s", node.emoji, node.name))
 	CompanyService.PushState(player)
 end
 
@@ -97,8 +97,8 @@ function ResearchService.Start()
 					table.insert(names, node.emoji .. " " .. node.name)
 				end
 			end
-			local extra = if #names > 0 then " Công nghệ mới: " .. table.concat(names, ", ") else ""
-			notify(player, string.format("🎆 Chúc mừng năm mới %d!%s", year, extra), "Evolve")
+			local extra = if #names > 0 then " New tech: " .. table.concat(names, ", ") else ""
+			notify(player, string.format("🎆 Happy New Year %d!%s", year, extra), "Evolve")
 		end
 	end)
 

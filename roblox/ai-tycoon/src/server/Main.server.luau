@@ -1,5 +1,6 @@
 -- Điểm khởi động phía server: tạo remote, bật các service, nối sự kiện người chơi.
 -- Server 1 người: người chơi thứ 2 vào sẽ được mời sang server khác.
+-- Chữ người chơi thấy là tiếng Anh; chú thích code là tiếng Việt.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -7,7 +8,9 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local CalendarService = require(script.Parent.CalendarService)
 local CompanyService = require(script.Parent.CompanyService)
 local DataService = require(script.Parent.DataService)
+local EventService = require(script.Parent.EventService)
 local FactoryService = require(script.Parent.FactoryService)
+local GoalService = require(script.Parent.GoalService)
 local LeaderboardService = require(script.Parent.LeaderboardService)
 local ModelService = require(script.Parent.ModelService)
 local MonetizationService = require(script.Parent.MonetizationService)
@@ -30,11 +33,13 @@ DataService.Start()
 WorldService.Start() -- dựng thành phố trước
 CompanyService.Start(remotes)
 CalendarService.Start()
--- thứ tự đăng ký day hook = thứ tự chạy mỗi ngày: lương → R&D → xưởng → model & doanh số
+-- thứ tự đăng ký day hook = thứ tự chạy mỗi ngày: lương → R&D → xưởng → model & doanh số → sự kiện → mục tiêu
 StaffService.Start()
 ResearchService.Start()
 FactoryService.Start()
 ModelService.Start()
+EventService.Start()
+GoalService.Start()
 StockService.Start(remotes)
 ProgressService.Start()
 LeaderboardService.Start()
@@ -50,9 +55,12 @@ local function onPlayerAdded(player)
 	if not player.Parent or DataService.Profiles[player] ~= profile then
 		return
 	end
+	StaffService.Prepare(profile)
 	CompanyService.OnPlayerLoaded(player, profile)
 	if CompanyService.IsActive(player) then
 		FactoryService.Render(player)
+		ModelService.OnPlayerLoaded(player)
+		EventService.OnPlayerLoaded(player, profile)
 		MonetizationService.AfterLoaded(player)
 	end
 end

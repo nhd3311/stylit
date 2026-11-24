@@ -44,9 +44,13 @@ function CalendarService.Start()
 		if type(index) ~= "number" or not C.Speeds[index] then
 			return
 		end
+		if profile.event then
+			CompanyService.Notify(player, "Make a decision on the current event first ⚡")
+			return
+		end
 		local fastUnlocked = player:GetAttribute("VIP") == true or player:GetAttribute("TimeMachine") == true
 		if index >= C.FastSpeedIndex and not fastUnlocked then
-			CompanyService.Notify(player, "Tua x5 cần Game Pass ⏭️ Cỗ Máy Thời Gian hoặc VIP", "Open:Shop")
+			CompanyService.Notify(player, "x5 speed needs the ⏭️ Time Machine pass or VIP", "Open:Shop")
 			return
 		end
 		profile.speed = index
@@ -70,6 +74,11 @@ function CalendarService.Start()
 					progress[player] -= 1
 					advanceDay(player, profile)
 					advanced = true
+					-- sự kiện vừa tạm dừng thời gian thì dừng luôn
+					if (C.Speeds[profile.speed] or 0) <= 0 then
+						progress[player] = 0
+						break
+					end
 				end
 				if advanced then
 					CompanyService.PushState(player)

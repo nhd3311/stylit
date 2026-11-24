@@ -291,7 +291,7 @@ local function buildHills()
 	text.Font = Enum.Font.BuilderSansExtraBold
 	text.TextScaled = true
 	text.TextColor3 = Color3.fromRGB(250, 250, 250)
-	text.Text = "THUNG LŨNG AI"
+	text.Text = "AI VALLEY"
 	text.Parent = gui
 	gui.Parent = sign
 end
@@ -345,7 +345,7 @@ local function buildPlaza()
 		CFrame = exchange * CFrame.new(12, 21, 0),
 		Transparency = 1,
 		CanCollide = false,
-	}), "🏛️ SÀN CHỨNG KHOÁN", UDim2.fromScale(40, 6), Vector3.new(0, 4, 0), Color3.fromRGB(255, 215, 90))
+	}), "🏛️ STOCK EXCHANGE", UDim2.fromScale(40, 6), Vector3.new(0, 4, 0), Color3.fromRGB(255, 215, 90))
 
 	-- vài cây và ghế đá quanh quảng trường
 	for _, z in { -45, -15, 15, 45 } do

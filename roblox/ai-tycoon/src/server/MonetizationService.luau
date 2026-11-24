@@ -67,7 +67,7 @@ local function grantStarterPack(player)
 	profile.starterClaimed = true
 	task.spawn(DataService.Save, player)
 
-	remotes.Notify:FireClient(player, "🎁 Đã mở Gói Khởi Nghiệp! Tiền, bàn làm việc và 1 lập trình viên giỏi đã về công ty 🚀", "Evolve")
+	remotes.Notify:FireClient(player, "🎁 Starter Pack opened! Cash, desks and a skilled engineer just joined your company 🚀", "Evolve")
 	CompanyService.RenderSeats(player)
 	CompanyService.PushState(player)
 end
@@ -81,6 +81,8 @@ local function grantPass(player, passKey)
 		task.spawn(addVipTag, player.Character)
 	elseif passKey == "StarterPack" then
 		grantStarterPack(player)
+	elseif passKey == "GoldenOffice" then
+		CompanyService.RenderBuilding(player) -- đổi sang nội thất vàng
 	end
 	CompanyService.PushState(player)
 end
@@ -98,7 +100,7 @@ function MonetizationService.LoadPasses(player)
 			if ok and owns then
 				player:SetAttribute(passKey, true)
 			elseif not ok then
-				warn("[Monetization] Không kiểm tra được pass", passKey, owns)
+				warn("[Monetization] Could not check pass", passKey, owns)
 			end
 		end
 	end
@@ -130,7 +132,40 @@ local function grantProduct(player, profile, product)
 		end
 		-- không có gì đang chạy: đổi thành boost năng suất để người chơi không mất Robux
 		addBoosts(profile, { Work = 30 * 60 })
-		return true, product.name .. " (chưa có gì đang chạy nên đổi thành x2 Năng suất 30 phút)"
+		return true, product.name .. " (nothing was running, so you got x2 staff output for 30 min instead)"
+	elseif product.kind == "Funding" then
+		local cash = math.max(product.minCash, math.floor(ModelService.RevenuePerDay(player) * product.cashDays))
+		CompanyService.AddCash(player, cash)
+		return true, string.format("%s (+%s)", product.name, Config.Money(cash))
+	elseif product.kind == "Legend" then
+		-- vai trò đang ít người nhất; hết bàn thì kê thêm 1 bàn nếu còn chỗ trong tòa nhà
+		local counts = {}
+		for _, role in Config.RoleOrder do
+			counts[role] = 0
+		end
+		for _, staff in profile.staff do
+			counts[staff.role] += 1
+		end
+		local role = Config.RoleOrder[1]
+		for _, r in Config.RoleOrder do
+			if counts[r] < counts[role] then
+				role = r
+			end
+		end
+		if profile.workstations - 1 - #profile.staff <= 0 and profile.workstations < Config.Capacity(profile.building) then
+			profile.workstations += 1
+		end
+		if StaffService.AddStaff(player, profile, role, Config.Staff.LegendSkill) then
+			CompanyService.RenderSeats(player)
+			return true, string.format("%s (%s %s)", product.name, Config.Roles[role].emoji, Config.Roles[role].name)
+		end
+		-- tòa nhà hết chỗ: đổi ra tiền bằng 1 năm lương của huyền thoại
+		local cash = Config.Salary(Config.Staff.LegendSkill, profile.day) * 12
+		CompanyService.AddCash(player, cash)
+		return true, string.format("%s (office full, so you got %s instead)", product.name, Config.Money(cash))
+	elseif product.kind == "Shield" then
+		profile.shields += 1
+		return true, product.name
 	end
 	return false, nil
 end
@@ -150,7 +185,7 @@ local function processReceipt(receipt)
 	local key = Config.DevProductById[receipt.ProductId]
 	local product = key and Config.DevProducts[key]
 	if not product then
-		warn("[Monetization] ProductId lạ, chưa có trong Config:", receipt.ProductId)
+		warn("[Monetization] Unknown ProductId, not in Config:", receipt.ProductId)
 		return Enum.ProductPurchaseDecision.NotProcessedYet
 	end
 
@@ -165,7 +200,7 @@ local function processReceipt(receipt)
 		return Enum.ProductPurchaseDecision.NotProcessedYet
 	end
 
-	remotes.Notify:FireClient(player, "Cảm ơn đã ủng hộ! Đã nhận: " .. grantedText .. " 💖")
+	remotes.Notify:FireClient(player, "Thanks for your support! You got: " .. grantedText .. " 💖")
 	CompanyService.PushState(player)
 	return Enum.ProductPurchaseDecision.PurchaseGranted
 end
@@ -181,7 +216,7 @@ function MonetizationService.Start(remoteFolder)
 		for passKey, pass in Config.GamePasses do
 			if pass.id == passId then
 				grantPass(player, passKey)
-				remotes.Notify:FireClient(player, "Đã kích hoạt " .. pass.name .. " 🎉")
+				remotes.Notify:FireClient(player, pass.name .. " activated 🎉")
 			end
 		end
 	end)

@@ -11,7 +11,11 @@ local Visuals = require(script.Parent.Visuals)
 
 local LeaderboardService = {}
 
-local store = DataStoreService:GetOrderedDataStore("TopEarned_v1")
+-- Chưa publish thì không lấy được DataStore: bảng chỉ hiện lời nhắc
+local storeOk, store = pcall(DataStoreService.GetOrderedDataStore, DataStoreService, "TopEarned_v1")
+if not storeOk then
+	store = nil
+end
 local nameCache = {}
 local rows = {}
 
@@ -85,6 +89,12 @@ end
 local MEDALS = { "🥇", "🥈", "🥉" }
 
 local function refresh()
+	if not store or DataService.Offline then
+		for _, faceRows in rows do
+			faceRows[1].Text = "⚠️ Publish game + bật API Services để xem bảng xếp hạng"
+		end
+		return
+	end
 	for player, profile in DataService.Profiles do
 		pcall(store.SetAsync, store, tostring(player.UserId), math.floor(math.min(profile.totalEarned, 2 ^ 53)))
 	end

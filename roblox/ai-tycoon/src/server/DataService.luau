@@ -3,6 +3,7 @@
 -- khi người chơi thoát, khi server tắt, và NGAY LẬP TỨC sau mỗi giao dịch Robux.
 
 local DataStoreService = game:GetService("DataStoreService")
+local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Config = require(ReplicatedStorage.Shared.Config)
@@ -12,10 +13,17 @@ local MAX_RETRIES = 5
 local MAX_PURCHASE_HISTORY = 100
 local SCHEMA_VERSION = 2
 
-local store = DataStoreService:GetDataStore(STORE_NAME)
+-- Game chưa publish thì GetDataStore báo lỗi ngay. Bắt lỗi để vẫn chơi thử được
+-- ở "chế độ thử": data mới tinh, không tải, không lưu.
+local storeOk, store = pcall(DataStoreService.GetDataStore, DataStoreService, STORE_NAME)
+if not storeOk then
+	warn("[DataService] Chưa dùng được DataStore (game chưa publish?). Chế độ thử: KHÔNG lưu data.", store)
+	store = nil
+end
 
 local DataService = {}
 DataService.Profiles = {} :: { [Player]: any }
+DataService.Offline = store == nil -- true = chế độ thử, không đụng tới DataStore
 
 local function defaultData()
 	return {
@@ -60,9 +68,9 @@ local function reconcile(data, template)
 	return data
 end
 
-local function withRetry(fn)
+local function withRetry(fn, attempts)
 	local lastErr
-	for attempt = 1, MAX_RETRIES do
+	for attempt = 1, attempts or MAX_RETRIES do
 		local ok, result = pcall(fn)
 		if ok then
 			return true, result
@@ -78,11 +86,23 @@ local function keyFor(player: Player)
 end
 
 function DataService.Load(player: Player)
+	if DataService.Offline then
+		local profile = defaultData()
+		DataService.Profiles[player] = profile
+		return profile
+	end
+
+	-- Trong Studio thử 1 lần thôi cho nhanh (thường lỗi do chưa bật API Services)
 	local ok, data = withRetry(function()
 		return store:GetAsync(keyFor(player))
-	end)
+	end, if RunService:IsStudio() then 1 else MAX_RETRIES)
 	if not ok then
-		-- Không tải được thì KHÔNG cho chơi, tránh ghi đè data thật bằng data trống
+		if RunService:IsStudio() then
+			warn("[DataService] Không tải được data (bật Game Settings > Security > Enable Studio Access to API Services). Chế độ thử: KHÔNG lưu data.", data)
+			DataService.Offline = true
+			return DataService.Load(player)
+		end
+		-- Trên server thật: không tải được thì KHÔNG cho chơi, tránh ghi đè data thật bằng data trống
 		player:Kick("Không tải được dữ liệu, vào lại sau ít phút nha 🙏")
 		return nil
 	end
@@ -99,6 +119,9 @@ function DataService.Save(player: Player): boolean
 	local profile = DataService.Profiles[player]
 	if not profile then
 		return false
+	end
+	if DataService.Offline then
+		return true -- chế độ thử: coi như đã lưu
 	end
 	profile.lastSave = os.time()
 	local ok, err = withRetry(function()

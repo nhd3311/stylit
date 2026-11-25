@@ -5,7 +5,7 @@
 -- toàn bộ bảng Codes. Chỉ để ở đây các mã đã/sắp công bố. Muốn có mã bí mật thì chuyển bảng
 -- Codes sang một ModuleScript trong ServerScriptService/ServerStorage (CodesService chỉ cần đổi require).
 
-local Config = require(script.Parent.Config)
+local Config = require(script.Parent:WaitForChild("Config"))
 
 local RewardsConfig = {}
 

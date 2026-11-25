@@ -27,7 +27,7 @@ local checking = {} -- [player] = true khi đang Check (chặn gọi lồng nhau
 
 -- Trao badge (chạy nền vì gọi web). Đã có hoặc đang xử lý thì bỏ qua; lỗi thì để lần vào game sau thử lại.
 local function awardBadge(player, badgeId)
-	if type(badgeId) ~= "number" or badgeId == 0 then
+	if type(badgeId) ~= "number" or badgeId == 0 or not player.Parent then
 		return
 	end
 	local owned = ownedBadges[player]
@@ -167,7 +167,8 @@ local CHECKS = {
 
 -- ghi nhận 1 thành tựu + thưởng credits + trao badge; trả về số credits đã thưởng
 local function grant(player, profile, achievement)
-	ensure(profile)[achievement.key] = os.time()
+	local unlocked = ensure(profile)
+	unlocked[achievement.key] = os.time()
 	local credits = 0
 	local base = achievement.reward and achievement.reward.credits
 	if type(base) == "number" and base > 0 then
@@ -247,18 +248,25 @@ function AchievementService.Check(player, profile)
 	return run(player, profile, nil)
 end
 
--- Mở khoá thẳng 1 thành tựu theo key (cho service khác khi có điều kiện riêng). Trả về true nếu vừa mở.
+-- đã mở thành tựu `key` chưa
+function AchievementService.Has(profile, key)
+	return profile ~= nil and profile.achievements ~= nil and profile.achievements[key] ~= nil
+end
+
+-- Mở khoá thẳng 1 thành tựu theo key (cho service khác khi có điều kiện riêng).
+-- Trả về true nếu thành tựu này vừa được mở trong lần gọi này.
 function AchievementService.Unlock(player, key, profile)
 	if not RewardsConfig.AchievementByKey[key] then
 		warn("[AchievementService] Không có thành tựu", key)
 		return false
 	end
-	return run(player, profile, { [key] = true }) > 0
-end
-
--- đã mở thành tựu `key` chưa
-function AchievementService.Has(profile, key)
-	return profile ~= nil and profile.achievements ~= nil and profile.achievements[key] ~= nil
+	profile = profile or DataService.Profiles[player]
+	if not profile then
+		return false
+	end
+	local before = AchievementService.Has(profile, key)
+	run(player, profile, { [key] = true })
+	return not before and AchievementService.Has(profile, key)
 end
 
 -- ================= Khởi động =================

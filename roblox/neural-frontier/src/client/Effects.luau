@@ -44,8 +44,8 @@ end
 -- ================= Đội bot =================
 
 -- 1 bot: thú máy dựng từ BotModels + vệt sáng (Trail), đèn, lấp lánh cho bot hiếm
-local function makeBot(bot, level)
-	local rig = BotModels.Build(bot, level)
+local function makeBot(bot, level, variant)
+	local rig = BotModels.Build(bot, level, variant)
 	local body = rig.body
 	local size = rig.size
 	local a0 = Instance.new("Attachment")
@@ -67,7 +67,20 @@ local function makeBot(bot, level)
 	light.Range = 6 + size * 2
 	light.Brightness = 1.2
 	light.Parent = body
-	if Config.RarityOrder[bot.rarity] >= Config.RarityOrder.Epic then
+	if variant then
+		-- biến thể: lấp lánh vàng (Shiny) hoặc cầu vồng (Holo)
+		local glitter = Instance.new("ParticleEmitter")
+		glitter.Color = if variant == "Holo"
+			then ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 80, 80)), ColorSequenceKeypoint.new(0.33, Color3.fromRGB(255, 255, 90)), ColorSequenceKeypoint.new(0.66, Color3.fromRGB(80, 255, 220)), ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 90, 255)) })
+			else ColorSequence.new(Color3.fromRGB(255, 225, 120))
+		glitter.LightEmission = 1
+		glitter.Rate = if variant == "Holo" then 18 else 10
+		glitter.Lifetime = NumberRange.new(0.6, 1.1)
+		glitter.Speed = NumberRange.new(0.4, 1.2)
+		glitter.SpreadAngle = Vector2.new(180, 180)
+		glitter.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.25), NumberSequenceKeypoint.new(1, 0) })
+		glitter.Parent = body
+	elseif Config.RarityOrder[bot.rarity] >= Config.RarityOrder.Epic then
 		local sparkle = Instance.new("ParticleEmitter")
 		sparkle.Color = ColorSequence.new(Config.RarityColors[bot.rarity], bot.color)
 		sparkle.LightEmission = 1
@@ -93,11 +106,12 @@ local function rebuildSquad(player)
 		end
 	end
 	squad = { key = key, bots = {} }
+	-- định dạng "Scout:1:,Byte:3:Shiny"
 	for entry in key:gmatch("[^,]+") do
-		local id, level = entry:match("(%w+):(%d+)")
+		local id, level, variant = entry:match("^(%w+):(%d+):?(%a*)$")
 		local bot = id and Config.BotById[id]
 		if bot then
-			table.insert(squad.bots, makeBot(bot, tonumber(level)))
+			table.insert(squad.bots, makeBot(bot, tonumber(level), if variant ~= "" then variant else nil))
 		end
 	end
 	squads[player] = squad

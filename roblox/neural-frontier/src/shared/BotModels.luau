@@ -13,6 +13,7 @@ local BotModels = {}
 local METAL = Color3.fromRGB(232, 238, 250)
 local DARK = Color3.fromRGB(36, 40, 56)
 local GOLD = Color3.fromRGB(255, 205, 70)
+local SHINY_METAL = Color3.fromRGB(255, 212, 110)
 local WHITE = Color3.new(1, 1, 1)
 local NEON = Enum.Material.Neon
 local PLASTIC = Enum.Material.SmoothPlastic
@@ -38,6 +39,12 @@ local function newPart(shape, size, color, material, transparency)
 	end
 	p.Size = size
 	p.Color = color
+	-- đánh dấu part kim loại/tối để đổi màu khi là biến thể Shiny/Holo
+	if color == METAL then
+		p:SetAttribute("Metal", true)
+	elseif color == DARK then
+		p:SetAttribute("Dark", true)
+	end
 	p.Material = material or PLASTIC
 	p.Transparency = transparency or 0
 	return p
@@ -221,8 +228,8 @@ end
 
 -- ================= API =================
 
--- bot: dòng trong Config.Bots. level: cấp nâng (to dần 4%/cấp)
-function BotModels.Build(bot, level)
+-- bot: dòng trong Config.Bots. level: cấp nâng (to dần 4%/cấp). variant: nil | "Shiny" | "Holo"
+function BotModels.Build(bot, level, variant)
 	local s = bot.size * (1 + ((level or 1) - 1) * 0.04)
 	local accent = bot.accent or bot.color:Lerp(WHITE, 0.45)
 	local build = forms[bot.form] or forms.Orb
@@ -232,7 +239,26 @@ function BotModels.Build(bot, level)
 		local halo = if bot.rarity == "Mythic" then Color3.fromRGB(255, 90, 220) else GOLD
 		add(rig, newPart("Cylinder", Vector3.new(0.05 * s, 0.55 * s, 0.55 * s), halo, NEON, 0.1), CFrame.new(0, 0.85 * s, 0) * VERTICAL, { kind = "spin", axis = "Y", joint = Vector3.new(0, 0.85 * s, 0), speed = 3 })
 	end
+	if variant == "Shiny" then
+		-- vỏ kim loại hoá vàng bóng
+		for _, part in rig.model:GetDescendants() do
+			if part:IsA("BasePart") and part:GetAttribute("Metal") then
+				part.Color = SHINY_METAL
+				part.Material = Enum.Material.Metal
+				part.Reflectance = 0.25
+			end
+		end
+	elseif variant == "Holo" then
+		-- mọi part (trừ phần tối) đổi màu cầu vồng liên tục trong Pose
+		rig.holoParts = {}
+		for _, part in rig.model:GetDescendants() do
+			if part:IsA("BasePart") and not part:GetAttribute("Dark") then
+				table.insert(rig.holoParts, part)
+			end
+		end
+	end
 	rig.model.Name = bot.name
+	rig.variant = variant
 	rig.size = s
 	BotModels.Pose(rig, CFrame.new(), 0)
 	return rig
@@ -251,10 +277,16 @@ function BotModels.Pose(rig, cframe, t)
 		end
 		piece.part.CFrame = cframe * cf
 	end
+	if rig.holoParts then
+		for i, part in rig.holoParts do
+			part.Color = Color3.fromHSV((t * 0.25 + i * 0.045) % 1, 0.5, 1)
+		end
+	end
 end
 
 -- biến thành bóng đen "???" cho bot chưa khám phá
 function BotModels.Silhouette(rig)
+	rig.holoParts = nil
 	for _, part in rig.model:GetDescendants() do
 		if part:IsA("BasePart") then
 			part.Color = Color3.fromRGB(14, 16, 26)

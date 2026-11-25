@@ -61,14 +61,15 @@ function Visuals.Particles(parent, color, rate)
 	return p
 end
 
--- Ánh sáng chiều nắng hơi bão hoà, hợp phong cách cartoon/neon
+-- Ánh sáng hoàng hôn tím/xanh: khối neon nổi bật, đáy vực chìm trong sương
 function Visuals.SetupLighting()
-	Lighting.ClockTime = 15.5
-	Lighting.Brightness = 2.4
-	Lighting.Ambient = Color3.fromRGB(90, 90, 110)
-	Lighting.OutdoorAmbient = Color3.fromRGB(140, 140, 160)
-	Lighting.EnvironmentDiffuseScale = 0.7
-	Lighting.EnvironmentSpecularScale = 0.8
+	Lighting.ClockTime = 17.6
+	Lighting.GeographicLatitude = 20
+	Lighting.Brightness = 2.2
+	Lighting.Ambient = Color3.fromRGB(80, 70, 120)
+	Lighting.OutdoorAmbient = Color3.fromRGB(130, 120, 175)
+	Lighting.EnvironmentDiffuseScale = 0.6
+	Lighting.EnvironmentSpecularScale = 1
 	local function ensure(className, name)
 		local inst = Lighting:FindFirstChild(name) or Instance.new(className)
 		inst.Name = name
@@ -76,20 +77,21 @@ function Visuals.SetupLighting()
 		return inst
 	end
 	local atmosphere = ensure("Atmosphere", "FrontierAir")
-	atmosphere.Density = 0.32
-	atmosphere.Offset = 0.2
-	atmosphere.Color = Color3.fromRGB(190, 210, 255)
-	atmosphere.Decay = Color3.fromRGB(120, 110, 200)
-	atmosphere.Glare = 0.4
-	atmosphere.Haze = 1.4
+	atmosphere.Density = 0.36
+	atmosphere.Offset = 0.15
+	atmosphere.Color = Color3.fromRGB(210, 180, 255)
+	atmosphere.Decay = Color3.fromRGB(70, 50, 140)
+	atmosphere.Glare = 0.3
+	atmosphere.Haze = 1.8
 	local bloom = ensure("BloomEffect", "Bloom")
-	bloom.Intensity = 0.6
-	bloom.Size = 26
-	bloom.Threshold = 0.9
+	bloom.Intensity = 0.9
+	bloom.Size = 28
+	bloom.Threshold = 0.85
 	local grade = ensure("ColorCorrectionEffect", "Grade")
-	grade.Saturation = 0.22
-	grade.Contrast = 0.1
-	ensure("SunRaysEffect", "SunRays").Intensity = 0.08
+	grade.Saturation = 0.25
+	grade.Contrast = 0.12
+	grade.TintColor = Color3.fromRGB(245, 240, 255)
+	ensure("SunRaysEffect", "SunRays").Intensity = 0.06
 end
 
 return Visuals

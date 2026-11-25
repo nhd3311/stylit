@@ -108,6 +108,26 @@ local function grantProduct(player, profile, product)
 		-- đồ đã trả tiền: cho vượt giới hạn kho bot để không mất lượt mua
 		PlayerService.Hatch(player, profile, capsule, product.count)
 		return true, product.name
+	elseif product.kind == "Bundle" then
+		-- gói cố định (không ngẫu nhiên): bot chắc chắn + credits + boost
+		local bot = product.bot and Config.BotById[product.bot]
+		if bot then
+			local isNew = not profile.discovered[bot.id]
+			profile.discovered[bot.id] = true
+			table.insert(profile.bots, { type = bot.id, level = 1 })
+			remotes.Hatch:FireClient(player, "Gift", { { id = bot.id, new = isNew } })
+		end
+		if product.credits then
+			PlayerService.AddCredits(player, product.credits)
+		end
+		for boost, seconds in product.boosts or {} do
+			profile.boosts[boost] = math.max(os.time(), profile.boosts[boost] or 0) + seconds
+		end
+		if product.once then
+			profile.starterPack = true
+		end
+		PlayerService.Refresh(player)
+		return true, product.name
 	end
 	return false, nil
 end

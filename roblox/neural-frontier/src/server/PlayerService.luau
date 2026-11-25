@@ -1,6 +1,6 @@
 -- Người chơi: level/XP, máu, ba lô data, thu thập (bot tự hút + bấm tay), upload đổi Credits,
--- mở Capsule ra bot (có tỉ lệ + luck), Bot Database, nâng/recycle bot, nâng ba lô,
--- kỹ năng AI Core, nhiệm vụ của Unit-0.
+-- mở Capsule ra bot (có tỉ lệ + luck + biến thể Shiny/Holo), Fuse, khoá bot, Bot Database,
+-- nâng/recycle bot, nâng ba lô, kỹ năng AI Core, nhiệm vụ của Unit-0, quà đăng nhập mỗi ngày.
 -- Server là "trọng tài": client chỉ gửi yêu cầu, server kiểm tra rồi mới làm.
 
 local Players = game:GetService("Players")
@@ -16,6 +16,7 @@ local remotes
 local sessions = {} -- [player] = { lastAction, lastHarvest, lastUpload, lastHatch, cooldowns, overclockUntil, shieldUntil }
 local rng = Random.new()
 local actions = {}
+local dailyInfo -- định nghĩa ở mục Quà đăng nhập
 
 -- EnemyService gắn vào đây để tránh require vòng
 PlayerService.DamageArea = nil -- (player, position, radius, amount)
@@ -51,7 +52,7 @@ end
 
 local function botPower(entry)
 	local bot = Config.BotById[entry.type]
-	return Config.BotStat(bot, entry.level, "gather") + Config.BotStat(bot, entry.level, "attack")
+	return Config.BotStat(bot, entry.level, "gather", entry.variant) + Config.BotStat(bot, entry.level, "attack", entry.variant)
 end
 
 -- Danh sách chỉ số bot đang mang ra trận (mạnh nhất trước), tối đa = số slot
@@ -109,7 +110,7 @@ function PlayerService.GatherPerSecond(player, profile)
 	local total = 0
 	for _, i in equipped(player, profile) do
 		local entry = profile.bots[i]
-		total += Config.BotStat(Config.BotById[entry.type], entry.level, "gather")
+		total += Config.BotStat(Config.BotById[entry.type], entry.level, "gather", entry.variant)
 	end
 	if overclocked(player) then
 		total *= 2
@@ -129,7 +130,7 @@ function PlayerService.BotAttack(player)
 	local total = 0
 	for _, i in equipped(player, profile) do
 		local entry = profile.bots[i]
-		total += Config.BotStat(Config.BotById[entry.type], entry.level, "attack")
+		total += Config.BotStat(Config.BotById[entry.type], entry.level, "attack", entry.variant)
 	end
 	return total * (if overclocked(player) then 2 else 1) * (1 + 0.05 * (profile.level - 1))
 end
@@ -147,12 +148,12 @@ end
 
 -- ================= Đồng bộ =================
 
--- Thông tin bot cho mọi client vẽ (mỗi người chơi thấy bot của nhau): "Scout:1,Miner:2"
+-- Thông tin bot cho mọi client vẽ (mỗi người chơi thấy bot của nhau): "Scout:1:,Miner:2:Shiny"
 local function publishBots(player, profile)
 	local parts = {}
 	for _, i in equipped(player, profile) do
 		local entry = profile.bots[i]
-		table.insert(parts, entry.type .. ":" .. entry.level)
+		table.insert(parts, entry.type .. ":" .. entry.level .. ":" .. (entry.variant or ""))
 	end
 	player:SetAttribute("Bots", table.concat(parts, ","))
 end
@@ -179,9 +180,25 @@ local function questInfo(player, profile)
 		backpack = profile.backpack,
 		boss = if s.bosses[quest.target] then 1 else 0,
 		discovered = countKeys(profile.discovered),
+		eventWins = s.eventWins or 0,
 	})[quest.check]
 	local target = if quest.check == "boss" then 1 else quest.target
 	return { index = profile.quest, total = #Config.Quests, text = quest.text, reward = quest.reward, value = value, target = target }
+end
+
+-- ================= Quà đăng nhập =================
+
+local function today()
+	return os.time() // 86400
+end
+
+-- ngày nhận tiếp theo (1..7) và có nhận được chưa
+function dailyInfo(profile)
+	local daily = profile.daily
+	local ready = daily.last < today()
+	local streak = if daily.last == today() - 1 or daily.last == today() then daily.streak else 0
+	local nextStreak = if ready then streak + 1 else streak
+	return { ready = ready, streak = streak, day = ((math.max(1, nextStreak) - 1) % #Config.DailyRewards) + 1 }
 end
 
 function PlayerService.PushState(player)
@@ -193,6 +210,7 @@ function PlayerService.PushState(player)
 	if stats then
 		stats.Level.Value = profile.level
 		stats.Credits.Value = math.floor(profile.credits)
+		stats.Wins.Value = profile.stats.eventWins or 0
 	end
 	local root = rootOf(player)
 	local zone = root and Config.ZoneAt(root.Position)
@@ -217,6 +235,10 @@ function PlayerService.PushState(player)
 		claimedSets = profile.claimedSets,
 		gatherBonus = gatherBonus(profile),
 		restricted = player:GetAttribute("PaidRandomRestricted") == true,
+		variants = profile.variants,
+		daily = dailyInfo(profile),
+		starterPack = profile.starterPack == true,
+		eventWins = profile.stats.eventWins or 0,
 		boosts = profile.boosts,
 		stats = profile.stats,
 		vip = player:GetAttribute("VIP") == true,
@@ -385,21 +407,49 @@ end
 
 -- Mở `count` capsule cho người chơi (Credits đã trừ / Robux đã trả trước khi gọi).
 -- Bot hiếm (Legendary+) được báo cho cả server.
+-- ghi nhận đã gặp biến thể (Bot Database hiện huy hiệu ✨/🌈)
+local function markVariant(profile, botId, variant)
+	if variant then
+		profile.variants[botId] = profile.variants[botId] or {}
+		profile.variants[botId][variant] = true
+	end
+end
+
+local function rollVariant(player)
+	local hunter = player:GetAttribute("ShinyHunter") == true
+	local r = rng:NextNumber()
+	local holo = Config.VariantChance("Holo", hunter)
+	if r < holo then
+		return "Holo"
+	elseif r < holo + Config.VariantChance("Shiny", hunter) then
+		return "Shiny"
+	end
+	return nil
+end
+
+local function announce(player, text)
+	for _, other in Players:GetPlayers() do
+		if other ~= player then
+			notify(other, text, "Announce")
+		end
+	end
+end
+
+-- Mở `count` capsule cho người chơi (Credits đã trừ / Robux đã trả / quà miễn phí trước khi gọi).
+-- Mỗi bot có thể ra biến thể Shiny/Holo. Bot hiếm được báo cho cả server.
 function PlayerService.Hatch(player, profile, capsule, count)
 	local luck = PlayerService.Luck(player, profile)
 	local results = {}
 	for _ = 1, count do
 		local bot = roll(capsule, luck)
+		local variant = rollVariant(player)
 		local isNew = not profile.discovered[bot.id]
 		profile.discovered[bot.id] = true
-		table.insert(profile.bots, { type = bot.id, level = 1 })
-		table.insert(results, { id = bot.id, new = isNew })
-		if Config.RarityOrder[bot.rarity] >= Config.RarityOrder.Legendary then
-			for _, other in Players:GetPlayers() do
-				if other ~= player then
-					notify(other, string.format("🌟 %s hatched a %s %s!", player.DisplayName, bot.rarity, bot.name), "Announce")
-				end
-			end
+		markVariant(profile, bot.id, variant)
+		table.insert(profile.bots, { type = bot.id, level = 1, variant = variant })
+		table.insert(results, { id = bot.id, new = isNew, variant = variant })
+		if Config.RarityOrder[bot.rarity] >= Config.RarityOrder.Legendary or variant == "Holo" or (variant == "Shiny" and Config.RarityOrder[bot.rarity] >= Config.RarityOrder.Epic) then
+			announce(player, string.format("🌟 %s hatched a %s (%s)!", player.DisplayName, Config.BotLabel(bot, variant), bot.rarity))
 		end
 	end
 	remotes.Hatch:FireClient(player, capsule.id, results)
@@ -407,6 +457,17 @@ function PlayerService.Hatch(player, profile, capsule, count)
 	checkQuest(player, profile)
 	PlayerService.PushState(player)
 	return results
+end
+
+-- capsule Credits xịn nhất người chơi đã mở khoá (quà ngày, thưởng sự kiện)
+function PlayerService.BestCapsule(profile)
+	local best = Config.Capsules[1]
+	for _, capsule in Config.Capsules do
+		if capsule.price and profile.level >= capsule.level then
+			best = capsule
+		end
+	end
+	return best
 end
 
 function actions.OpenCapsule(player, profile, session, capsuleId, count)
@@ -482,8 +543,12 @@ function actions.RecycleBot(player, profile, session, index)
 	if not bot or #profile.bots <= 1 then
 		return
 	end
+	if entry.locked then
+		notify(player, "🔒 This bot is locked. Unlock it first.")
+		return
+	end
 	table.remove(profile.bots, index)
-	local refund = Config.RecycleValue(bot, entry.level)
+	local refund = Config.RecycleValue(bot, entry.level, entry.variant)
 	profile.credits += refund
 	notify(player, string.format("♻️ Recycled %s for %s credits", bot.name, Config.Short(refund)))
 	publishBots(player, profile)
@@ -504,8 +569,9 @@ function actions.RecycleReserve(player, profile, session, rarity)
 	for i = #profile.bots, 1, -1 do
 		local entry = profile.bots[i]
 		local bot = Config.BotById[entry.type]
-		if not keep[i] and bot and bot.rarity == rarity and #profile.bots > 1 then
-			refund += Config.RecycleValue(bot, entry.level)
+		-- không đụng tới bot đang ra trận, bot đã khoá và bot biến thể
+		if not keep[i] and bot and bot.rarity == rarity and not entry.locked and not entry.variant and #profile.bots > 1 then
+			refund += Config.RecycleValue(bot, entry.level, entry.variant)
 			table.remove(profile.bots, i)
 			count += 1
 		end
@@ -517,6 +583,87 @@ function actions.RecycleReserve(player, profile, session, rarity)
 	profile.credits += refund
 	notify(player, string.format("♻️ Recycled %d %s bots for %s credits", count, rarity, Config.Short(refund)), "Reward")
 	publishBots(player, profile)
+	PlayerService.PushState(player)
+end
+
+-- khoá / mở khoá bot (bot khoá không bị Recycle, không bị Fuse)
+function actions.ToggleLock(player, profile, session, index)
+	local entry = type(index) == "number" and profile.bots[index]
+	if not entry then
+		return
+	end
+	entry.locked = if entry.locked then nil else true
+	PlayerService.PushState(player)
+end
+
+-- Fuse: gộp FuseCount bot giống hệt (cùng loại, cùng biến thể, chưa khoá) thành 1 bot biến thể kế tiếp.
+-- Ưu tiên tiêu bot cấp thấp; bot mới giữ cấp cao nhất trong số bị gộp.
+function actions.FuseBots(player, profile, session, botType, variant)
+	local bot = type(botType) == "string" and Config.BotById[botType]
+	if not bot then
+		return
+	end
+	variant = if variant == "Shiny" then "Shiny" else nil
+	local target = Config.NextVariant[variant or ""]
+	if not target then
+		return
+	end
+	local picks = {}
+	for i, entry in profile.bots do
+		if entry.type == bot.id and entry.variant == variant and not entry.locked then
+			table.insert(picks, i)
+		end
+	end
+	if #picks < Config.FuseCount then
+		notify(player, string.format("You need %d unlocked %s to fuse", Config.FuseCount, Config.BotLabel(bot, variant)))
+		return
+	end
+	table.sort(picks, function(a, b)
+		return profile.bots[a].level < profile.bots[b].level
+	end)
+	local chosen, level = {}, 1
+	for k = 1, Config.FuseCount do
+		chosen[picks[k]] = true
+		level = math.max(level, profile.bots[picks[k]].level)
+	end
+	for i = #profile.bots, 1, -1 do
+		if chosen[i] then
+			table.remove(profile.bots, i)
+		end
+	end
+	local isNew = not (profile.variants[bot.id] and profile.variants[bot.id][target])
+	table.insert(profile.bots, { type = bot.id, level = level, variant = target })
+	markVariant(profile, bot.id, target)
+	if target == "Holo" then
+		announce(player, string.format("🧬 %s fused a %s!", player.DisplayName, Config.BotLabel(bot, target)))
+	end
+	remotes.Hatch:FireClient(player, "Fuse", { { id = bot.id, new = isNew, variant = target } })
+	publishBots(player, profile)
+	PlayerService.PushState(player)
+end
+
+-- Quà đăng nhập: mỗi ngày (giờ UTC) nhận 1 lần; nhận liên tục thì lên ngày tiếp theo của chuỗi 7 ngày
+function actions.ClaimDaily(player, profile)
+	local info = dailyInfo(profile)
+	if not info.ready then
+		notify(player, "🎁 Come back tomorrow for your next reward!")
+		return
+	end
+	profile.daily.streak = info.streak + 1
+	profile.daily.last = today()
+	local reward = Config.DailyRewards[info.day]
+	if reward.credits then
+		local amount = Config.ScaledCredits(reward.credits, profile.level)
+		PlayerService.AddCredits(player, amount)
+		notify(player, string.format("🎁 Day %d reward: +%s credits!", info.day, Config.Short(amount)), "Reward")
+	elseif reward.boost then
+		profile.boosts[reward.boost] = math.max(os.time(), profile.boosts[reward.boost] or 0) + reward.minutes * 60
+		notify(player, string.format("🎁 Day %d reward: x2 %s for %d min!", info.day, reward.boost, reward.minutes), "Reward")
+	elseif reward.capsule then
+		local capsule = if reward.capsule == "Best" then PlayerService.BestCapsule(profile) else Config.CapsuleById[reward.capsule]
+		notify(player, string.format("🎁 Day %d reward: free %s!", info.day, capsule.name), "Reward")
+		PlayerService.Hatch(player, profile, capsule, 1)
+	end
 	PlayerService.PushState(player)
 end
 
@@ -574,7 +721,7 @@ local function onAction(player, name, ...)
 	if not session or not profile or not handler then
 		return
 	end
-	if name ~= "Harvest" and name ~= "UseCore" then
+	if name ~= "Harvest" and name ~= "UseCore" and name ~= "ToggleLock" then
 		local t = os.clock()
 		if t - session.lastAction < 0.15 then
 			return
@@ -592,6 +739,11 @@ local function tick()
 		local root = rootOf(player)
 		local humanoid = humanoidOf(player)
 		if not profile or not root or not humanoid or humanoid.Health <= 0 then
+			continue
+		end
+		-- rơi xuống vực: hạ gục (mất data đang mang như chết bình thường)
+		if root.Position.Y < -30 then
+			humanoid.Health = 0
 			continue
 		end
 		local zone = Config.ZoneAt(root.Position)
@@ -624,6 +776,9 @@ function PlayerService.OnPlayerLoaded(player, profile)
 	local credits = Instance.new("NumberValue")
 	credits.Name = "Credits"
 	credits.Parent = leaderstats
+	local wins = Instance.new("IntValue")
+	wins.Name = "Wins"
+	wins.Parent = leaderstats
 	leaderstats.Parent = player
 
 	local function onCharacter(character)
@@ -663,6 +818,11 @@ function PlayerService.Refresh(player)
 		publishBots(player, profile)
 		PlayerService.PushState(player)
 	end
+end
+
+-- cho service khác (EventService) đăng ký thêm hành động từ client
+function PlayerService.AddAction(name, handler)
+	actions[name] = handler
 end
 
 function PlayerService.Start(remoteFolder)

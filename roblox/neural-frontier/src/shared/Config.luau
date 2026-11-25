@@ -77,6 +77,17 @@ Config.RarityOrder = { Common = 1, Rare = 2, Epic = 3, Legendary = 4, Mythic = 5
 -- Luck chỉ nhân trọng số của các độ hiếm này (tỉ lệ hiển thị luôn tính sẵn luck)
 Config.LuckRarities = { Epic = true, Legendary = true, Mythic = true }
 
+-- ===== Biến thể bot =====
+-- Mỗi bot mở từ capsule có cơ hội ra biến thể: chỉ số và giá trị nhân `mult`.
+-- Game Pass Shiny Hunter nhân đôi cơ hội. Fuse: gộp FuseCount bot giống hệt nhau (cùng loại,
+-- cùng biến thể) thành 1 bot biến thể kế tiếp (thường -> Shiny -> Holo).
+Config.Variants = {
+	{ id = "Shiny", name = "Shiny", emoji = "✨", chance = 1 / 40, mult = 1.5, color = Color3.fromRGB(255, 215, 90) },
+	{ id = "Holo", name = "Holo", emoji = "🌈", chance = 1 / 400, mult = 3, color = Color3.fromRGB(120, 255, 255) },
+}
+Config.FuseCount = 5
+Config.NextVariant = { [""] = "Shiny", Shiny = "Holo" }
+
 -- ===== Capsule =====
 -- price: giá Credits mỗi capsule (nil = chỉ mua bằng Robux). level: level cần để mở.
 -- drops: trọng số rơi (cộng lại = 100 => đúng bằng % hiển thị khi không có luck)
@@ -119,23 +130,23 @@ Config.Cores = {
 
 -- ===== Vùng (zone) =====
 -- center: tâm vùng; size: kích thước bãi; level: level cần để qua cổng
--- dataMult: hệ số data/giây; nodes: số tinh thể data; terrain: chất liệu nền
+-- dataMult: hệ số data/giây; nodes: số tinh thể data; crystal: màu tinh thể
 Config.Zones = {
 	{
 		id = "Meadow", name = "Byte Meadow", emoji = "🌿", level = 1, center = Vector3.new(0, 0, -170), size = 150,
-		dataMult = 1, nodes = 22, nodeValue = 6, terrain = Enum.Material.Grass, crystal = Color3.fromRGB(80, 230, 255),
+		dataMult = 1, nodes = 22, nodeValue = 6, crystal = Color3.fromRGB(80, 230, 255),
 		enemy = { name = "Rogue Drone", hp = 30, damage = 6, speed = 10, credits = 12, xp = 8, count = 7, color = Color3.fromRGB(255, 80, 80) },
 		boss = { name = "Glitch King", hp = 900, damage = 18, speed = 8, credits = 600, xp = 250, respawn = 120, color = Color3.fromRGB(255, 40, 120), size = 9 },
 	},
 	{
 		id = "Canyon", name = "Circuit Canyon", emoji = "🏜️", level = 6, center = Vector3.new(0, 0, -400), size = 170,
-		dataMult = 4, nodes = 24, nodeValue = 25, terrain = Enum.Material.Sand, crystal = Color3.fromRGB(255, 190, 60),
+		dataMult = 4, nodes = 24, nodeValue = 25, crystal = Color3.fromRGB(255, 190, 60),
 		enemy = { name = "Scrap Hunter", hp = 220, damage = 18, speed = 12, credits = 90, xp = 45, count = 8, color = Color3.fromRGB(255, 140, 40) },
 		boss = { name = "Rust Titan", hp = 9000, damage = 45, speed = 9, credits = 6000, xp = 1800, respawn = 150, color = Color3.fromRGB(200, 100, 30), size = 12 },
 	},
 	{
 		id = "Spires", name = "Neon Spires", emoji = "🌃", level = 15, center = Vector3.new(0, 0, -650), size = 180,
-		dataMult = 16, nodes = 26, nodeValue = 110, terrain = Enum.Material.Basalt, crystal = Color3.fromRGB(200, 90, 255),
+		dataMult = 16, nodes = 26, nodeValue = 110, crystal = Color3.fromRGB(200, 90, 255),
 		enemy = { name = "Neon Wraith", hp = 1500, damage = 55, speed = 15, credits = 650, xp = 260, count = 9, color = Color3.fromRGB(160, 60, 255) },
 		boss = { name = "Overmind", hp = 80000, damage = 130, speed = 10, credits = 60000, xp = 15000, respawn = 180, color = Color3.fromRGB(120, 0, 255), size = 15 },
 	},
@@ -153,6 +164,7 @@ Config.Quests = {
 	{ text = "Reach level 3 and unlock Dash", check = "level", target = 3, reward = 600 },
 	{ text = "Own 4 bots", check = "bots", target = 4, reward = 1200 },
 	{ text = "Discover 4 different bots", check = "discovered", target = 4, reward = 1500 },
+	{ text = "Win a Glitch Floor event", check = "eventWins", target = 1, reward = 2500 },
 	{ text = "Defeat the Glitch King", check = "boss", target = "Meadow", reward = 3000 },
 	{ text = "Reach level 6 to open Circuit Canyon", check = "level", target = 6, reward = 4000 },
 	{ text = "Upload 5,000 data", check = "uploaded", target = 5000, reward = 8000 },
@@ -163,6 +175,32 @@ Config.Quests = {
 	{ text = "Defeat the Overmind", check = "boss", target = "Spires", reward = 1000000 },
 }
 
+-- ===== Quà đăng nhập mỗi ngày =====
+-- Chuỗi 7 ngày; lỡ 1 ngày thì quay lại ngày 1. Credits nhân theo level (Config.ScaledCredits).
+-- capsule = "Best": capsule Credits xịn nhất đã mở khoá.
+Config.DailyRewards = {
+	{ credits = 150 },
+	{ capsule = "Best" },
+	{ credits = 500 },
+	{ boost = "Luck", minutes = 15 },
+	{ credits = 1500 },
+	{ boost = "Gather", minutes = 30 },
+	{ capsule = "Neon" },
+}
+
+-- ===== Sự kiện Glitch Floor =====
+-- Sàn đấu bay bên phải Hub: ô sàn nhấp nháy đỏ rồi rơi, trụ lại cuối cùng thì thắng.
+Config.Event = {
+	Interval = 300, -- giây chờ giữa 2 lượt
+	LobbyTime = 25, -- thời gian mời tham gia trước khi bắt đầu
+	MaxTime = 90, -- trụ hết thời gian này cũng thắng
+	ArenaCenter = Vector3.new(175, 50, 0),
+	Grid = 9,
+	TileSize = 8,
+	WinCredits = 500,
+	PlayCredits = 100,
+}
+
 -- ===== Kiếm Robux =====
 -- ID = 0 nghĩa là chưa cấu hình.
 -- paidRandom = true: liên quan tới vật phẩm ngẫu nhiên trả tiền. Người chơi ở nơi luật cấm
@@ -171,6 +209,7 @@ Config.GamePasses = {
 	VIP = { id = 0, name = "⭐ VIP", description = "x2 Credits from uploads, VIP chat tag" },
 	LuckyScanner = { id = 0, name = "🍀 Lucky Scanner", description = "x1.5 luck on every capsule, forever", paidRandom = true },
 	TripleHatch = { id = 0, name = "🥚 Triple Hatch", description = "Open 3 credit capsules at once", paidRandom = true },
+	ShinyHunter = { id = 0, name = "✨ Shiny Hunter", description = "x2 chance for Shiny and Holo bots", paidRandom = true },
 	BotSlots = { id = 0, name = "🤖 +3 Bot Slots", description = "Bring 3 more bots into battle" },
 	BigBackpack = { id = 0, name = "🎒 Big Backpack", description = "x2 backpack capacity forever" },
 	AutoUpload = { id = 0, name = "📡 Auto Upload", description = "Data uploads itself when your backpack is full" },
@@ -178,7 +217,9 @@ Config.GamePasses = {
 }
 -- kind: Boost (boosts = { tên = giây thật }) | Credits (minutes: số phút thu nhập, min)
 --       Capsule (capsule = id, count = số capsule mở ngay)
+--       Bundle (gói cố định, không ngẫu nhiên: bot chắc chắn + credits + boost; once = chỉ bán 1 lần)
 Config.DevProducts = {
+	StarterPack = { id = 0, kind = "Bundle", once = true, bot = "Holo", credits = 5000, boosts = { Credits = 30 * 60, Gather = 30 * 60 }, name = "🎁 Starter Pack" },
 	NeonCapsule1 = { id = 0, kind = "Capsule", capsule = "Neon", count = 1, name = "💎 Neon Capsule x1", paidRandom = true },
 	NeonCapsule3 = { id = 0, kind = "Capsule", capsule = "Neon", count = 3, name = "💎 Neon Capsule x3", paidRandom = true },
 	NeonCapsule10 = { id = 0, kind = "Capsule", capsule = "Neon", count = 10, name = "💎 Neon Capsule x10", paidRandom = true },
@@ -195,6 +236,7 @@ Config.ShopRobux = {
 	{ "pass", "VIP" },
 	{ "pass", "LuckyScanner" },
 	{ "pass", "TripleHatch" },
+	{ "pass", "ShinyHunter" },
 	{ "pass", "BotSlots" },
 	{ "pass", "BigBackpack" },
 	{ "pass", "AutoUpload" },
@@ -222,6 +264,7 @@ Config.BotById = index(Config.Bots)
 Config.CoreById = index(Config.Cores)
 Config.ZoneById = index(Config.Zones)
 Config.CapsuleById = index(Config.Capsules)
+Config.VariantById = index(Config.Variants)
 for _, capsule in Config.Capsules do
 	for _, drop in capsule.drops do
 		Config.BotById[drop.bot].capsule = capsule.id
@@ -248,16 +291,35 @@ function Config.Power(level)
 	return Config.Player.BasePower + Config.Player.PowerPerLevel * (level - 1)
 end
 
--- chỉ số 1 bot theo cấp nâng
-function Config.BotStat(bot, level, stat)
-	return bot[stat] * (1 + Config.BotUpgrade.UpgradeBonus * ((level or 1) - 1))
+function Config.VariantMult(variant)
+	local v = variant and Config.VariantById[variant]
+	return if v then v.mult else 1
+end
+-- tên hiển thị kèm biến thể: "✨ Shiny Byte Kitty"
+function Config.BotLabel(bot, variant)
+	local v = variant and Config.VariantById[variant]
+	return if v then string.format("%s %s %s", v.emoji, v.name, bot.name) else bot.name
+end
+-- cơ hội ra biến thể (0..1), có pass Shiny Hunter thì x2
+function Config.VariantChance(variant, hunter)
+	local v = Config.VariantById[variant]
+	return v.chance * (if hunter then 2 else 1)
+end
+-- credits thưởng (quà ngày, sự kiện) tăng theo level để luôn đáng giá
+function Config.ScaledCredits(base, level)
+	return math.floor(base * 1.22 ^ ((level or 1) - 1))
+end
+
+-- chỉ số 1 bot theo cấp nâng và biến thể
+function Config.BotStat(bot, level, stat, variant)
+	return bot[stat] * (1 + Config.BotUpgrade.UpgradeBonus * ((level or 1) - 1)) * Config.VariantMult(variant)
 end
 
 function Config.BotUpgradePrice(bot, level)
 	return math.floor(bot.value * Config.BotUpgrade.UpgradeCost * level)
 end
-function Config.RecycleValue(bot, level)
-	return math.floor(bot.value * 0.3 * (1 + 0.5 * ((level or 1) - 1)))
+function Config.RecycleValue(bot, level, variant)
+	return math.floor(bot.value * 0.3 * (1 + 0.5 * ((level or 1) - 1)) * Config.VariantMult(variant))
 end
 
 -- Tỉ lệ rơi thật của 1 capsule với hệ số luck: { { bot, chance (0..1) } } theo thứ tự drops

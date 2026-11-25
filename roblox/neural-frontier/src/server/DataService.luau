@@ -11,7 +11,7 @@ local Config = require(ReplicatedStorage.Shared.Config)
 local STORE_NAME = "NeuralFrontier_v1"
 local MAX_RETRIES = 5
 local MAX_PURCHASE_HISTORY = 100
-local SCHEMA_VERSION = 2
+local SCHEMA_VERSION = 3
 
 -- Game chưa publish thì GetDataStore báo lỗi ngay. Bắt lỗi để vẫn chơi thử được
 -- ở "chế độ thử": data mới tinh, không tải, không lưu.
@@ -36,8 +36,11 @@ local function defaultData()
 		bots = { { type = "Scout", level = 1 } }, -- bot sở hữu
 		discovered = { Scout = true }, -- Bot Database: loại bot đã từng có
 		claimedSets = {}, -- [capsuleId] = true khi đã nhận thưởng đủ bộ
+		variants = {}, -- [botId] = { Shiny = true, Holo = true } biến thể đã từng có
+		daily = { streak = 0, last = 0 }, -- quà đăng nhập: chuỗi ngày + ngày (UTC) nhận gần nhất
+		starterPack = false, -- đã mua Starter Pack (chỉ bán 1 lần)
 		quest = 1,
-		stats = { uploaded = 0, kills = 0, bosses = {} },
+		stats = { uploaded = 0, kills = 0, bosses = {}, eventWins = 0 },
 		boosts = {},
 		purchases = {},
 		lastSave = os.time(),
@@ -55,6 +58,10 @@ local function migrate(data)
 			data.discovered[entry.type] = true
 		end
 		version = 2
+	end
+	if version < 3 then
+		-- v3: biến thể bot, quà ngày, Starter Pack, số trận thắng sự kiện (reconcile tự bù mặc định)
+		version = 3
 	end
 	data.schemaVersion = version
 	return data

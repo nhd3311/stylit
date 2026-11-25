@@ -14,15 +14,21 @@ Người chơi là một **Bot Tamer**. Bạn dẫn một đội **thú máy AI*
 4. Lên level → mở kỹ năng mới và mở cổng vùng tiếp theo.
 5. Chết thì **mất data đang mang** (Credits vẫn giữ), nên phải tính lúc nào về upload.
 
-## 🗺️ Ba vùng
+## 🗺️ Thế giới "Neon Grid" (toàn khối, không còn cỏ/núi)
 
-| Vùng | Level | Data x | Quái | Boss |
-|---|---|---|---|---|
-| 🌿 Byte Meadow | 1 | x1 | Rogue Drone | 👑 Glitch King |
-| 🏜️ Circuit Canyon | 6 | x4 | Scrap Hunter | 👑 Rust Titan |
-| 🌃 Neon Spires | 15 | x16 | Neon Wraith | 👑 Overmind |
+Mọi thứ là **khối nổi lơ lửng** trên khoảng không, dưới đáy là lưới neon tím xanh chìm trong sương. Ánh sáng tông **hoàng hôn neon** để khối phát sáng nổi bật.
 
-Boss hồi sinh sau 2 đến 3 phút và cả server được báo. **Ai góp sát thương đều được thưởng**, nên người chơi có lý do đánh boss cùng nhau.
+- **Hub**: đảo lát gạch trắng, khe gạch phát sáng xanh, lan can kính, 4 trụ đèn, cổng "TO THE FRONTIER", cổng sự kiện 🟥 Glitch Floor.
+- Các đảo nối nhau bằng **cầu khối** có lan can kính và trụ đỡ cắm xuống vực. **Rơi xuống vực là bị hạ gục** (mất data đang mang).
+- Mảnh đảo khối trôi xa xa hai bên cho khung cảnh có chiều sâu.
+
+| Vùng | Level | Data x | Phong cách khối | Quái | Boss |
+|---|---|---|---|---|---|
+| 🌿 Byte Meadow | 1 | x1 | Gạch caro bạc hà, cây voxel có "quả pixel" phát sáng, khối data bay | Rogue Drone | 👑 Glitch King |
+| 🏜️ Circuit Canyon | 6 | x4 | Gạch đồng, vách hẻm núi bậc thang, mạch điện neon dưới sàn, tủ server nhấp nháy | Scrap Hunter | 👑 Rust Titan |
+| 🌃 Neon Spires | 15 | x16 | Gạch tím đậm, tháp kính nhiều tầng có cửa sổ neon, vòng hologram bay | Neon Wraith | 👑 Overmind |
+
+Mỗi vùng có **tường khối cao thấp so le** với viền neon trên đỉnh. Boss hồi sinh sau 2–3 phút và cả server được báo. Ai góp sát thương đều được thưởng.
 
 ## 🥚 Capsule Lab + 🤖 20 thú máy
 
@@ -42,10 +48,35 @@ Bot không mua thẳng nữa mà **mở từ Capsule**. Mỗi capsule cho đúng
 - Mỗi bot là một **thú máy dựng bằng Part**, có cử động: đập cánh, vẫy đuôi, xúc tu đung đưa, vòng hào quang quay. Bot Legendary/Mythic có vòng hào quang trên đầu.
 - Chỉ **4 bot mạnh nhất** ra trận (Game Pass Bot Slots +3). Kho tối đa 60 bot. Bot dư có thể Recycle từng con hoặc **Recycle cả loạt** bot dự bị Common/Rare.
 
+## ✨ Biến thể, 🧬 Fuse, 🔒 Khoá bot
+
+- Mỗi bot mở ra có cơ hội là **✨ Shiny** (1/40, chỉ số x1.5, vỏ vàng bóng, lấp lánh vàng) hoặc **🌈 Holo** (1/400, chỉ số x3, đổi màu cầu vồng liên tục). Game Pass ✨ Shiny Hunter nhân đôi cơ hội. Cơ hội biến thể hiện trên từng capsule.
+- **Fusion Lab** (trong bảng Bots): gộp **5 bot giống hệt nhau** thành 1 bản ✨ Shiny, 5 Shiny thành 1 🌈 Holo. Bot mới giữ cấp cao nhất. Có hoạt cảnh riêng.
+- **Khoá bot** 🔒: bot khoá không bị Recycle, không bị Fuse. Recycle cả loạt không bao giờ đụng tới bot đang ra trận, bot khoá và bot Shiny/Holo.
+
 ## 📚 Bot Database
 
 - Bot chưa có hiện **bóng đen "???"**, có rồi thì hiện thú máy 3D đầy màu sắc.
 - Sưu tầm đủ 5 bot của một capsule thì nhận thưởng một lần: Credits và **+% gather vĩnh viễn** (Meadow +5%, Canyon +10%, Spires +15%, Neon +25%).
+- Mỗi bot có 2 huy hiệu ✨/🌈 sáng lên khi anh từng sở hữu bản biến thể đó.
+
+## 🎁 Quà đăng nhập 7 ngày
+
+Mỗi ngày (theo giờ UTC) nhận 1 lần. Chuỗi liên tục thì lên ngày tiếp theo, lỡ 1 ngày là quay về Ngày 1. Credits tự tăng theo level.
+
+| Ngày | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|---|---|---|---|---|---|---|---|
+| Quà | Credits | Capsule xịn nhất đã mở | Credits | x2 Luck 15' | Credits | x2 Gather 30' | **💎 Neon Capsule miễn phí** |
+
+Vào game mà có quà chưa nhận thì bảng Daily tự mở.
+
+## 🟥 Sự kiện Glitch Floor (minigame)
+
+- Cứ **5 phút** mở một lượt (lượt đầu sau 1 phút). Bấm **JOIN** trên HUD ở đâu cũng được, hoặc bước lên cổng đỏ ở Hub.
+- Người tham gia được đưa lên **sàn đấu bay**, đếm 3-2-1-GO. Ô sàn **nhấp nháy đỏ rồi rơi**, nhịp nhanh dần. Có đợt rơi nguyên một hàng, một cột hoặc cả vòng ngoài.
+- Rơi khỏi sàn là bị loại. Người cuối cùng còn đứng (hoặc trụ đủ 90 giây) **thắng**: nhận credits và 1 capsule miễn phí. Người chơi khác nhận credits tham gia.
+- Bảng xếp hạng có cột **Wins**, và có thêm nhiệm vụ "Win a Glitch Floor event".
+
 
 ## ⚡ Kỹ năng AI Core
 
@@ -62,9 +93,11 @@ Trên điện thoại có sẵn nút bấm cho từng kỹ năng và nút 💾 t
 
 | Loại | Tên | Tác dụng | Giá gợi ý |
 |---|---|---|---|
+| Dev Product | 🎁 **Starter Pack** (chỉ bán 1 lần) | Holo Kitty (Epic) chắc chắn + 5K credits + 30' x2 Credits & Gather | 49–99 R$ |
 | Dev Product | 💎 Neon Capsule x1 / x3 / x10 | Mở ngay Neon Capsule (có Mythic) | 49 / 139 / 399 R$ |
 | Dev Product | 🍀 x2 Luck | x2 tỉ lệ Epic+ trong 15 phút | 49 R$ |
 | Game Pass | 🍀 Lucky Scanner | x1.5 luck vĩnh viễn | 249 R$ |
+| Game Pass | ✨ Shiny Hunter | x2 cơ hội Shiny/Holo | 299 R$ |
 | Game Pass | 🥚 Triple Hatch | Mở 3 capsule Credits một lần | 199 R$ |
 | Game Pass | ⭐ VIP | x2 Credits khi upload, tag VIP | 199 R$ |
 | Game Pass | 🤖 +3 Bot Slots | Mang thêm 3 bot ra trận | 299 R$ |
@@ -72,11 +105,12 @@ Trên điện thoại có sẵn nút bấm cho từng kỹ năng và nút 💾 t
 | Dev Product | 🚀 Mega Boost · 💰 / 💾 Boost | x2 Credits và/hoặc Gather | 29–79 R$ |
 | Dev Product | 💳 Credit Pack S / L | Credits tự tăng theo tiến độ | 49 / 199 R$ |
 
-Giá là gợi ý, anh tự đặt trên Creator Dashboard. **x3 và x10 rẻ hơn thật** so với mua lẻ, không dùng giá gạch giả.
+Giá là gợi ý, anh tự đặt trên Creator Dashboard. **x3 và x10 rẻ hơn thật** so với mua lẻ, không dùng giá gạch giả. Starter Pack là gói **cố định, không ngẫu nhiên** nên ai cũng mua được.
 
 ### ⚖️ Làm đúng luật Roblox về vật phẩm ngẫu nhiên trả tiền
 - **Luôn hiện tỉ lệ rơi** ở Capsule Lab, trên bệ trưng bày trong map và trong hoạt cảnh mở.
-- Game kiểm tra `PolicyService:GetPolicyInfoForPlayerAsync()`. Người chơi ở nơi luật cấm (`ArePaidRandomItemsRestricted`) sẽ **không thấy** Neon Capsule, Luck, Triple Hatch và Credit Pack (các món có `paidRandom = true` trong Config). Họ vẫn mở capsule bằng Credits kiếm được khi chơi.
+- Game kiểm tra `PolicyService:GetPolicyInfoForPlayerAsync()`. Người chơi ở nơi luật cấm (`ArePaidRandomItemsRestricted`) sẽ **không thấy** Neon Capsule, Luck, Shiny Hunter, Triple Hatch và Credit Pack (các món có `paidRandom = true` trong Config). Họ vẫn mở capsule bằng Credits kiếm được khi chơi.
+- Cơ hội ✨ Shiny / 🌈 Holo cũng được hiện rõ trên từng capsule.
 - Khi publish, trong **Maturity & Compliance Questionnaire** nhớ khai là game **có paid random items**.
 
 ## ▶️ Chạy thử trong Studio
@@ -84,7 +118,7 @@ Giá là gợi ý, anh tự đặt trên Creator Dashboard. **x3 và x10 rẻ h�
 1. Mở `NeuralFrontier.rbxlx` bằng Studio (**File → Open from File**), rồi bấm **Play**. Chưa publish vẫn chơi được ở chế độ thử, nhưng data không được lưu.
 2. Muốn lưu data thì **Publish** game, rồi bật **Game Settings → Security → Enable Studio Access to API Services**.
 3. Muốn thử nhiều người chơi: tab **Test → Clients and Servers → 2 Players → Start**.
-4. Vào Creator Dashboard, tạo 7 Game Pass `VIP`, `LuckyScanner`, `TripleHatch`, `BotSlots`, `BigBackpack`, `AutoUpload`, `TurboBoots` và 9 Developer Product `NeonCapsule1`, `NeonCapsule3`, `NeonCapsule10`, `LuckBoost`, `CreditBoost`, `GatherBoost`, `MegaBoost`, `CreditsSmall`, `CreditsLarge`.
+4. Vào Creator Dashboard, tạo 8 Game Pass `VIP`, `LuckyScanner`, `TripleHatch`, `ShinyHunter`, `BotSlots`, `BigBackpack`, `AutoUpload`, `TurboBoots` và 10 Developer Product `StarterPack`, `NeonCapsule1`, `NeonCapsule3`, `NeonCapsule10`, `LuckBoost`, `CreditBoost`, `GatherBoost`, `MegaBoost`, `CreditsSmall`, `CreditsLarge`.
 5. Dán ID vào `src/shared/Config.luau`. Khi ID còn là `0`, nút trong shop sẽ hiện "Set ID".
 
 Dùng Rojo thì chạy `rojo serve` trong thư mục này.
@@ -94,10 +128,11 @@ Dùng Rojo thì chạy `rojo serve` trong thư mục này.
 | File | Việc |
 |---|---|
 | `shared/Config.luau` | Toàn bộ số liệu: bot, capsule + tỉ lệ, vùng, quái, kỹ năng, nhiệm vụ, shop |
-| `shared/BotModels.luau` | Dựng 7 dáng thú máy (Orb, Cat, Fox, Beetle, Owl, Jelly, Dragon) + cử động, capsule 3D |
+| `shared/BotModels.luau` | Dựng 7 dáng thú máy (Orb, Cat, Fox, Beetle, Owl, Jelly, Dragon) + cử động + biến thể Shiny/Holo, capsule 3D |
 | `server/DataService.luau` | Lưu và tải data, retry, chế độ thử khi chưa publish |
-| `server/WorldService.luau` | Dựng map bằng code: Terrain, Hub, Capsule Lab, cổng vùng, tinh thể data |
-| `server/PlayerService.luau` | Thu thập, upload, mở capsule, Database, nâng cấp/recycle bot, kỹ năng, level, nhiệm vụ |
+| `server/WorldService.luau` | Dựng thế giới khối: đảo lát gạch, tường, cầu, trang trí theo vùng, Hub, Capsule Lab, sàn Glitch Floor |
+| `server/EventService.luau` | Điều khiển sự kiện Glitch Floor: mời, đếm ngược, làm rơi ô sàn, loại người rơi, phát thưởng |
+| `server/PlayerService.luau` | Thu thập, upload, mở capsule + biến thể, Fuse, khoá bot, Database, quà ngày, kỹ năng, level, nhiệm vụ |
 | `server/EnemyService.luau` | AI của quái và boss, đội bot tự bắn, chia thưởng boss |
 | `server/MonetizationService.luau` | Game Pass, Dev Product, Neon Capsule, kiểm tra PolicyService |
 | `client/Main.client.luau` | HUD hologram, nút kỹ năng, bảng Bots / Capsules / Database / Gear / Missions / Shop, hoạt cảnh mở capsule |

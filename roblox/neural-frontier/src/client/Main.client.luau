@@ -466,12 +466,16 @@ task.spawn(function()
 		local left = (workspace:GetAttribute("EventEndsAt") or 0) - workspace:GetServerTimeNow()
 		local count = workspace:GetAttribute("EventPlayers") or 0
 		local joined = player:GetAttribute("EventJoined") == true
+		local heist = workspace:GetAttribute("EventMode") == "Heist"
+		local title = if heist then "⚡ CORE HEIST" else "🟥 GLITCH FLOOR"
 		if phase == "Lobby" then
-			eventText.Text = string.format("🟥 GLITCH FLOOR <font color='#FF5A78'>OPEN</font>\nstarts in %s · %d joined", clockText(left), count)
+			eventText.Text = string.format("%s <font color='#FF5A78'>OPEN</font>\nstarts in %s · %d joined", title, clockText(left), count)
 		elseif phase == "Live" then
-			eventText.Text = string.format("🟥 GLITCH FLOOR <font color='#FF5A78'>LIVE</font>\n%d left · %s", count, clockText(left))
+			eventText.Text = if heist
+				then string.format("%s <font color='#FF5A78'>LIVE</font>\n%s left", title, clockText(left))
+				else string.format("%s <font color='#FF5A78'>LIVE</font>\n%d left · %s", title, count, clockText(left))
 		else
-			eventText.Text = string.format("🟥 GLITCH FLOOR\nnext round in %s", clockText(left))
+			eventText.Text = string.format("%s\nnext round in %s", title, clockText(left))
 		end
 		eventJoin.Text = if joined then "✓ IN" else "JOIN"
 		eventJoin.BackgroundColor3 = if joined then C.lime:Lerp(C.void, 0.35) else C.red
@@ -1710,6 +1714,7 @@ function panels.Guide()
 	section("🎁 DAILY & EVENTS")
 	guideRow("🎁", C.lime, "Daily rewards", "Claim every day. Day 7 gives a free Neon Capsule. Missing a day resets the streak.")
 	guideRow("🟥", C.red, "Glitch Floor", "Every few minutes. Tap JOIN, dodge the falling tiles and be the last one standing!")
+	guideRow("⚡", C.magenta, "Core Heist (PvP)", "Takes turns with Glitch Floor. Grab data cores, bank them at your vault, Pulse rivals to steal theirs. You never lose real bots or credits!")
 	section("🌀 TRAVEL")
 	guideRow("🌀", C.violet, "Warp", "Tap 🌀 on the zone banner. The Hub and your Habitat are always free.")
 end
@@ -2596,6 +2601,45 @@ remotes.Notify.OnClientEvent:Connect(function(message, action)
 	end
 	if message ~= "" then
 		toast(message, 3, accentFor(message, action))
+	end
+end)
+
+-- ================= ⚡ Core Heist HUD (trên giữa, khi đang trong vòng) =================
+
+local heistBox = glass({ AnchorPoint = Vector2.new(0.5, 0), Position = UDim2.new(0.5, 0, 0, 78), Size = UDim2.fromOffset(460, 112), BackgroundTransparency = 0.12, Visible = false, Parent = gui }, C.magenta, 12)
+brackets(heistBox, C.magenta, 10)
+local heistTitle = text({ Position = UDim2.fromOffset(12, 4), Size = UDim2.new(1, -24, 0, 18), FontFace = DISPLAY, TextSize = 11, TextXAlignment = Enum.TextXAlignment.Left, RichText = true, Text = "", Parent = heistBox })
+local heistStats = text({ Position = UDim2.fromOffset(12, 24), Size = UDim2.new(0.55, -12, 0, 40), TextSize = 16, TextXAlignment = Enum.TextXAlignment.Left, RichText = true, Text = "", Parent = heistBox })
+local heistBoard = text({ AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -12, 0, 24), Size = UDim2.new(0.45, -12, 0, 62), TextSize = 13, TextXAlignment = Enum.TextXAlignment.Right, TextYAlignment = Enum.TextYAlignment.Top, RichText = true, Text = "", Parent = heistBox })
+text({ Position = UDim2.fromOffset(12, 90), Size = UDim2.new(1, -24, 0, 16), FontFace = BODY_LIGHT, TextSize = 12, TextColor3 = C.muted, TextXAlignment = Enum.TextXAlignment.Left, Text = "Grab cores → bank at YOUR vault · 💥 Pulse (Q) near rivals to steal · stand on a rival vault to raid", Parent = heistBox })
+local lastCarry = 0
+task.spawn(function()
+	while true do
+		task.wait(0.15)
+		local bank = player:GetAttribute("HeistBank")
+		local active = bank ~= nil and workspace:GetAttribute("EventPhase") == "Live" and workspace:GetAttribute("EventMode") == "Heist"
+		heistBox.Visible = active
+		if active then
+			local carry = player:GetAttribute("HeistCarry") or 0
+			local left = (workspace:GetAttribute("EventEndsAt") or 0) - workspace:GetServerTimeNow()
+			heistTitle.Text = string.format("⚡ CORE HEIST  <font color='#FF7AD9'>%s</font>", clockText(left))
+			heistStats.Text = string.format("🎒 Carrying <font color='#FFD75A'><b>%d</b></font> pts%s\n🏦 Vault <font color='#7CFFB0'><b>%d</b></font> pts", carry, if carry > 0 then "  <font color='#FF7A8C'>· go bank!</font>" else "", bank)
+			local lines = {}
+			for i, entry in string.split(workspace:GetAttribute("HeistBoard") or "", ";") do
+				local name, score = entry:match("^(.*):(%d+)$")
+				if name then
+					local me = name == player.DisplayName
+					table.insert(lines, string.format("%s#%d %s  <b>%s</b>%s", if me then "<font color='#7CFFB0'>" else "", i, esc(name), score, if me then "</font>" else ""))
+				end
+			end
+			heistBoard.Text = table.concat(lines, "\n")
+			if carry > lastCarry then
+				Audio.Play("Harvest")
+			end
+			lastCarry = carry
+		else
+			lastCarry = 0
+		end
 	end
 end)
 

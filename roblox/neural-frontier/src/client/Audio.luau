@@ -451,6 +451,14 @@ function Audio.AreaAt(position)
 			return "Event"
 		end
 	end
+	-- đấu trường Core Heist cũng dùng nhạc sự kiện
+	local heist = Config.Heist
+	if heist and heist.ArenaCenter then
+		local d = position - heist.ArenaCenter
+		if math.abs(d.X) <= heist.Size / 2 + 8 and math.abs(d.Z) <= heist.Size / 2 + 8 and d.Y > -30 then
+			return "Event"
+		end
+	end
 	local h = Config.Habitat
 	if h and h.Center then
 		local d = position - h.Center

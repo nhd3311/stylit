@@ -325,6 +325,19 @@ function handlers.Shockwave(position, radius, color)
 	Audio.Play("Explode", { position = at, volume = 1.3, pitch = 0.7 })
 end
 
+-- Core Heist: bị Pulse của đối thủ đẩy văng (client sở hữu vật lý nhân vật nên tự đẩy)
+function handlers.Knockback(player, velocity)
+	local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+	if not root then
+		return
+	end
+	burst(root.Position, Color3.fromRGB(255, 90, 200), 6)
+	if player == Players.LocalPlayer and typeof(velocity) == "Vector3" then
+		root.AssemblyLinearVelocity = velocity
+		Audio.Play("Hurt")
+	end
+end
+
 Effects.OnHurt = nil -- Main gán: chớp đỏ màn hình khi chính mình bị đánh
 
 function handlers.Hurt(player)

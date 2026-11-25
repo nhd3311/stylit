@@ -338,6 +338,39 @@ Config.Event = {
 	PlayCredits = 100,
 }
 
+-- ===== ⚡ Core Heist (PvP, thay phiên với Glitch Floor) =====
+-- Lõi data rơi khắp đấu trường. Nhặt rồi mang về KHO của mình để giữ điểm.
+-- Dùng Pulse (Q) gần người khác để cướp một nửa số lõi họ đang cầm (Shield chặn được).
+-- Đứng trong kho đối thủ để trộm dần điểm trong kho (chủ kho đứng trong kho thì không trộm được).
+-- Chỉ cướp đồ trong vòng chơi: KHÔNG ai mất bot hay Credits thật.
+Config.Heist = {
+	ArenaCenter = Vector3.new(-190, 50, 0),
+	Size = 124, -- cạnh sàn (stud)
+	Duration = 120, -- giây mỗi vòng
+	MaxPlayers = 8, -- = số kho
+	MaxCores = 18, -- số lõi tối đa nằm trên sàn
+	StartCores = 10,
+	SpawnEvery = 1.2,
+	MaxCarry = 12, -- số lõi cầm được cùng lúc
+	PickupRange = 5,
+	VaultRadius = 7,
+	StealRadius = 16, -- = bán kính Pulse
+	StealCooldown = 3,
+	StunTime = 1.5, -- bị cướp xong không nhặt được trong ... giây
+	RaidEvery = 1.5, -- đứng trong kho đối thủ mỗi ... giây trộm 1 lần
+	RaidShare = 0.15, -- mỗi lần trộm 15% điểm trong kho (ít nhất 1)
+	Cores = {
+		{ id = "Common", value = 1, weight = 55, color = Color3.fromRGB(0, 230, 255) },
+		{ id = "Rare", value = 3, weight = 27, color = Color3.fromRGB(80, 140, 255) },
+		{ id = "Epic", value = 6, weight = 12, color = Color3.fromRGB(180, 90, 255) },
+		{ id = "Legendary", value = 12, weight = 6, color = Color3.fromRGB(255, 200, 60) },
+	},
+	MegaCore = { value = 30, at = 60, color = Color3.fromRGB(255, 70, 200) }, -- lõi khổng lồ giữa sàn ở giây thứ 60
+	WinCredits = 600, -- hạng 1 (cần ít nhất 2 người chơi) + 1 capsule miễn phí
+	PlayCredits = 100,
+	PointCredits = 12, -- mỗi điểm trong kho
+}
+
 -- ===== Kiếm Robux =====
 -- ID = 0 nghĩa là chưa cấu hình.
 -- paidRandom = true: liên quan tới vật phẩm ngẫu nhiên trả tiền. Người chơi ở nơi luật cấm

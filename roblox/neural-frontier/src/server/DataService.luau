@@ -47,7 +47,7 @@ local function defaultData()
 		invitesRewarded = {}, -- [tostring(userId)] = true: đã nhận thưởng mời bạn với người này
 		settings = { musicVolume = 0.6, sfxVolume = 0.8, lowGraphics = false, hideOtherSquads = false, uiScale = 1, showDamageNumbers = true },
 		quest = 1,
-		stats = { uploaded = 0, kills = 0, bosses = {}, eventWins = 0, fused = 0 },
+		stats = { uploaded = 0, kills = 0, bosses = {}, eventWins = 0, fused = 0, heistWins = 0 },
 		boosts = {},
 		purchases = {},
 		lastSave = os.time(),

@@ -36,73 +36,105 @@ Mỗi vùng có **tường khối cao thấp so le** với viền neon trên đ�
 
 **Dịch chuyển**: bấm nút 🌀 trên thanh vùng. Về Hub luôn miễn phí. Tới vùng đã mở thì **miễn phí mỗi 60 giây**; có pass 🌀 Zone Warp thì không phải chờ. Boss hồi sinh sau 2–3 phút và cả server được báo. Ai góp sát thương đều được thưởng.
 
-## 🥚 Capsule Lab + 🤖 20 thú máy
+## 🥚 Capsule Lab + 🤖 55 thú máy
 
 Bot không mua thẳng nữa mà **mở từ Capsule**. Mỗi capsule cho đúng 1 bot, **tỉ lệ rơi luôn hiện rõ** (đã tính luck).
 
 | Capsule | Mở bằng | Level | Bot bên trong (tỉ lệ gốc) |
 |---|---|---|---|
-| 🌿 Meadow | 120 Credits | 1 | Scout Orb 45% · Byte Kitty 30% · Miner Beetle 17% · Glitch Fox 7% · **Pixel Owl 1%** |
-| 🏜️ Canyon | 4K Credits | 6 | Guard Beetle 45% · Laser Orb 30% · Dune Kitty 17% · Harvester Jelly 7% · **Sun Drake 1%** |
-| 🌃 Spires | 90K Credits | 15 | Titan Beetle 45% · Neon Jelly 30% · Volt Fox 17% · Void Owl 7% · **Quantum Dragon 1%** |
-| ❄️ Frost | 2.5M Credits | 22 | Snow Orb 45% · Frost Kitty 30% · Glacier Beetle 17% · Borealis Jelly 7% · **Ice Wyrm 1%** |
-| 🌋 Magma | 70M Credits | 30 | Ember Orb 45% · Cinder Fox 30% · Magma Beetle 17% · Blaze Owl 7% · **Inferno Drake 1%** |
-| 🌀 Rift | 2B Credits | 40 | Static Orb 45% · Rift Kitty 30% · Null Beetle 17% · Phase Fox 7% · **Rift Leviathan 1%** |
-| ☁️ Citadel | 60B Credits | 50 | Halo Orb 45% · Seraph Kitty 30% · Aegis Beetle 17% · Oracle Owl 7% · **Celestial Dragon 1%** |
-| 💎 **Neon** | **Robux** | 1 | Holo Kitty 50% · Prism Fox 30% · Aurora Owl 15% · **Nova Dragon 4.5%** · **Singularity 0.5%** |
+| 🌿 Meadow | 120 Credits | 1 | Scout Orb 44.85% · Byte Bunny 30% · Miner Crab 17% · Glitch Fox 7% · **Pixel Owl 1%** · **Bloom Phoenix 0.15%** |
+| 🏜️ Canyon | 4K Credits | 6 | Guard Beetle 44.85% · Laser Mantis 30% · Dune Kitty 17% · Harvester Jelly 7% · **Sun Drake 1%** · **Sandstorm Serpent 0.15%** |
+| 🌃 Spires | 90K Credits | 15 | Titan Golem 44.85% · Neon Jelly 30% · Volt Fox 17% · Void Owl 7% · **Quantum Dragon 1%** · **Synth Whale 0.15%** |
+| ❄️ Frost | 2.5M Credits | 22 | Snow Penguin 44.85% · Frost Kitty 30% · Glacier Crab 17% · Borealis Whale 7% · **Ice Wyrm 1%** · **Frostfire Phoenix 0.15%** |
+| 🌋 Magma | 70M Credits | 30 | Ember Orb 44.85% · Cinder Fox 30% · Magma Mantis 17% · Blaze Phoenix 7% · **Inferno Drake 1%** · **Molten Colossus 0.15%** |
+| 🌀 Rift | 2B Credits | 40 | Static Orb 44.85% · Rift Bunny 30% · Null Beetle 17% · Phase Mantis 7% · **Rift Leviathan 1%** · **Nebula Whale 0.15%** |
+| ☁️ Citadel | 60B Credits | 50 | Halo Orb 44.85% · Seraph Kitty 30% · Aegis Golem 17% · Oracle Owl 7% · **Celestial Dragon 1%** · **Starlight Phoenix 0.15%** |
+| 💎 **Neon** | **Robux** | 1 | Holo Kitty 49.9% · Prism Fox 30% · **Aurora Owl 15%** · **Nova Dragon 4.5%** · **Singularity 0.5%** · **Prismatic Wyrm 0.1%** 👑 |
 
-- Độ hiếm: Common → Rare → Epic → Legendary → **Mythic** (chỉ có trong Neon Capsule).
-- **Luck** chỉ nhân tỉ lệ của Epic, Legendary, Mythic. Nguồn luck: Game Pass 🍀 Lucky Scanner (x1.5, vĩnh viễn) và gói 🍀 x2 Luck (15 phút).
-- **Hoạt cảnh mở capsule**: capsule rung (bot càng hiếm rung càng lâu), bung nắp, bot hiện ra giữa vầng sáng màu độ hiếm, hiện chữ "NEW!" nếu là bot mới. Mở x3/x10 thì hiện cả hàng kết quả.
-- Ai mở được bot **Legendary/Mythic** thì **cả server được báo**.
-- Mỗi bot là một **thú máy dựng bằng Part**, có cử động: đập cánh, vẫy đuôi, xúc tu đung đưa, vòng hào quang quay. Bot Legendary/Mythic có vòng hào quang trên đầu.
+- Độ hiếm: Common → Rare → Epic → Legendary → **Mythic** → **👑 SECRET**.
+  - Mỗi capsule vùng có 1 bot **Mythic "săn thêm"** (0.15%, khoảng 1/667).
+  - Neon Capsule có thêm **Prismatic Wyrm** SECRET (0.1%).
+  - Bot "săn thêm" không bắt buộc khi gom đủ bộ trong Database.
+- **Luck** chỉ nhân tỉ lệ của Epic, Legendary, Mythic, Secret. Nguồn luck: Game Pass 🍀 Lucky Scanner (x1.5, vĩnh viễn) và gói 🍀 x2 Luck (15 phút).
+- **Hoạt cảnh mở capsule**:
+  - Capsule rung (bot càng hiếm rung càng lâu), bung nắp, rồi bot hiện ra giữa vầng sáng màu độ hiếm.
+  - Hiện chữ "NEW!" nếu là bot mới.
+  - Mở x3/x10 thì hiện cả hàng kết quả.
+- Ai mở được bot **Legendary trở lên** hoặc bản Holo/Void thì **cả server được báo**.
+
+### 🦊 15 dáng thú máy + phụ kiện riêng
+- **Dáng**: Orb, Mèo, Cáo, Bọ, Cú, Sứa, Rồng, **Thỏ, Chim cánh cụt, Bọ ngựa, Phượng hoàng, Rắn, Golem, Cá voi, Cua**.
+- **Cử động**: vẫy đuôi, đập cánh, tai cụp, càng kẹp, chân bò, thân rắn lượn sóng...
+- **Phụ kiện riêng** (`traits` trong Config): Sừng, Vương miện, Ăng-ten, Gai, Tinh thể, Bánh răng, Lửa, Mảnh bay quanh, Cánh nhỏ. Nhờ vậy 2 bot cùng dáng vẫn trông khác hẳn.
+- **Hào quang theo độ hiếm**:
+  - Legendary: vòng vàng.
+  - Mythic: vòng hồng + 3 viên ngọc bay quanh.
+  - SECRET: 2 vòng chéo đổi màu cầu vồng + 4 quả cầu sáng.
 - Chỉ **4 bot mạnh nhất** ra trận (Game Pass Bot Slots +3). Kho tối đa 60 bot. Bot dư có thể Recycle từng con hoặc **Recycle cả loạt** bot dự bị Common/Rare.
 
 ## ✨ Biến thể, 🧬 Fuse, 🔒 Khoá bot
 
-- Mỗi bot mở ra có cơ hội là **✨ Shiny** (1/40, chỉ số x1.5, vỏ vàng bóng, lấp lánh vàng) hoặc **🌈 Holo** (1/400, chỉ số x3, đổi màu cầu vồng liên tục). Game Pass ✨ Shiny Hunter nhân đôi cơ hội. Cơ hội biến thể hiện trên từng capsule.
-- **Fusion Lab** (trong bảng Bots): gộp **5 bot giống hệt nhau** thành 1 bản ✨ Shiny, 5 Shiny thành 1 🌈 Holo. Bot mới giữ cấp cao nhất. Có hoạt cảnh riêng.
-- **Khoá bot** 🔒: bot khoá không bị Recycle, không bị Fuse. Recycle cả loạt không bao giờ đụng tới bot đang ra trận, bot khoá và bot Shiny/Holo.
+| Biến thể | Cơ hội | Chỉ số | Trông như thế nào |
+|---|---|---|---|
+| ✨ Shiny | 1/40 | x1.5 | vỏ vàng bóng, lấp lánh vàng |
+| 🌈 Holo | 1/400 | x3 | đổi màu cầu vồng liên tục |
+| 🌌 **Void** | 1/2,500 | **x5** | vỏ tím than trong suốt, đèn tím hồng, 2 vòng vật chất tối, bụi sao |
 
-## 📚 Bot Database
+- Game Pass ✨ Shiny Hunter nhân đôi cơ hội biến thể. Cơ hội hiện trên từng capsule.
+- **Fusion Lab** (trong bảng Bots): gộp **5 bot giống hệt nhau** thành biến thể kế tiếp. Thứ tự: thường → ✨ Shiny → 🌈 Holo → 🌌 Void. Bot mới giữ cấp cao nhất.
+- **Khoá bot** 🔒: bot khoá không bị Recycle, không bị Fuse. Recycle cả loạt không bao giờ đụng tới bot đang ra trận, bot khoá và bot biến thể.
 
-- Bot chưa có hiện **bóng đen "???"**, có rồi thì hiện thú máy 3D đầy màu sắc.
-- Sưu tầm đủ 5 bot của một capsule thì nhận thưởng một lần: Credits và **+% gather vĩnh viễn** (Meadow +5%, Canyon +10%, Spires +15%, Frost +20%, Magma +25%, Rift +30%, Citadel +40%, Neon +25%). Tổng cộng **40 bot** để sưu tầm.
-- Mỗi bot có 2 huy hiệu ✨/🌈 sáng lên khi anh từng sở hữu bản biến thể đó.
+## 📚 Bot Database + 👑 Boss Vault
 
-## 🏠 Habitat: nuôi bot và trưng bày bộ sưu tập
+- Bot chưa có hiện dạng **hologram xanh "???"**, có rồi thì hiện thú máy 3D đầy màu sắc.
+- Gom đủ các bot gốc của một capsule thì nhận thưởng một lần: Credits và **+% gather vĩnh viễn**.
+  - Meadow +5%, Canyon +10%, Spires +15%, Frost +20%, Magma +25%, Rift +30%, Citadel +40%, Neon +25%.
+- **Boss Vault**: mỗi boss có 1 bot **SECRET độc quyền**.
+  - Ai góp sát thương khi boss chết đều được 1 lượt quay riêng: **1/50**. Luck nhân thêm, tối đa x4.
+  - Có hoạt cảnh "Boss Drop" và cả server được báo.
+- Tổng cộng **55 bot**. Mỗi bot có 3 huy hiệu ✨/🌈/🌌 sáng lên khi anh từng sở hữu bản biến thể đó.
 
-- Đảo **Bot Habitat** nằm phía sau Hub (đi qua cầu ở cổng nam). Có **8 ô vườn**, mỗi người chơi vào server được chia 1 ô.
-- **Đặt bot vào vườn** (bảng 🏠 HABITAT): bot sẽ **đi dạo quanh ô, nhún nhảy**. Bot nghỉ trong vườn thì không ra trận.
-- Bot trong vườn **làm ra Credits cả khi offline**. Sản lượng = tổng gather của bot trong vườn × hệ số data của vùng xịn nhất đã mở.
-- **Độ vui** giảm dần trong 6 giờ. Bấm **🍖 Feed** để bot vui lại 100%; vui càng nhiều thì làm càng nhiều (đói hẳn vẫn làm được 30%).
-- Kho chứa tối đa **4 giờ** sản lượng, nên phải quay lại bấm **💰 Collect**. Đây là lý do để người chơi quay lại game mỗi ngày.
-- **Trưng bày**: 3 bot hiếm nhất của anh đứng xoay trên **bệ đá**. Biển tên hiện *"🏠 Tên · 📚 23/40 bots"* cho cả server xem.
-- Game Pass **🏡 Habitat Expansion**: +6 ô nghỉ và kho chứa x2.
-- Nút 🌀 Warp có thêm **"My Habitat"** (miễn phí).
-- ⚠️ Có 8 ô vườn, nên anh đặt **Max Players = 8** trong Game Settings (hoặc thêm ô trong `Config.Habitat.Plots`).
+## 👾 Quái và boss
 
-## 📖 Hướng dẫn người mới + nút ❓ Guide
+Mỗi vùng có một loài quái và một boss với **model riêng**, nhiều màu và có cử động:
 
-- Người chơi mới vào game sẽ có **tutorial 9 bước**: đi vào Byte Meadow → thu thập → upload → mở capsule → xem đội bot → đặt bot vào Habitat → đánh drone → xong.
-- Bước nào cần đi tới đâu thì có **tia sáng chỉ đường** từ nhân vật tới đích và **mũi tên ⬇️** trên đích. Bước cần bấm menu thì có **ngón tay 👈** chỉ vào nút.
-- Làm đúng thì **tự qua bước sau**, có bong bóng ăn mừng. Có nút **SKIP**. Tiến độ được lưu, thoát ra vào lại vẫn làm tiếp.
-- Nút **❓ GUIDE** luôn hiện cạnh thẻ phi công. Mở ra là **hướng dẫn đầy đủ** mọi tính năng, có nút **▶ chơi lại tutorial**.
-- Người chơi cũ (level > 3) không bị bắt làm tutorial.
+| Vùng | Quái | Boss | Bot SECRET rơi ra |
+|---|---|---|---|
+| 🌿 Meadow | Drone cánh quạt, mắt giận dữ | 👑 Glitch King: đầu màn hình mặt pixel, vương miện, áo choàng, quyền trượng | Glitch Monarch |
+| 🏜️ Canyon | Bọ cạp máy, đuôi có ngòi neon | ⚙️ Rust Titan: mech khổng lồ, vai giáp, 2 nắm đấm | Titan Prime |
+| 🌃 Spires | Bóng ma áo choàng hologram | 🧠 Overmind: bộ não 3 mắt, dây cáp, vòng năng lượng | Overmind Jr. |
+| ❄️ Frost | Lính canh pha lê, mảnh băng bay quanh | 🧊 Cryo Colossus: golem băng, cụm tinh thể | Cryo Seraph |
+| 🌋 Magma | Nhện đá dung nham, 6 chân | 🔥 Forge Tyrant: golem lửa, sừng, búa nung đỏ | Forge Wyrm |
+| 🌀 Rift | Con mắt glitch có xúc tu | 🦋 Glitch Queen: váy jelly, cánh bướm neon | Rift Empress |
+| ☁️ Citadel | Drone thiên thần, khiên chữ thập | ☀️ Celestial Core: mặt trời, 3 vòng quỹ đạo, cánh sáng | Star Whale |
 
-## 🎁 Quà đăng nhập 7 ngày
+- **⭐ Quái Elite** (1/12): vàng ánh kim, to hơn, máu x5, thưởng x4, 1/6 cơ hội rơi **capsule miễn phí** của vùng đó.
+- **Boss có 3 phase**: còn 66% máu và 33% máu thì nổi giận, nhanh hơn và đánh đau hơn.
+- **Chiêu boss có báo trước** bằng vòng đỏ dưới đất, chạy ra khỏi vòng là né được:
+  - **Slam**: đập xuống chỗ người chơi đang đứng.
+  - **Nova**: sóng nổ quanh boss.
+  - **Gọi đệ**: từ phase 2.
+- **Thanh máu boss** lớn ở giữa màn hình khi đứng gần, có vạch phase. Không ai đánh thì boss hồi máu dần.
+- Model quái do máy người chơi vẽ (server chỉ giữ khung va chạm vô hình). Vì vậy quái cử động mượt mà không tốn băng thông, và quái ở xa không vẽ để nhẹ máy.
 
-Mỗi ngày (theo giờ UTC) nhận 1 lần. Chuỗi liên tục thì lên ngày tiếp theo, lỡ 1 ngày là quay về Ngày 1. Credits tự tăng theo level.
+## ⚡ Core Heist (PvP cướp lõi data)
 
-| Ngày | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
-|---|---|---|---|---|---|---|---|
-| Quà | Credits | Capsule xịn nhất đã mở | Credits | x2 Luck 15' | Credits | x2 Gather 30' | **💎 Neon Capsule miễn phí** |
+Chạy **xen kẽ với Glitch Floor** (lượt đầu tiên là Core Heist). Bấm **JOIN** giống Glitch Floor.
 
-Vào game mà có quà chưa nhận thì bảng Daily tự mở.
+- Tối đa **8 người**, mỗi người một **kho** (bệ tròn màu riêng) quanh đấu trường. Đấu trường có khối chắn để nấp và bục giữa.
+- **Lõi data** rơi khắp sàn:
+  - Lõi thường: Common +1, Rare +3, Epic +6, Legendary +12.
+  - Giây thứ 60 có **💎 MEGA CORE +30** ở giữa.
+- Chạm lõi là nhặt (cầm tối đa 12). Về **kho của mình** là cất hết. **Chỉ điểm trong kho mới tính.**
+- **Cướp**: dùng 💥 **Pulse (Q)** gần đối thủ để đẩy văng họ và cướp **một nửa số lõi họ đang cầm**. 🛡️ Shield chặn được.
+- **Đột kích kho**: đứng trong kho đối thủ thì cứ 1.5 giây trộm 15% điểm của họ. Chủ kho về đứng giữ kho là chặn được.
+- Ai đang cầm lõi sẽ có bảng "🔷 xN" trên đầu, nên ai cũng thấy để đuổi.
+- **Hết 2 phút**: xếp hạng theo điểm trong kho. Ai cũng nhận Credits theo điểm. **Hạng 1** (cần ít nhất 2 người) nhận thêm **capsule miễn phí**.
+- **Chỉ tranh đồ trong vòng chơi**: không ai mất bot hay Credits thật, nên chơi vui mà không cay.
 
 ## 🟥 Sự kiện Glitch Floor (minigame)
 
-- Cứ **5 phút** mở một lượt (lượt đầu sau 1 phút). Bấm **JOIN** trên HUD ở đâu cũng được, hoặc bước lên cổng đỏ ở Hub.
+- Cứ **5 phút** mở một lượt sự kiện, thay phiên giữa Glitch Floor và ⚡ Core Heist (lượt đầu sau 1 phút). Bấm **JOIN** trên HUD ở đâu cũng được, hoặc bước lên cổng đỏ ở Hub.
 - Người tham gia được đưa lên **sàn đấu bay**, đếm 3-2-1-GO. Ô sàn **nhấp nháy đỏ rồi rơi**, nhịp nhanh dần. Có đợt rơi nguyên một hàng, một cột hoặc cả vòng ngoài.
 - Rơi khỏi sàn là bị loại. Người cuối cùng còn đứng (hoặc trụ đủ 90 giây) **thắng**: nhận credits và 1 capsule miễn phí. Người chơi khác nhận credits tham gia.
 - Bảng xếp hạng có cột **Wins**, và có thêm nhiệm vụ "Win a Glitch Floor event".
@@ -188,14 +220,16 @@ Dùng Rojo thì chạy `rojo serve` trong thư mục này.
 | File | Việc |
 |---|---|
 | `shared/Config.luau` | Toàn bộ số liệu: bot, capsule + tỉ lệ, vùng, quái, kỹ năng, nhiệm vụ, shop |
-| `shared/BotModels.luau` | Dựng 7 dáng thú máy (Orb, Cat, Fox, Beetle, Owl, Jelly, Dragon) + cử động + biến thể Shiny/Holo, capsule 3D |
+| `shared/BotModels.luau` | Dựng 15 dáng thú máy + phụ kiện + hào quang theo độ hiếm + biến thể Shiny/Holo/Void, capsule 3D |
 | `server/DataService.luau` | Lưu và tải data, retry, chế độ thử khi chưa publish |
 | `server/WorldService.luau` | Dựng thế giới khối: đảo lát gạch, tường, cầu, trang trí theo vùng, Hub, Capsule Lab, sàn Glitch Floor |
 | `server/HabitatService.luau` | Chia ô vườn, bot nghỉ làm Credits khi offline, độ vui/cho ăn/thu hoạch, bệ trưng bày |
 | `client/Habitat.luau` | Vẽ bot đi dạo trong vườn, bot trên bệ trưng bày, biển tên chủ ô |
 | `server/EventService.luau` | Điều khiển sự kiện Glitch Floor: mời, đếm ngược, làm rơi ô sàn, loại người rơi, phát thưởng |
 | `server/PlayerService.luau` | Thu thập, upload, mở capsule + biến thể, Fuse, khoá bot, Database, quà ngày, kỹ năng, level, nhiệm vụ |
-| `server/EnemyService.luau` | AI của quái và boss, đội bot tự bắn, chia thưởng boss |
+| `server/EnemyService.luau` | AI quái, quái Elite, boss 3 phase + chiêu có báo trước + gọi đệ, đội bot tự bắn, chia thưởng boss |
+| `shared/EnemyModels.luau` + `client/Enemies.luau` | Model riêng của 7 loài quái + 7 boss, client vẽ và cho cử động, thanh máu boss |
+| `server/HeistService.luau` | Vòng PvP ⚡ Core Heist: đấu trường, lõi data, kho, cướp bằng Pulse, đột kích kho, xếp hạng |
 | `server/MonetizationService.luau` | Game Pass, Dev Product, Neon Capsule, kiểm tra PolicyService |
 | `client/Main.client.luau` | HUD hologram, nút 3D bong bóng, menu có bong bóng bay, các bảng (Bots, Capsules, Database, Daily, Gear, Missions, Shop, Warp), hoạt cảnh mở capsule |
 | `client/Effects.luau` | Vẽ đội thú máy bay theo, laser, số sát thương, nổ, hào quang |

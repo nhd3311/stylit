@@ -400,6 +400,12 @@ function PlayerService.OnKill(player, def, zone, isBoss)
 	PlayerService.AddXp(player, def.xp)
 end
 
+-- đang bật Shield? (Core Heist: Shield chặn bị cướp lõi)
+function PlayerService.IsShielded(player)
+	local session = sessions[player]
+	return session ~= nil and session.shieldUntil > os.clock()
+end
+
 -- Quái đánh người chơi (EnemyService gọi). Shield giảm sát thương.
 function PlayerService.Damage(player, amount)
 	local session = sessions[player]
@@ -889,6 +895,7 @@ function actions.UseCore(player, profile, session, coreId)
 		if PlayerService.DamageArea then
 			PlayerService.DamageArea(player, root.Position, core.radius, Config.Power(profile.level))
 		end
+		PlayerService.Emit("Pulse", player, profile, { position = root.Position, radius = core.radius })
 	elseif core.id == "Overclock" then
 		session.overclockUntil = t + core.duration
 		PlayerService.Fx("Aura", player, Color3.fromRGB(255, 220, 60), core.duration)

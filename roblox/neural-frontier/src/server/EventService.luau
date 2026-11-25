@@ -13,6 +13,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Config = require(ReplicatedStorage.Shared.Config)
 local DataService = require(script.Parent.DataService)
+local HeistService = require(script.Parent.HeistService)
 local PlayerService = require(script.Parent.PlayerService)
 local WorldService = require(script.Parent.WorldService)
 
@@ -29,6 +30,17 @@ local joined = {} -- [player] = true: đăng ký lượt tới
 local participants = {} -- [player] = true: đang trên sàn
 local eliminated = {} -- người bị loại trong lượt hiện tại (theo thứ tự)
 local rng = Random.new()
+-- lượt tới là gì: "Heist" (⚡ Core Heist, PvP cướp lõi) hoặc "Glitch" (🟥 Glitch Floor), thay phiên nhau
+local mode = "Heist"
+
+local function setMode(name)
+	mode = name
+	workspace:SetAttribute("EventMode", name)
+end
+
+local function modeName()
+	return if mode == "Heist" then "Core Heist" else "Glitch Floor"
+end
 
 local function now()
 	return workspace:GetServerTimeNow()
@@ -132,7 +144,7 @@ end
 
 local function join(player)
 	if phase == "Live" then
-		PlayerService.Notify(player, "🟥 A round is running. You'll be in the next one!")
+		PlayerService.Notify(player, "🎮 A round is running. You'll be in the next one!")
 	end
 	if joined[player] then
 		return
@@ -142,7 +154,7 @@ local function join(player)
 	if phase ~= "Live" then
 		workspace:SetAttribute("EventPlayers", count(joined))
 	end
-	PlayerService.Notify(player, if phase == "Lobby" then "✅ You're in! The round starts soon." else "✅ Queued for the next Glitch Floor round!", "EventJoined")
+	PlayerService.Notify(player, if phase == "Lobby" then "✅ You're in! The round starts soon." else "✅ Queued for the next " .. modeName() .. " round!", "EventJoined")
 end
 
 local function eliminate(player)
@@ -201,7 +213,10 @@ local function runRound()
 	local e = Config.Event
 	setPhase("Lobby", now() + e.LobbyTime)
 	for _, player in Players:GetPlayers() do
-		PlayerService.Notify(player, string.format("🟥 GLITCH FLOOR opens! Tap JOIN within %ds", e.LobbyTime), "EventOpen")
+		local text = if mode == "Heist"
+			then string.format("⚡ CORE HEIST opens! Grab data cores & steal from rivals. Tap JOIN within %ds", e.LobbyTime)
+			else string.format("🟥 GLITCH FLOOR opens! Tap JOIN within %ds", e.LobbyTime)
+		PlayerService.Notify(player, text, "EventOpen")
 	end
 	task.wait(e.LobbyTime)
 
@@ -214,6 +229,11 @@ local function runRound()
 	end
 	joined = {}
 	if #list == 0 then
+		setPhase("Idle", now() + e.Interval)
+		return
+	end
+	if mode == "Heist" then
+		HeistService.Run(list, setPhase)
 		setPhase("Idle", now() + e.Interval)
 		return
 	end
@@ -297,17 +317,20 @@ function EventService.Start()
 		participants[player] = nil
 	end)
 	local firstDelay = 60
+	setMode("Heist")
 	setPhase("Idle", now() + firstDelay)
 	task.spawn(function()
 		task.wait(firstDelay)
 		while true do
 			local ok, err = pcall(runRound)
 			if not ok then
-				warn("[EventService] Lỗi trong lượt Glitch Floor:", err)
+				warn("[EventService] Lỗi trong lượt sự kiện:", err)
 				participants, eliminated, joined = {}, {}, {}
 				resetTiles()
+				HeistService.Reset()
 				setPhase("Idle", now() + Config.Event.Interval)
 			end
+			setMode(if mode == "Heist" then "Glitch" else "Heist")
 			task.wait(Config.Event.Interval)
 		end
 	end)

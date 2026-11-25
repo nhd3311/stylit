@@ -395,6 +395,7 @@ function PlayerService.OnKill(player, def, zone, isBoss)
 		profile.stats.bosses[zone.id] = true
 		notify(player, string.format("🏆 %s defeated! +%s credits", def.name, Config.Short(def.credits * creditMult(player, profile))), "Reward")
 		PlayerService.Emit("BossKilled", player, profile, { zoneId = zone.id })
+		PlayerService.BossDrop(player, profile, def)
 	end
 	PlayerService.AddXp(player, def.xp)
 end
@@ -489,16 +490,24 @@ local function markVariant(profile, botId, variant)
 	end
 end
 
+-- Config.Variants xếp từ hiếm nhất (Void) xuống Shiny
 local function rollVariant(player)
 	local hunter = player:GetAttribute("ShinyHunter") == true
 	local r = rng:NextNumber()
-	local holo = Config.VariantChance("Holo", hunter)
-	if r < holo then
-		return "Holo"
-	elseif r < holo + Config.VariantChance("Shiny", hunter) then
-		return "Shiny"
+	local edge = 0
+	for _, v in Config.Variants do
+		edge += Config.VariantChance(v.id, hunter)
+		if r < edge then
+			return v.id
+		end
 	end
 	return nil
+end
+
+-- bot đáng báo cho cả server: Legendary trở lên, Holo/Void, hoặc Shiny từ Epic trở lên
+local function worthAnnouncing(bot, variant)
+	local rank = Config.RarityOrder[bot.rarity]
+	return rank >= Config.RarityOrder.Legendary or variant == "Holo" or variant == "Void" or (variant == "Shiny" and rank >= Config.RarityOrder.Epic)
 end
 
 local function announce(player, text)
@@ -523,7 +532,7 @@ function PlayerService.Hatch(player, profile, capsule, count)
 		table.insert(profile.bots, { type = bot.id, level = 1, variant = variant })
 		table.insert(results, { id = bot.id, new = isNew, variant = variant })
 		PlayerService.Emit("Hatched", player, profile, { bot = bot, variant = variant, capsuleId = capsule.id, new = isNew })
-		if Config.RarityOrder[bot.rarity] >= Config.RarityOrder.Legendary or variant == "Holo" or (variant == "Shiny" and Config.RarityOrder[bot.rarity] >= Config.RarityOrder.Epic) then
+		if worthAnnouncing(bot, variant) then
 			announce(player, string.format("🌟 %s hatched a %s (%s)!", player.DisplayName, Config.BotLabel(bot, variant), bot.rarity))
 		end
 	end
@@ -532,6 +541,45 @@ function PlayerService.Hatch(player, profile, capsule, count)
 	checkQuest(player, profile)
 	PlayerService.PushState(player)
 	return results
+end
+
+-- Hạ boss: mỗi người góp sát thương có cơ hội riêng nhận bot SECRET của boss đó (Luck nhân thêm, tối đa x4).
+-- Bot quý nên vẫn trao kể cả khi kho bot đã đầy.
+function PlayerService.BossDrop(player, profile, def)
+	local bot = def.drop and Config.BotById[def.drop]
+	if not bot then
+		return
+	end
+	local luck = math.min(PlayerService.Luck(player, profile), 4)
+	if rng:NextNumber() >= Config.BossDropChance * luck then
+		return
+	end
+	local variant = rollVariant(player)
+	local isNew = not profile.discovered[bot.id]
+	profile.discovered[bot.id] = true
+	markVariant(profile, bot.id, variant)
+	table.insert(profile.bots, { type = bot.id, level = 1, variant = variant })
+	PlayerService.Emit("Hatched", player, profile, { bot = bot, variant = variant, capsuleId = "Boss", new = isNew })
+	announce(player, string.format("👑 %s got the SECRET %s from %s!", player.DisplayName, Config.BotLabel(bot, variant), def.name))
+	notify(player, string.format("👑 SECRET DROP! %s gave you %s", def.name, Config.BotLabel(bot, variant)), "Reward")
+	remotes.Hatch:FireClient(player, "Boss", { { id = bot.id, new = isNew, variant = variant } })
+	publishBots(player, profile)
+	PlayerService.PushState(player)
+end
+
+-- Quà capsule miễn phí (quái Elite rơi): còn chỗ trong kho bot thì mở luôn
+function PlayerService.GiftCapsule(player, capsuleId, message)
+	local profile = DataService.Profiles[player]
+	local capsule = Config.CapsuleById[capsuleId]
+	if not profile or not capsule then
+		return
+	end
+	if #profile.bots >= maxBots(player) then
+		notify(player, "🤖 Your bot storage is full, so the free capsule was lost. Recycle some bots!")
+		return
+	end
+	notify(player, message, "Reward")
+	PlayerService.Hatch(player, profile, capsule, 1)
 end
 
 -- capsule Credits xịn nhất người chơi đã mở khoá (quà ngày, thưởng sự kiện)
@@ -580,7 +628,7 @@ function actions.ClaimSet(player, profile, session, capsuleId)
 	if not capsule or profile.claimedSets[capsule.id] then
 		return
 	end
-	for _, drop in capsule.drops do
+	for _, drop in Config.SetDrops(capsule) do
 		if not profile.discovered[drop.bot] then
 			return
 		end
@@ -693,7 +741,7 @@ function actions.FuseBots(player, profile, session, botType, variant)
 	if not bot then
 		return
 	end
-	variant = if variant == "Shiny" then "Shiny" else nil
+	variant = if variant == "Shiny" or variant == "Holo" then variant else nil
 	local target = Config.NextVariant[variant or ""]
 	if not target then
 		return
@@ -726,7 +774,7 @@ function actions.FuseBots(player, profile, session, botType, variant)
 	markVariant(profile, bot.id, target)
 	profile.stats.fused = (profile.stats.fused or 0) + 1
 	PlayerService.Emit("Fused", player, profile, { bot = bot, variant = target })
-	if target == "Holo" then
+	if target == "Holo" or target == "Void" then
 		announce(player, string.format("🧬 %s fused a %s!", player.DisplayName, Config.BotLabel(bot, target)))
 	end
 	remotes.Hatch:FireClient(player, "Fuse", { { id = bot.id, new = isNew, variant = target } })

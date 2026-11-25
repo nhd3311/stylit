@@ -100,7 +100,7 @@ local function publish(player, profile)
 	for _, entry in profile.bots do
 		local bot = Config.BotById[entry.type]
 		if bot then
-			local score = Config.RarityOrder[bot.rarity] * 10 + (if entry.variant == "Holo" then 6 elseif entry.variant == "Shiny" then 3 else 0) + entry.level * 0.1
+			local score = Config.RarityOrder[bot.rarity] * 10 + (Config.VariantOrder[entry.variant or ""] or 0) * 3 + entry.level * 0.1
 			table.insert(ranked, { entry = entry, score = score })
 		end
 	end

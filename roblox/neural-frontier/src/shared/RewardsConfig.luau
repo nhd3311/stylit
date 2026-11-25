@@ -68,6 +68,8 @@ RewardsConfig.Achievements = {
 	{ key = "FirstMythic", group = "Hatching", name = "Mythic Tamer", description = "Get a Mythic bot", icon = "🔮", badgeId = 0, reward = { credits = 5000 }, check = "rarity", target = "Mythic" },
 	{ key = "FirstShiny", group = "Hatching", name = "So Shiny!", description = "Get a Shiny bot", icon = "✨", badgeId = 0, reward = { credits = 1000 }, check = "variant", target = "Shiny" },
 	{ key = "FirstHolo", group = "Hatching", name = "Hologram Hero", description = "Get a Holo bot", icon = "🌈", badgeId = 0, reward = { credits = 3000 }, check = "variant", target = "Holo" },
+	{ key = "FirstVoid", group = "Hatching", name = "Into the Void", description = "Get a Void bot", icon = "🌌", badgeId = 0, reward = { credits = 12000 }, check = "variant", target = "Void" },
+	{ key = "FirstSecret", group = "Hatching", name = "Secret Keeper", description = "Get a SECRET bot", icon = "👑", badgeId = 0, reward = { credits = 15000 }, check = "rarity", target = "Secret" },
 
 	-- 🗺️ Mở vùng (Meadow mở sẵn từ level 1 nên không tính)
 	stage("Canyon", 0, 1000),

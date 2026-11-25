@@ -73,6 +73,8 @@ AudioConfig.SFX = {
 	RevealMythic = { id = 0, volume = 0.75, pitchVariance = 0, throttle = 0.2 }, -- ra bot Mythic: hoành tráng nhất, bùng năng lượng + hợp xướng thiên thần ("mythic", "heavenly choir")
 	Shiny = { id = 0, volume = 0.55, pitchVariance = 0, throttle = 0.2 }, -- biến thể ✨ Shiny: lấp lánh "twinkle" kim tuyến, phát chồng lên Reveal ("twinkle", "glitter")
 	Holo = { id = 0, volume = 0.6, pitchVariance = 0, throttle = 0.2 }, -- biến thể 🌈 Holo: synth shimmer cầu vồng, ngân dài hơn Shiny ("shimmer", "rainbow magic")
+	Void = { id = 0, volume = 0.65, pitchVariance = 0, throttle = 0.2 }, -- biến thể 🌌 Void: tiếng hút trầm của hố đen + ngân sáng ("black hole", "deep whoosh", "cosmic")
+	RevealSecret = { id = 0, volume = 0.8, pitchVariance = 0, throttle = 0.2 }, -- ra bot SECRET: hợp xướng + chuông + bùng nổ, hoành tráng hơn cả Mythic ("secret reveal", "divine", "ultra rare")
 	Fuse = { id = 0, volume = 0.65, pitchVariance = 0, throttle = 0.2 }, -- gộp bot (Fuse): hút năng lượng vào rồi bùng ra ("energy charge", "merge", "fusion")
 
 	-- ----- Kỹ năng (AI Cores) -----

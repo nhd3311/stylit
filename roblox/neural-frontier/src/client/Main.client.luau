@@ -21,6 +21,7 @@ local Effects = require(script.Parent:WaitForChild("Effects"))
 local HabitatFx = require(script.Parent:WaitForChild("Habitat"))
 local Fx = require(script.Parent:WaitForChild("Fx"))
 local Audio = require(script.Parent:WaitForChild("Audio"))
+local Enemies = require(script.Parent:WaitForChild("Enemies"))
 local RewardsPanels = require(script.Parent:WaitForChild("RewardsPanels"))
 local Settings = require(script.Parent:WaitForChild("Settings"))
 local SocialPanel = require(script.Parent:WaitForChild("SocialPanel"))
@@ -126,7 +127,8 @@ end
 local function fire(action, ...)
 	remotes.Action:FireServer(action, ...)
 end
-local VARIANT_COLORS = { Shiny = Color3.fromRGB(255, 215, 90), Holo = Color3.fromRGB(120, 255, 255) }
+local VARIANT_COLORS = { Shiny = Color3.fromRGB(255, 215, 90), Holo = Color3.fromRGB(120, 255, 255), Void = Color3.fromRGB(200, 100, 255) }
+local VARIANT_LIST = { "Shiny", "Holo", "Void" }
 -- "1/40" dạng dễ đọc cho cơ hội biến thể
 local function oneIn(chance)
 	return "1/" .. math.floor(1 / chance + 0.5)
@@ -920,7 +922,7 @@ local function buyPass(pass)
 end
 local function countDiscovered(capsule)
 	local n = 0
-	for _, drop in capsule.drops do
+	for _, drop in Config.SetDrops(capsule) do
 		if state.discovered and state.discovered[drop.bot] then
 			n += 1
 		end
@@ -1069,7 +1071,7 @@ function panels.Bots()
 		end
 	end
 	if shown == 0 then
-		row({ icon = "🧬", iconColor = C.off, title = "No duplicates yet", sub = string.format("Collect %d of the same bot to fuse a ✨ Shiny. %d Shinies make a 🌈 Holo!", Config.FuseCount, Config.FuseCount), height = 56 })
+		row({ icon = "🧬", iconColor = C.off, title = "No duplicates yet", sub = string.format("Collect %d of the same bot to fuse a ✨ Shiny. %d Shinies → 🌈 Holo, %d Holos → 🌌 Void!", Config.FuseCount, Config.FuseCount, Config.FuseCount), height = 56 })
 	end
 
 	section("STORAGE", string.format("%d / %d bots", #state.bots, state.maxBots or Config.MaxBots))
@@ -1126,11 +1128,15 @@ function panels.Capsules()
 		local tag = if premium then "ROBUX · MYTHIC INSIDE" elseif locked then "🔒 LEVEL " .. capsule.level else "💳 " .. short(capsule.price) .. " EACH"
 		chip(card, tag, if premium then C.magenta elseif locked then C.off else C.gold, if locked then C.muted else C.void, true)
 		capsuleViewport(card, capsule, UDim2.fromOffset(120, 140), UDim2.fromOffset(10, 40))
-		-- tỉ lệ rơi từng bot (đã tính luck)
-		for i, item in Config.CapsuleOdds(capsule, luck) do
+		-- tỉ lệ rơi từng bot (đã tính luck): các ô chia đều bề ngang còn lại của thẻ
+		local odds = Config.CapsuleOdds(capsule, luck)
+		local strip = new("Frame", { Position = UDim2.fromOffset(140, 40), Size = UDim2.new(1, -146, 0, 134), BackgroundTransparency = 1, Parent = card }, {
+			new("UIListLayout", { FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 5), SortOrder = Enum.SortOrder.LayoutOrder }),
+		})
+		for i, item in odds do
 			local bot = item.bot
 			local rarity = Config.RarityColors[bot.rarity]
-			local cell = new("Frame", { Position = UDim2.fromOffset(140 + (i - 1) * 90, 40), Size = UDim2.fromOffset(84, 134), BackgroundColor3 = C.void, BackgroundTransparency = 0.35, BorderSizePixel = 0, Parent = card }, {
+			local cell = new("Frame", { LayoutOrder = i, Size = UDim2.new(1 / #odds, -5, 1, 0), BackgroundColor3 = C.void, BackgroundTransparency = 0.35, BorderSizePixel = 0, Parent = strip }, {
 				corner(10),
 				stroke(rarity, 1.2, 0.3),
 			})
@@ -1169,7 +1175,7 @@ function panels.Capsules()
 			end
 		end
 		local hunter = player:GetAttribute("ShinyHunter") == true
-		text({ Position = UDim2.fromOffset(14, 186), Size = UDim2.fromOffset(150, 36), FontFace = DISPLAY, TextSize = 8, RichText = true, TextWrapped = true, TextXAlignment = Enum.TextXAlignment.Left, Text = string.format("<font color='#FFD75A'>✨ SHINY %s</font>\n<font color='#78FFFF'>🌈 HOLO %s</font>", oneIn(Config.VariantChance("Shiny", hunter)), oneIn(Config.VariantChance("Holo", hunter))), Parent = card })
+		text({ Position = UDim2.fromOffset(14, 186), Size = UDim2.fromOffset(150, 36), FontFace = DISPLAY, TextSize = 8, RichText = true, TextWrapped = true, TextXAlignment = Enum.TextXAlignment.Left, Text = string.format("<font color='#FFD75A'>✨ SHINY %s</font>\n<font color='#78FFFF'>🌈 HOLO %s</font>\n<font color='#C864FF'>🌌 VOID %s</font>", oneIn(Config.VariantChance("Shiny", hunter)), oneIn(Config.VariantChance("Holo", hunter)), oneIn(Config.VariantChance("Void", hunter))), Parent = card })
 		for i, spec in specs do
 			local b = button({
 				Parent = card,
@@ -1198,7 +1204,7 @@ function panels.Database()
 			found += 1
 		end
 	end
-	local shinies, holos = 0, 0
+	local shinies, holos, voids = 0, 0, 0
 	for _, kinds in state.variants or {} do
 		if kinds.Shiny then
 			shinies += 1
@@ -1206,32 +1212,63 @@ function panels.Database()
 		if kinds.Holo then
 			holos += 1
 		end
+		if kinds.Void then
+			voids += 1
+		end
 	end
-	section("BOT DATABASE", string.format("Discovered <b>%d / %d</b>  ·  ✨ %d  ·  🌈 %d", found, total, shinies, holos))
+	section("BOT DATABASE", string.format("Discovered <b>%d / %d</b>  ·  ✨ %d  ·  🌈 %d  ·  🌌 %d", found, total, shinies, holos, voids))
+	-- 1 ô bot trong lưới: model 3D (hologram "???" nếu chưa gặp), tên, độ hiếm, huy hiệu biến thể
+	local function databaseCell(cells, i, bot, hint)
+		local known = state.discovered[bot.id] == true
+		local rarity = Config.RarityColors[bot.rarity]
+		local cell = new("Frame", { LayoutOrder = i, BackgroundColor3 = WHITE, BorderSizePixel = 0, Parent = cells }, {
+			corner(10),
+			vgradient(if known then rarity:Lerp(C.void, 0.55) else C.glassHi, C.glass),
+			stroke(if known then rarity else C.off, 1.2, 0.25),
+		})
+		botViewport(cell, bot, 1, UDim2.new(1, 0, 0, 90), { silhouette = not known, animate = known })
+		text({ Position = UDim2.fromOffset(6, 90), Size = UDim2.new(1, -12, 0, 20), TextSize = 14, TextTruncate = Enum.TextTruncate.AtEnd, Text = if known then bot.name else "???", TextColor3 = if known then C.text else C.muted, Parent = cell })
+		text({ Position = UDim2.fromOffset(6, 112), Size = UDim2.new(1, -12, 0, 14), FontFace = DISPLAY, TextSize = 7, TextColor3 = rarity, Text = if hint and not known then hint else string.upper(bot.rarity), Parent = cell })
+		if known then
+			-- huy hiệu biến thể: sáng nếu đã từng có, mờ nếu chưa
+			local kinds = (state.variants or {})[bot.id] or {}
+			for k, variant in VARIANT_LIST do
+				text({ AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -4 - (#VARIANT_LIST - k) * 18, 0, 4), Size = UDim2.fromOffset(16, 16), TextSize = 13, Text = Config.VariantById[variant].emoji, TextTransparency = if kinds[variant] then 0 else 0.8, Parent = cell })
+			end
+		end
+	end
+	-- 👑 Boss Vault: bot SECRET chỉ rơi từ boss
+	local vault = {}
+	for _, bot in Config.Bots do
+		if bot.boss then
+			table.insert(vault, bot)
+		end
+	end
+	if #vault > 0 then
+		local got = 0
+		for _, bot in vault do
+			if state.discovered[bot.id] then
+				got += 1
+			end
+		end
+		section("👑 BOSS VAULT · SECRET", string.format("%d / %d  ·  %s per boss kill", got, #vault, oneIn(Config.BossDropChance)))
+		local cells = grid(UDim2.fromOffset(118, 136))
+		for i, bot in vault do
+			local zone = Config.ZoneById[bot.boss]
+			databaseCell(cells, i, bot, zone and string.upper("Boss: " .. zone.boss.name) or nil)
+		end
+	end
 	for _, capsule in Config.Capsules do
 		local count = countDiscovered(capsule)
-		local complete = count == #capsule.drops
+		local need = #Config.SetDrops(capsule)
+		local complete = count >= need
 		local claimed = state.claimedSets[capsule.id] == true
-		section(capsule.emoji .. " " .. string.upper(capsule.name), string.format("%d / %d", count, #capsule.drops))
+		section(capsule.emoji .. " " .. string.upper(capsule.name), string.format("%d / %d", count, need))
 		local cells = grid(UDim2.fromOffset(118, 136))
 		for i, drop in capsule.drops do
 			local bot = Config.BotById[drop.bot]
-			local known = state.discovered[bot.id] == true
-			local rarity = Config.RarityColors[bot.rarity]
-			local cell = new("Frame", { LayoutOrder = i, BackgroundColor3 = WHITE, BorderSizePixel = 0, Parent = cells }, {
-				corner(10),
-				vgradient(if known then rarity:Lerp(C.void, 0.55) else C.glassHi, C.glass),
-				stroke(if known then rarity else C.off, 1.2, 0.25),
-			})
-			botViewport(cell, bot, 1, UDim2.new(1, 0, 0, 90), { silhouette = not known, animate = known })
-			text({ Position = UDim2.fromOffset(6, 90), Size = UDim2.new(1, -12, 0, 20), TextSize = 14, TextTruncate = Enum.TextTruncate.AtEnd, Text = if known then bot.name else "???", TextColor3 = if known then C.text else C.muted, Parent = cell })
-			text({ Position = UDim2.fromOffset(6, 112), Size = UDim2.new(1, -12, 0, 14), FontFace = DISPLAY, TextSize = 7, TextColor3 = rarity, Text = string.upper(bot.rarity), Parent = cell })
-			if known then
-				-- huy hiệu biến thể: sáng nếu đã từng có, mờ nếu chưa
-				local kinds = (state.variants or {})[bot.id] or {}
-				for k, variant in { "Shiny", "Holo" } do
-					text({ AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -4 - (2 - k) * 18, 0, 4), Size = UDim2.fromOffset(16, 16), TextSize = 13, Text = Config.VariantById[variant].emoji, TextTransparency = if kinds[variant] then 0 else 0.8, Parent = cell })
-				end
+			if bot then
+				databaseCell(cells, i, bot)
 			end
 		end
 		local reward = string.format("Reward: +%s 💳 and +%d%% gather forever", short(capsule.reward.credits), math.floor(capsule.reward.gather * 100 + 0.5))
@@ -1243,7 +1280,7 @@ function panels.Database()
 			accent = if complete and not claimed then C.gold else nil,
 			buttons = {
 				{
-					text = if claimed then "✓ CLAIMED" elseif complete then "🎁 CLAIM" else string.format("%d / %d", count, #capsule.drops),
+					text = if claimed then "✓ CLAIMED" elseif complete then "🎁 CLAIM" else string.format("%d / %d", count, need),
 					color = if complete and not claimed then C.gold:Lerp(C.void, 0.2) else C.off,
 					onClick = if complete and not claimed then function()
 						fire("ClaimSet", capsule.id)
@@ -1663,7 +1700,8 @@ function panels.Guide()
 	guideRow("👑", C.gold, "Bosses", "Every stage has a boss. Everyone who deals damage gets the reward.")
 	section("🤖 BOTS & COLLECTION")
 	guideRow("🥚", C.orange, "Capsules", "Each capsule gives 1 bot. The exact odds are shown on every capsule.")
-	guideRow("✨", Color3.fromRGB(255, 215, 90), "Shiny & Holo", "Rare variants with x1.5 / x3 stats. Fuse 5 identical bots into the next variant.")
+	guideRow("✨", Color3.fromRGB(255, 215, 90), "Shiny, Holo & Void", "Rare variants with x1.5 / x3 / x5 stats. Fuse 5 identical bots into the next variant.")
+	guideRow("👑", Color3.fromRGB(90, 255, 220), "SECRET bots", "Each boss can drop its own SECRET bot. Everyone who hits the boss gets a roll!")
 	guideRow("🔒", C.gold, "Lock & upgrade", "Lock favourites so they're never recycled. Upgrade bots with credits.")
 	guideRow("📚", C.blue, "Bot Database", "Discover every bot of a capsule to claim a set reward and a permanent gather bonus.")
 	section("🏠 HABITAT")
@@ -1698,7 +1736,7 @@ local function panelSignature()
 	end
 	local parts = { openPanel, state.level, state.backpack, state.slots, #state.bots, tostring(state.luck), tostring(state.restricted), tostring(state.starterPack), tostring(state.daily.ready) .. state.daily.day }
 	for id, kinds in state.variants or {} do
-		table.insert(parts, id .. (if kinds.Shiny then "s" else "") .. (if kinds.Holo then "h" else ""))
+		table.insert(parts, id .. (if kinds.Shiny then "s" else "") .. (if kinds.Holo then "h" else "") .. (if kinds.Void then "v" else ""))
 	end
 	local h = state.habitat
 	if h and openPanel == "Habitat" then
@@ -1870,7 +1908,7 @@ local function capsuleDeal()
 end
 local function setClaimable()
 	for _, capsule in Config.Capsules do
-		if not state.claimedSets[capsule.id] and countDiscovered(capsule) == #capsule.drops then
+		if not state.claimedSets[capsule.id] and countDiscovered(capsule) >= #Config.SetDrops(capsule) then
 			return true
 		end
 	end
@@ -2329,6 +2367,7 @@ end
 local SPECIAL_REVEALS = {
 	Fuse = { name = "Fusion", color = Color3.fromRGB(170, 110, 255) },
 	Gift = { name = "Starter Pack", color = Color3.fromRGB(255, 205, 80) },
+	Boss = { name = "Boss Drop", color = Color3.fromRGB(90, 255, 220) },
 }
 
 local function playHatch(capsuleId, results)
@@ -2346,7 +2385,7 @@ local function playHatch(capsuleId, results)
 	end
 	-- biến thể hiếm cũng được ưu tiên lên sân khấu
 	for _, r in results do
-		if r.variant == "Holo" or (r.variant == "Shiny" and best.variant ~= "Holo") then
+		if (Config.VariantOrder[r.variant or ""] or 0) > (Config.VariantOrder[best.variant or ""] or 0) then
 			best = r
 		end
 	end
@@ -2356,7 +2395,7 @@ local function playHatch(capsuleId, results)
 	end
 	local variant = best.variant
 	local rarity = if variant then VARIANT_COLORS[variant] else Config.RarityColors[bot.rarity]
-	local rank = Config.RarityOrder[bot.rarity] + (if variant == "Holo" then 2 elseif variant == "Shiny" then 1 else 0)
+	local rank = Config.RarityOrder[bot.rarity] + (Config.VariantOrder[variant or ""] or 0)
 
 	hatchLayer.Visible = true
 	rays.Visible = false
@@ -2560,6 +2599,43 @@ remotes.Notify.OnClientEvent:Connect(function(message, action)
 	end
 end)
 
+-- ================= Thanh máu boss (trên giữa, khi đứng gần boss) =================
+
+local bossBar = glass({ AnchorPoint = Vector2.new(0.5, 0), Position = UDim2.new(0.5, 0, 0, 78), Size = UDim2.fromOffset(460, 50), BackgroundTransparency = 0.15, Visible = false, Parent = gui }, C.red, 12)
+local bossName = text({ Position = UDim2.fromOffset(12, 4), Size = UDim2.new(1, -24, 0, 18), FontFace = DISPLAY, TextSize = 11, TextXAlignment = Enum.TextXAlignment.Left, RichText = true, Text = "", Parent = bossBar })
+local bossHpText = text({ AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -12, 0, 4), Size = UDim2.fromOffset(160, 18), FontFace = DISPLAY, TextSize = 10, TextColor3 = C.muted, TextXAlignment = Enum.TextXAlignment.Right, Text = "", Parent = bossBar })
+local bossTrack = new("Frame", { Position = UDim2.fromOffset(12, 26), Size = UDim2.new(1, -24, 0, 14), BackgroundColor3 = C.void, BorderSizePixel = 0, Parent = bossBar }, { corner(7), stroke(C.red, 1, 0.4) })
+local bossFill = new("Frame", { Size = UDim2.fromScale(1, 1), BackgroundColor3 = WHITE, BorderSizePixel = 0, Parent = bossTrack }, {
+	corner(7),
+	new("UIGradient", { Color = ColorSequence.new(C.red, C.magenta) }),
+})
+-- vạch chia phase (66% / 33%)
+for _, at in { 0.66, 0.33 } do
+	new("Frame", { Position = UDim2.new(at, -1, 0, 0), Size = UDim2.new(0, 2, 1, 0), BackgroundColor3 = WHITE, BackgroundTransparency = 0.3, BorderSizePixel = 0, ZIndex = 3, Parent = bossTrack })
+end
+local shownRatio = 1
+RunService.Heartbeat:Connect(function(dt)
+	local body = Enemies.NearestBoss()
+	if not body then
+		bossBar.Visible = false
+		return
+	end
+	local maxHp = body:GetAttribute("MaxHp") or 1
+	local hp = body:GetAttribute("Hp") or maxHp
+	local phase = body:GetAttribute("Phase") or 1
+	local ratio = math.clamp(hp / math.max(1, maxHp), 0, 1)
+	if not bossBar.Visible then
+		shownRatio = ratio
+	end
+	shownRatio += (ratio - shownRatio) * math.min(1, dt * 8)
+	bossBar.Visible = true
+	bossFill.Size = UDim2.fromScale(shownRatio, 1)
+	local pips = string.rep("●", phase) .. string.rep("○", 3 - phase)
+	bossName.Text = string.format("👑 %s  <font color='#FF7A8C'>%s</font>%s", string.upper(body.Name), pips, if phase >= 3 then "  <font color='#FF4A5A'>ENRAGED</font>" else "")
+	bossHpText.Text = string.format("%s / %s", short(math.max(0, hp)), short(maxHp))
+end)
+
+Enemies.Start()
 Effects.Start(remotes:WaitForChild("Fx"))
 HabitatFx.Start()
 Fx.Start(workspace:WaitForChild("World"))

@@ -69,14 +69,15 @@ local function makeBot(bot, level, variant)
 	light.Range = 6 + size * 2
 	light.Brightness = 1.2
 	light.Parent = body
-	if variant == "Shiny" or variant == "Holo" then
-		-- biến thể: lấp lánh vàng (Shiny) hoặc cầu vồng (Holo)
+	if variant == "Shiny" or variant == "Holo" or variant == "Void" then
+		-- biến thể: lấp lánh vàng (Shiny), cầu vồng (Holo) hoặc bụi sao tím (Void)
 		local glitter = Instance.new("ParticleEmitter")
 		glitter.Color = if variant == "Holo"
 			then ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 80, 80)), ColorSequenceKeypoint.new(0.33, Color3.fromRGB(255, 255, 90)), ColorSequenceKeypoint.new(0.66, Color3.fromRGB(80, 255, 220)), ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 90, 255)) })
+			elseif variant == "Void" then ColorSequence.new(Color3.fromRGB(200, 100, 255), Color3.fromRGB(90, 40, 200))
 			else ColorSequence.new(Color3.fromRGB(255, 225, 120))
 		glitter.LightEmission = 1
-		glitter.Rate = if variant == "Holo" then 18 else 10
+		glitter.Rate = if variant == "Void" then 24 elseif variant == "Holo" then 18 else 10
 		glitter.Lifetime = NumberRange.new(0.6, 1.1)
 		glitter.Speed = NumberRange.new(0.4, 1.2)
 		glitter.SpreadAngle = Vector2.new(180, 180)
@@ -86,7 +87,7 @@ local function makeBot(bot, level, variant)
 		local sparkle = Instance.new("ParticleEmitter")
 		sparkle.Color = ColorSequence.new(Config.RarityColors[bot.rarity], bot.color)
 		sparkle.LightEmission = 1
-		sparkle.Rate = if bot.rarity == "Mythic" then 14 else 6
+		sparkle.Rate = if bot.rarity == "Secret" then 22 elseif bot.rarity == "Mythic" then 14 else 6
 		sparkle.Lifetime = NumberRange.new(0.5, 1)
 		sparkle.Speed = NumberRange.new(0.5, 1.5)
 		sparkle.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.2 + size * 0.05), NumberSequenceKeypoint.new(1, 0) })
@@ -275,6 +276,53 @@ function handlers.Aura(player, color, duration)
 		conn:Disconnect()
 		aura:Destroy()
 	end)
+end
+
+-- tìm mặt đất ngay dưới một điểm (bỏ qua nhân vật, quái, hiệu ứng) để đặt vòng cảnh báo
+local groundParams = RaycastParams.new()
+groundParams.FilterType = Enum.RaycastFilterType.Exclude
+local function groundAt(position)
+	local ignore = { fxFolder }
+	for _, name in { "Enemies", "EnemyFx", "HabitatFx" } do
+		local inst = workspace:FindFirstChild(name)
+		if inst then
+			table.insert(ignore, inst)
+		end
+	end
+	for _, other in Players:GetPlayers() do
+		if other.Character then
+			table.insert(ignore, other.Character)
+		end
+	end
+	groundParams.FilterDescendantsInstances = ignore
+	local hit = workspace:Raycast(position + Vector3.new(0, 6, 0), Vector3.new(0, -80, 0), groundParams)
+	return if hit then hit.Position else position
+end
+
+-- chiêu boss sắp nổ: viền đỏ + đĩa đỏ lớn dần trong `duration` giây. Ra khỏi vòng là né được!
+function handlers.Telegraph(position, radius, duration, color)
+	local at = groundAt(position) + Vector3.new(0, 0.15, 0)
+	local flat = CFrame.new(at) * CFrame.Angles(0, 0, math.pi / 2)
+	local alert = Color3.fromRGB(255, 60, 70):Lerp(color or Color3.new(1, 0, 0), 0.25)
+	local edge = part({ Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.12, radius * 2, radius * 2), CFrame = flat, Color = alert, Material = Enum.Material.Neon, Transparency = 0.55 })
+	local inner = part({ Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.18, radius * 2 - 0.8, radius * 2 - 0.8), CFrame = flat, Color = Color3.fromRGB(20, 8, 12), Material = Enum.Material.SmoothPlastic, Transparency = 0.6 })
+	local fill = part({ Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.24, 0.5, 0.5), CFrame = flat, Color = alert, Material = Enum.Material.Neon, Transparency = 0.35 })
+	TweenService:Create(fill, TweenInfo.new(duration, Enum.EasingStyle.Linear), { Size = Vector3.new(0.24, radius * 2, radius * 2) }):Play()
+	TweenService:Create(edge, TweenInfo.new(0.25, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), { Transparency = 0.15 }):Play()
+	task.delay(duration, function()
+		edge:Destroy()
+		inner:Destroy()
+		fill:Destroy()
+	end)
+end
+
+-- chiêu nổ / boss chuyển phase: vòng sóng xung kích lan ra + bụi sáng
+function handlers.Shockwave(position, radius, color)
+	local at = groundAt(position) + Vector3.new(0, 0.3, 0)
+	local wave = part({ Shape = Enum.PartType.Cylinder, Size = Vector3.new(0.4, 2, 2), CFrame = CFrame.new(at) * CFrame.Angles(0, 0, math.pi / 2), Color = color, Material = Enum.Material.Neon, Transparency = 0.1 })
+	fadeAndDestroy(wave, 0.45, { Size = Vector3.new(0.4, radius * 2.2, radius * 2.2), Transparency = 1 })
+	burst(at + Vector3.new(0, 2, 0), color, math.max(8, radius * 0.6))
+	Audio.Play("Explode", { position = at, volume = 1.3, pitch = 0.7 })
 end
 
 Effects.OnHurt = nil -- Main gán: chớp đỏ màn hình khi chính mình bị đánh

@@ -102,7 +102,9 @@ local function wholeNumber(x)
 	return x
 end
 
--- chuỗi gọn: bỏ ký tự điều khiển, cắt khoảng trắng 2 đầu, tối đa MAX_NAME ký tự; rỗng / sai kiểu -> nil
+-- chuỗi gọn cho dashboard: chỉ giữ chữ/số ASCII, khoảng trắng và _ - . : /
+-- (bỏ emoji như "💳 Credit Pack S" -> "Credit Pack S"), cắt khoảng trắng 2 đầu, tối đa MAX_NAME ký tự.
+-- Rỗng / sai kiểu -> nil
 local function cleanName(s)
 	if type(s) == "number" then
 		s = tostring(s)
@@ -110,19 +112,12 @@ local function cleanName(s)
 	if type(s) ~= "string" then
 		return nil
 	end
-	s = (s:gsub("%c", ""))
+	s = (s:gsub("[^%w _%-%.:/]", ""))
 	s = s:match("^%s*(.-)%s*$") or ""
 	if s == "" then
 		return nil
 	end
-	if #s > MAX_NAME then
-		-- cắt theo ký tự UTF-8 để không làm vỡ chữ có dấu / emoji
-		local ok, cut = pcall(utf8.offset, s, MAX_NAME + 1)
-		if ok and cut then
-			s = s:sub(1, cut - 1)
-		end
-	end
-	return s
+	return s:sub(1, MAX_NAME)
 end
 
 -- "IAP" / Enum.AnalyticsEconomyTransactionType.IAP -> "IAP"; sai -> "Gameplay"

@@ -185,6 +185,7 @@ local function reward(player, won)
 	PlayerService.AddCredits(player, credits)
 	if won then
 		profile.stats.eventWins = (profile.stats.eventWins or 0) + 1
+		PlayerService.Emit("EventWin", player, profile)
 		local capsule = PlayerService.BestCapsule(profile)
 		PlayerService.Notify(player, string.format("🏆 YOU WIN! +%s credits and a free %s", Config.Short(credits), capsule.name), "EventWin")
 		PlayerService.Hatch(player, profile, capsule, 1)

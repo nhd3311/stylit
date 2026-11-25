@@ -24,6 +24,25 @@ PlayerService.DamageArea = nil -- (player, position, radius, amount)
 PlayerService.BotsChanged = {} -- hàm(player, profile) chạy mỗi khi đội/kho bot đổi
 PlayerService.StateExtras = {} -- [tên] = hàm(player, profile) -> dữ liệu thêm vào state gửi client
 
+-- ===== Kênh sự kiện (event bus) =====
+-- Service khác nghe sự kiện game mà không cần sửa file này:
+--   PlayerService.On("Hatched", function(player, profile, data) ... end)
+-- Sự kiện: Loaded, Hatched {bot, variant}, Fused {bot, variant}, LevelUp {level}, BossKilled {zoneId},
+--   EventWin, SetClaimed {capsuleId}, Uploaded {amount, credits}, Spent {amount, kind}, Tutorial {step}
+local listeners = {}
+function PlayerService.On(name, fn)
+	listeners[name] = listeners[name] or {}
+	table.insert(listeners[name], fn)
+end
+function PlayerService.Emit(name, player, profile, data)
+	for _, fn in listeners[name] or {} do
+		local ok, err = pcall(fn, player, profile, data or {})
+		if not ok then
+			warn("[PlayerService] Lỗi khi xử lý sự kiện", name, err)
+		end
+	end
+end
+
 function PlayerService.Notify(player, message, action)
 	remotes.Notify:FireClient(player, message, action)
 end
@@ -343,6 +362,7 @@ function PlayerService.AddXp(player, amount)
 		end
 		local extra = if #unlocked > 0 then " Unlocked: " .. table.concat(unlocked, ", ") else ""
 		notify(player, string.format("⬆️ Level %d!%s", profile.level, extra), "LevelUp")
+		PlayerService.Emit("LevelUp", player, profile, { level = profile.level })
 		local root = rootOf(player)
 		if root then
 			PlayerService.Fx("LevelUp", root.Position)
@@ -370,6 +390,7 @@ function PlayerService.OnKill(player, def, zone, isBoss)
 	if isBoss then
 		profile.stats.bosses[zone.id] = true
 		notify(player, string.format("🏆 %s defeated! +%s credits", def.name, Config.Short(def.credits * creditMult(player, profile))), "Reward")
+		PlayerService.Emit("BossKilled", player, profile, { zoneId = zone.id })
 	end
 	PlayerService.AddXp(player, def.xp)
 end
@@ -407,6 +428,7 @@ local function upload(player, profile, quiet)
 	PlayerService.AddCredits(player, credits)
 	profile.stats.uploaded += amount
 	notify(player, string.format("📡 Uploaded %s data → +%s credits", Config.Short(amount), Config.Short(credits)), "Reward")
+	PlayerService.Emit("Uploaded", player, profile, { amount = amount, credits = credits })
 	PlayerService.AddXp(player, math.ceil(amount * 0.4))
 	PlayerService.PushState(player)
 end
@@ -496,6 +518,7 @@ function PlayerService.Hatch(player, profile, capsule, count)
 		markVariant(profile, bot.id, variant)
 		table.insert(profile.bots, { type = bot.id, level = 1, variant = variant })
 		table.insert(results, { id = bot.id, new = isNew, variant = variant })
+		PlayerService.Emit("Hatched", player, profile, { bot = bot, variant = variant, capsuleId = capsule.id, new = isNew })
 		if Config.RarityOrder[bot.rarity] >= Config.RarityOrder.Legendary or variant == "Holo" or (variant == "Shiny" and Config.RarityOrder[bot.rarity] >= Config.RarityOrder.Epic) then
 			announce(player, string.format("🌟 %s hatched a %s (%s)!", player.DisplayName, Config.BotLabel(bot, variant), bot.rarity))
 		end
@@ -543,6 +566,7 @@ function actions.OpenCapsule(player, profile, session, capsuleId, count)
 	end
 	session.lastHatch = os.clock()
 	profile.credits -= cost
+	PlayerService.Emit("Spent", player, profile, { amount = cost, kind = "Capsule" })
 	PlayerService.Hatch(player, profile, capsule, count)
 end
 
@@ -560,6 +584,7 @@ function actions.ClaimSet(player, profile, session, capsuleId)
 	profile.claimedSets[capsule.id] = true
 	PlayerService.AddCredits(player, capsule.reward.credits)
 	notify(player, string.format("📚 %s set complete! +%s credits, +%d%% gather forever", capsule.name, Config.Short(capsule.reward.credits), math.floor(capsule.reward.gather * 100 + 0.5)), "Reward")
+	PlayerService.Emit("SetClaimed", player, profile, { capsuleId = capsule.id })
 	PlayerService.PushState(player)
 end
 
@@ -579,6 +604,7 @@ function actions.UpgradeBot(player, profile, session, index)
 		return
 	end
 	profile.credits -= price
+	PlayerService.Emit("Spent", player, profile, { amount = price, kind = "Upgrade" })
 	entry.level += 1
 	notify(player, string.format("⬆️ %s is now level %d", bot.name, entry.level), "Reward")
 	publishBots(player, profile)
@@ -642,6 +668,7 @@ end
 function actions.Tutorial(player, profile, session, step)
 	if type(step) == "number" then
 		profile.tutorial = math.clamp(math.floor(step), 0, 99)
+		PlayerService.Emit("Tutorial", player, profile, { step = profile.tutorial })
 	end
 end
 
@@ -693,6 +720,8 @@ function actions.FuseBots(player, profile, session, botType, variant)
 	local isNew = not (profile.variants[bot.id] and profile.variants[bot.id][target])
 	table.insert(profile.bots, { type = bot.id, level = level, variant = target })
 	markVariant(profile, bot.id, target)
+	profile.stats.fused = (profile.stats.fused or 0) + 1
+	PlayerService.Emit("Fused", player, profile, { bot = bot, variant = target })
 	if target == "Holo" then
 		announce(player, string.format("🧬 %s fused a %s!", player.DisplayName, Config.BotLabel(bot, target)))
 	end
@@ -780,6 +809,7 @@ function actions.BuyBackpack(player, profile)
 		return
 	end
 	profile.credits -= nextTier.price
+	PlayerService.Emit("Spent", player, profile, { amount = nextTier.price, kind = "Backpack" })
 	profile.backpack += 1
 	notify(player, string.format("🎒 Upgraded to %s (%s capacity)", nextTier.name, Config.Short(PlayerService.Capacity(player, profile))), "Reward")
 	checkQuest(player, profile)
@@ -924,6 +954,7 @@ function PlayerService.OnPlayerLoaded(player, profile)
 	end
 	publishBots(player, profile)
 	PlayerService.PushState(player)
+	PlayerService.Emit("Loaded", player, profile)
 end
 
 function PlayerService.OnPlayerRemoving(player)

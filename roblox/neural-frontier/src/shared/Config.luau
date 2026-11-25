@@ -210,12 +210,18 @@ Config.GamePasses = {
 	LuckyScanner = { id = 0, name = "🍀 Lucky Scanner", description = "x1.5 luck on every capsule, forever", paidRandom = true },
 	TripleHatch = { id = 0, name = "🥚 Triple Hatch", description = "Open 3 credit capsules at once", paidRandom = true },
 	ShinyHunter = { id = 0, name = "✨ Shiny Hunter", description = "x2 chance for Shiny and Holo bots", paidRandom = true },
+	RapidFire = { id = 0, name = "⚡ Rapid Fire", description = "Your bots attack 2x faster" },
+	AutoHarvest = { id = 0, name = "🤖 Auto Harvest", description = "Your squad harvests nearby crystals for you" },
+	DataShield = { id = 0, name = "🛡️ Data Shield", description = "Keep your data when you get knocked out" },
+	CoreOverdrive = { id = 0, name = "🔋 Core Overdrive", description = "Abilities recharge 2x faster" },
+	ZoneWarp = { id = 0, name = "🌀 Zone Warp", description = "Teleport to any unlocked zone instantly" },
+	MegaStorage = { id = 0, name = "📦 Mega Storage", description = "+60 bot storage" },
 	BotSlots = { id = 0, name = "🤖 +3 Bot Slots", description = "Bring 3 more bots into battle" },
 	BigBackpack = { id = 0, name = "🎒 Big Backpack", description = "x2 backpack capacity forever" },
 	AutoUpload = { id = 0, name = "📡 Auto Upload", description = "Data uploads itself when your backpack is full" },
 	TurboBoots = { id = 0, name = "👟 Turbo Boots", description = "Run much faster" },
 }
--- kind: Boost (boosts = { tên = giây thật }) | Credits (minutes: số phút thu nhập, min)
+-- kind: Boost (boosts = { tên = giây thật }: Credits, Gather, Luck, Clones) | Credits (minutes: số phút thu nhập, min)
 --       Capsule (capsule = id, count = số capsule mở ngay)
 --       Bundle (gói cố định, không ngẫu nhiên: bot chắc chắn + credits + boost; once = chỉ bán 1 lần)
 Config.DevProducts = {
@@ -224,7 +230,10 @@ Config.DevProducts = {
 	NeonCapsule3 = { id = 0, kind = "Capsule", capsule = "Neon", count = 3, name = "💎 Neon Capsule x3", paidRandom = true },
 	NeonCapsule10 = { id = 0, kind = "Capsule", capsule = "Neon", count = 10, name = "💎 Neon Capsule x10", paidRandom = true },
 	LuckBoost = { id = 0, kind = "Boost", boosts = { Luck = 15 * 60 }, name = "🍀 x2 Luck (15 min)", paidRandom = true },
-	CreditBoost = { id = 0, kind = "Boost", boosts = { Credits = 15 * 60 }, name = "💰 x2 Credits (15 min)" },
+	CreditBoost = { id = 0, kind = "Boost", boosts = { Credits = 30 * 60 }, name = "💰 x2 Credits (30 min)" },
+	CloneSquad = { id = 0, kind = "Boost", boosts = { Clones = 15 * 60 }, name = "👥 x4 Clone Squad (15 min)" },
+	-- ServerBoost: bật cho CẢ server (mọi người cùng hưởng, cả server được báo tên người mua)
+	ServerLuck = { id = 0, kind = "ServerBoost", boost = "Luck", seconds = 15 * 60, name = "🌍 Server x2 Luck (15 min)", paidRandom = true },
 	GatherBoost = { id = 0, kind = "Boost", boosts = { Gather = 15 * 60 }, name = "💾 x2 Gather (15 min)" },
 	MegaBoost = { id = 0, kind = "Boost", boosts = { Credits = 30 * 60, Gather = 30 * 60 }, name = "🚀 Mega Boost (30 min)" },
 	-- Credits mua được capsule nên cũng tính là paidRandom
@@ -237,11 +246,19 @@ Config.ShopRobux = {
 	{ "pass", "LuckyScanner" },
 	{ "pass", "TripleHatch" },
 	{ "pass", "ShinyHunter" },
+	{ "pass", "RapidFire" },
+	{ "pass", "AutoHarvest" },
+	{ "pass", "DataShield" },
+	{ "pass", "CoreOverdrive" },
+	{ "pass", "ZoneWarp" },
+	{ "pass", "MegaStorage" },
 	{ "pass", "BotSlots" },
 	{ "pass", "BigBackpack" },
 	{ "pass", "AutoUpload" },
 	{ "pass", "TurboBoots" },
 	{ "product", "MegaBoost" },
+	{ "product", "CloneSquad" },
+	{ "product", "ServerLuck" },
 	{ "product", "LuckBoost" },
 	{ "product", "CreditBoost" },
 	{ "product", "GatherBoost" },
@@ -249,7 +266,11 @@ Config.ShopRobux = {
 	{ "product", "CreditsLarge" },
 }
 Config.NeonProducts = { "NeonCapsule1", "NeonCapsule3", "NeonCapsule10" }
-Config.Multipliers = { Vip = 2, CreditBoost = 2, GatherBoost = 2, LuckBoost = 2, LuckyPass = 1.5 }
+Config.Multipliers = { Vip = 2, CreditBoost = 2, GatherBoost = 2, LuckBoost = 2, LuckyPass = 1.5, ServerLuck = 2 }
+-- Clone Squad: số bản sao hologram của bot mạnh nhất và % sức mạnh mỗi bản sao
+Config.Clones = { count = 4, power = 0.5 }
+Config.MegaStorageBonus = 60
+Config.AutoHarvestRange = 30
 
 -- ===== Tra cứu nhanh =====
 local function index(list)

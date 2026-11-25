@@ -253,13 +253,15 @@ function EnemyService.Start()
 		end
 	end)
 
-	-- Đội bot của mỗi người chơi tự bắn quái gần nhất mỗi giây
+	-- Đội bot của mỗi người chơi tự bắn quái gần nhất mỗi giây (Rapid Fire: mỗi 0.5 giây)
 	task.spawn(function()
+		local beat = 0
 		while true do
-			task.wait(1)
+			task.wait(0.5)
+			beat += 1
 			for _, player in Players:GetPlayers() do
 				local root = rootOf(player)
-				if root then
+				if root and (beat % 2 == 0 or player:GetAttribute("RapidFire")) then
 					local enemy = nearestEnemy(root.Position, 26)
 					local dps = PlayerService.BotAttack(player)
 					if enemy and dps > 0 then

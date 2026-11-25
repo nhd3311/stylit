@@ -67,7 +67,7 @@ local function makeBot(bot, level, variant)
 	light.Range = 6 + size * 2
 	light.Brightness = 1.2
 	light.Parent = body
-	if variant then
+	if variant == "Shiny" or variant == "Holo" then
 		-- biến thể: lấp lánh vàng (Shiny) hoặc cầu vồng (Holo)
 		local glitter = Instance.new("ParticleEmitter")
 		glitter.Color = if variant == "Holo"

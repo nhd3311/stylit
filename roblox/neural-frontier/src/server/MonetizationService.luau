@@ -108,6 +108,15 @@ local function grantProduct(player, profile, product)
 		-- đồ đã trả tiền: cho vượt giới hạn kho bot để không mất lượt mua
 		PlayerService.Hatch(player, profile, capsule, product.count)
 		return true, product.name
+	elseif product.kind == "ServerBoost" then
+		-- bật cho cả server; mua chồng thì cộng dồn thời gian
+		local key = "Server" .. product.boost .. "Until"
+		workspace:SetAttribute(key, math.max(os.time(), workspace:GetAttribute(key) or 0) + product.seconds)
+		for _, other in Players:GetPlayers() do
+			remotes.Notify:FireClient(other, string.format("🌍 %s activated %s for EVERYONE! Thank you! 💖", player.DisplayName, product.name), "Announce")
+			PlayerService.PushState(other)
+		end
+		return true, product.name
 	elseif product.kind == "Bundle" then
 		-- gói cố định (không ngẫu nhiên): bot chắc chắn + credits + boost
 		local bot = product.bot and Config.BotById[product.bot]

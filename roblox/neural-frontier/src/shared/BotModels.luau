@@ -228,7 +228,7 @@ end
 
 -- ================= API =================
 
--- bot: dòng trong Config.Bots. level: cấp nâng (to dần 4%/cấp). variant: nil | "Shiny" | "Holo"
+-- bot: dòng trong Config.Bots. level: cấp nâng (to dần 4%/cấp). variant: nil | "Shiny" | "Holo" | "Clone"
 function BotModels.Build(bot, level, variant)
 	local s = bot.size * (1 + ((level or 1) - 1) * 0.04)
 	local accent = bot.accent or bot.color:Lerp(WHITE, 0.45)
@@ -246,6 +246,15 @@ function BotModels.Build(bot, level, variant)
 				part.Color = SHINY_METAL
 				part.Material = Enum.Material.Metal
 				part.Reflectance = 0.25
+			end
+		end
+	elseif variant == "Clone" then
+		-- bản sao hologram (Clone Squad): vật liệu ForceField lấp lánh màu xanh
+		for _, part in rig.model:GetDescendants() do
+			if part:IsA("BasePart") then
+				part.Material = Enum.Material.ForceField
+				part.Color = Color3.fromRGB(90, 220, 255)
+				part.Transparency = 0
 			end
 		end
 	elseif variant == "Holo" then

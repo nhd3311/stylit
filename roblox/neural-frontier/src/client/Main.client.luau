@@ -370,7 +370,9 @@ hoverable(starterButton)
 -- ---------- Vùng + ba lô (trên giữa) ----------
 local zoneBanner = glass({ AnchorPoint = Vector2.new(0.5, 0), Position = UDim2.new(0.5, 0, 0, 6), Size = UDim2.fromOffset(400, 32), Parent = gui }, C.cyan, 16)
 local zoneStroke = zoneBanner:FindFirstChildOfClass("UIStroke")
-local zoneText = text({ Size = UDim2.fromScale(1, 1), FontFace = DISPLAY, TextSize = 11, Text = "HUB", Parent = zoneBanner })
+local zoneText = text({ Size = UDim2.new(1, -36, 1, 0), Position = UDim2.fromOffset(4, 0), FontFace = DISPLAY, TextSize = 11, Text = "HUB", Parent = zoneBanner })
+-- nút 🌀 mở bảng dịch chuyển (về Hub miễn phí, tới vùng cần Zone Warp)
+local warpButton = button({ Parent = zoneBanner, AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -3, 0.5, 0), Size = UDim2.fromOffset(28, 26), Text = "🌀", TextSize = 14, Color = C.violet, onClick = function() end })
 local dataBar = bar(gui, UDim2.new(0.5, -200, 0, 44), UDim2.fromOffset(400, 26), C.cyan, C.blue, 20)
 local DATA_OK = ColorSequence.new(C.cyan, C.blue)
 local DATA_FULL = ColorSequence.new(C.magenta, C.red)
@@ -422,6 +424,7 @@ local BOOSTS = {
 	Credits = { label = "💰 x2 CREDITS", color = C.gold },
 	Gather = { label = "💾 x2 GATHER", color = C.cyan },
 	Luck = { label = "🍀 x2 LUCK", color = C.lime },
+	Clones = { label = "👥 x4 CLONES", color = C.cyan },
 }
 local function renderBoosts()
 	for _, child in boostList:GetChildren() do
@@ -441,6 +444,12 @@ local function renderBoosts()
 	end
 	local now = workspace:GetServerTimeNow()
 	local order = 1
+	-- Server Luck do người khác mua: mọi người cùng thấy
+	local serverLuck = math.floor((workspace:GetAttribute("ServerLuckUntil") or 0) - now)
+	if serverLuck > 0 then
+		chip(order, string.format("🌍 SERVER LUCK x2  <font color='#7CFF9A'>%d:%02d</font>", serverLuck // 60, serverLuck % 60), C.lime)
+		order += 1
+	end
 	for key, expiry in state.boosts or {} do
 		local info = BOOSTS[key]
 		local left = math.floor(expiry - now)
@@ -577,6 +586,11 @@ local function abilityTile(order, emoji, key, name, color, onPress)
 	return { shade = shade, timer = timer, lock = lock }
 end
 
+-- Core Overdrive: hồi chiêu nhanh x2
+local function coreCooldown(core)
+	return core.cooldown * (if player:GetAttribute("CoreOverdrive") then 0.5 else 1)
+end
+
 local function useCore(core)
 	if not state then
 		return
@@ -589,7 +603,7 @@ local function useCore(core)
 	if (cooldownUntil[core.id] or 0) > t then
 		return
 	end
-	cooldownUntil[core.id] = t + core.cooldown
+	cooldownUntil[core.id] = t + coreCooldown(core)
 	if core.id == "Dash" then
 		-- client sở hữu vật lý nhân vật nên tự đẩy về phía trước
 		local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
@@ -852,6 +866,7 @@ local function shopCard(parent, cardOrder, name, description, color, owned, id, 
 end
 
 local panels = {}
+local EXTRA_PANELS -- bảng phụ (Warp), định nghĩa ở dưới
 local renderPanel -- khai báo trước (các bảng gọi để chuyển qua bảng khác), định nghĩa ở dưới
 local function goPanel(id)
 	return function()
@@ -975,7 +990,7 @@ function panels.Bots()
 		row({ icon = "🧬", iconColor = C.off, title = "No duplicates yet", sub = string.format("Collect %d of the same bot to fuse a ✨ Shiny. %d Shinies make a 🌈 Holo!", Config.FuseCount, Config.FuseCount), height = 56 })
 	end
 
-	section("STORAGE", string.format("%d / %d bots", #state.bots, Config.MaxBots))
+	section("STORAGE", string.format("%d / %d bots", #state.bots, state.maxBots or Config.MaxBots))
 	row({
 		icon = "♻",
 		iconColor = C.off,
@@ -1284,7 +1299,7 @@ function panels.Gear()
 			icon = core.emoji,
 			iconColor = CORE_COLORS[core.id],
 			title = string.format("%s  [%s]", string.upper(core.name), core.key),
-			sub = string.format("%s · %ss cooldown", core.desc, core.cooldown),
+			sub = string.format("%s · %ss cooldown%s", core.desc, stat(coreCooldown(core)), if player:GetAttribute("CoreOverdrive") then " (Overdrive)" else ""),
 			accent = if unlocked then CORE_COLORS[core.id] else nil,
 			dim = not unlocked,
 			buttons = { { text = if unlocked then "✓ ONLINE" else "🔒 LV." .. core.level, color = if unlocked then C.glassHi else C.off } },
@@ -1315,7 +1330,18 @@ function panels.Quests()
 end
 
 local PASS_COLORS = { VIP = C.gold, LuckyScanner = C.lime, TripleHatch = C.orange, ShinyHunter = Color3.fromRGB(255, 215, 90), BotSlots = C.magenta, BigBackpack = C.cyan, AutoUpload = C.blue, TurboBoots = C.lime }
-local PRODUCT_COLORS = { MegaBoost = C.magenta, LuckBoost = C.lime, CreditBoost = C.gold, GatherBoost = C.cyan, CreditsSmall = C.gold, CreditsLarge = C.gold }
+local PRODUCT_COLORS = { MegaBoost = C.magenta, CloneSquad = C.cyan, ServerLuck = C.lime, LuckBoost = C.lime, CreditBoost = C.gold, GatherBoost = C.cyan, CreditsSmall = C.gold, CreditsLarge = C.gold }
+PASS_COLORS.RapidFire = C.gold
+PASS_COLORS.AutoHarvest = C.cyan
+PASS_COLORS.DataShield = C.blue
+PASS_COLORS.CoreOverdrive = C.lime
+PASS_COLORS.ZoneWarp = C.violet
+PASS_COLORS.MegaStorage = C.orange
+-- mô tả riêng cho từng gói (gói nào không có thì dùng mô tả chung theo loại)
+local PRODUCT_DESC = {
+	CloneSquad = "4 hologram clones of your best bot fight and gather with you (50% power each).",
+	ServerLuck = "Doubles luck for EVERYONE in the server. Your name gets announced!",
+}
 
 function panels.Shop()
 	if not state.starterPack then
@@ -1369,8 +1395,10 @@ function panels.Shop()
 				buyPass(entry)
 			end)
 		else
-			local description
-			if entry.kind == "Credits" then
+			local description = PRODUCT_DESC[key]
+			if description then
+				-- mô tả riêng
+			elseif entry.kind == "Credits" then
 				description = string.format("Instant credits: about %d min of gathering in your best zone (at least %s).", entry.minutes, short(entry.min))
 			elseif entry.boosts and entry.boosts.Luck then
 				description = "x2 chance for Epic, Legendary and Mythic bots. Timer runs in real time."
@@ -1389,6 +1417,43 @@ function panels.Shop()
 end
 
 -- chữ ký: chỉ vẽ lại bảng khi thứ hiển thị trong bảng thật sự đổi
+-- bảng không nằm trong menu trái
+EXTRA_PANELS = {
+	Warp = { title = "ZONE WARP", icon = "🌀", color = C.violet },
+}
+
+function panels.Warp()
+	local pass = player:GetAttribute("ZoneWarp") == true
+	section("TELEPORT", if pass then "Zone Warp active" else "Returning to the Hub is free")
+	row({ icon = "🏙️", iconColor = C.cyan, title = "Hub", sub = "Upload data, Capsule Lab, shops, Glitch Floor portal", buttons = { { text = "🌀 WARP", color = C.cyan:Lerp(C.void, 0.3), onClick = function()
+		fire("Warp", "Hub")
+		openPanel = nil
+		renderPanel()
+	end } }, height = 58 })
+	for _, zone in Config.Zones do
+		local unlocked = state.level >= zone.level
+		local can = pass and unlocked
+		row({
+			icon = zone.emoji,
+			iconColor = zone.crystal,
+			title = zone.name,
+			sub = if unlocked then string.format("Data x%d", zone.dataMult) else string.format("Unlocks at level %d", zone.level),
+			dim = not unlocked,
+			accent = if can then zone.crystal else nil,
+			buttons = { {
+				text = if not unlocked then "🔒 LV." .. zone.level elseif pass then "🌀 WARP" else "🌀 PASS",
+				color = if can then C.violet elseif unlocked then C.violet:Lerp(C.void, 0.5) else C.off,
+				onClick = if can then function()
+					fire("Warp", zone.id)
+					openPanel = nil
+					renderPanel()
+				end elseif unlocked then goPanel("Shop") else nil,
+			} },
+			height = 58,
+		})
+	end
+end
+
 local function panelSignature()
 	local parts = { openPanel, state.level, state.backpack, state.slots, #state.bots, tostring(state.luck), tostring(state.restricted), tostring(state.starterPack), tostring(state.daily.ready) .. state.daily.day }
 	for id, kinds in state.variants or {} do
@@ -1417,7 +1482,7 @@ end
 
 local lastSig
 function renderPanel(animate)
-	local entry = openPanel and MENU_BY_ID[openPanel]
+	local entry = openPanel and (MENU_BY_ID[openPanel] or EXTRA_PANELS[openPanel])
 	if not entry or not state then
 		openPanel = nil
 		panel.Visible = false
@@ -1478,6 +1543,7 @@ for i, entry in MENU do
 end
 
 starterButton.Activated:Connect(goPanel("Shop"))
+warpButton.Activated:Connect(goPanel("Warp"))
 
 -- có việc nên làm thì hiện chấm "!" trên menu
 local function anyBotDeal()
@@ -1582,7 +1648,7 @@ RunService.RenderStepped:Connect(function(dt)
 		local tile = tiles[core.id]
 		local left = (cooldownUntil[core.id] or 0) - t
 		if left > 0 then
-			tile.shade.Size = UDim2.fromScale(1, math.clamp(left / core.cooldown, 0, 1))
+			tile.shade.Size = UDim2.fromScale(1, math.clamp(left / coreCooldown(core), 0, 1))
 			tile.timer.Text = if left >= 1 then tostring(math.ceil(left)) else string.format("%.1f", left)
 		elseif tile.timer.Text ~= "" then
 			tile.shade.Size = UDim2.fromScale(1, 0)

@@ -98,18 +98,26 @@ Trên điện thoại có sẵn nút bấm cho từng kỹ năng và nút 💾 t
 | Dev Product | 🍀 x2 Luck | x2 tỉ lệ Epic+ trong 15 phút | 49 R$ |
 | Game Pass | 🍀 Lucky Scanner | x1.5 luck vĩnh viễn | 249 R$ |
 | Game Pass | ✨ Shiny Hunter | x2 cơ hội Shiny/Holo | 299 R$ |
+| Game Pass | ⚡ Rapid Fire | Bot bắn nhanh x2 | 249 R$ |
+| Game Pass | 🤖 Auto Harvest | Đội bot tự hút tinh thể gần nhất mỗi giây, khỏi bấm | 199 R$ |
+| Game Pass | 🛡️ Data Shield | Bị hạ gục không mất data đang mang | 149 R$ |
+| Game Pass | 🔋 Core Overdrive | Kỹ năng hồi chiêu nhanh x2 | 149 R$ |
+| Game Pass | 🌀 Zone Warp | Dịch chuyển tức thì tới vùng đã mở (nút 🌀 trên thanh vùng). Về Hub thì miễn phí cho mọi người | 99 R$ |
+| Game Pass | 📦 Mega Storage | Kho bot +60 | 99 R$ |
+| Dev Product | 👥 x4 Clone Squad (15') | 4 bản sao hologram của bot mạnh nhất cùng đánh và thu thập (mỗi bản 50% sức mạnh) | 49 R$ |
+| Dev Product | 🌍 Server x2 Luck (15') | x2 luck cho **cả server**, cả server được báo tên người mua | 99 R$ |
 | Game Pass | 🥚 Triple Hatch | Mở 3 capsule Credits một lần | 199 R$ |
 | Game Pass | ⭐ VIP | x2 Credits khi upload, tag VIP | 199 R$ |
 | Game Pass | 🤖 +3 Bot Slots | Mang thêm 3 bot ra trận | 299 R$ |
 | Game Pass | 🎒 Big Backpack · 📡 Auto Upload · 👟 Turbo Boots | Ba lô x2 · tự upload · chạy nhanh | 99–149 R$ |
-| Dev Product | 🚀 Mega Boost · 💰 / 💾 Boost | x2 Credits và/hoặc Gather | 29–79 R$ |
+| Dev Product | 🚀 Mega Boost · 💰 x2 Credits (30') · 💾 x2 Gather (15') | x2 Credits và/hoặc Gather | 29–79 R$ |
 | Dev Product | 💳 Credit Pack S / L | Credits tự tăng theo tiến độ | 49 / 199 R$ |
 
 Giá là gợi ý, anh tự đặt trên Creator Dashboard. **x3 và x10 rẻ hơn thật** so với mua lẻ, không dùng giá gạch giả. Starter Pack là gói **cố định, không ngẫu nhiên** nên ai cũng mua được.
 
 ### ⚖️ Làm đúng luật Roblox về vật phẩm ngẫu nhiên trả tiền
 - **Luôn hiện tỉ lệ rơi** ở Capsule Lab, trên bệ trưng bày trong map và trong hoạt cảnh mở.
-- Game kiểm tra `PolicyService:GetPolicyInfoForPlayerAsync()`. Người chơi ở nơi luật cấm (`ArePaidRandomItemsRestricted`) sẽ **không thấy** Neon Capsule, Luck, Shiny Hunter, Triple Hatch và Credit Pack (các món có `paidRandom = true` trong Config). Họ vẫn mở capsule bằng Credits kiếm được khi chơi.
+- Game kiểm tra `PolicyService:GetPolicyInfoForPlayerAsync()`. Người chơi ở nơi luật cấm (`ArePaidRandomItemsRestricted`) sẽ **không thấy** Neon Capsule, Luck, Server Luck, Shiny Hunter, Triple Hatch và Credit Pack (các món có `paidRandom = true` trong Config). Họ vẫn mở capsule bằng Credits kiếm được khi chơi.
 - Cơ hội ✨ Shiny / 🌈 Holo cũng được hiện rõ trên từng capsule.
 - Khi publish, trong **Maturity & Compliance Questionnaire** nhớ khai là game **có paid random items**.
 
@@ -118,7 +126,7 @@ Giá là gợi ý, anh tự đặt trên Creator Dashboard. **x3 và x10 rẻ h�
 1. Mở `NeuralFrontier.rbxlx` bằng Studio (**File → Open from File**), rồi bấm **Play**. Chưa publish vẫn chơi được ở chế độ thử, nhưng data không được lưu.
 2. Muốn lưu data thì **Publish** game, rồi bật **Game Settings → Security → Enable Studio Access to API Services**.
 3. Muốn thử nhiều người chơi: tab **Test → Clients and Servers → 2 Players → Start**.
-4. Vào Creator Dashboard, tạo 8 Game Pass `VIP`, `LuckyScanner`, `TripleHatch`, `ShinyHunter`, `BotSlots`, `BigBackpack`, `AutoUpload`, `TurboBoots` và 10 Developer Product `StarterPack`, `NeonCapsule1`, `NeonCapsule3`, `NeonCapsule10`, `LuckBoost`, `CreditBoost`, `GatherBoost`, `MegaBoost`, `CreditsSmall`, `CreditsLarge`.
+4. Vào Creator Dashboard, tạo 14 Game Pass `VIP`, `LuckyScanner`, `TripleHatch`, `ShinyHunter`, `RapidFire`, `AutoHarvest`, `DataShield`, `CoreOverdrive`, `ZoneWarp`, `MegaStorage`, `BotSlots`, `BigBackpack`, `AutoUpload`, `TurboBoots` và 12 Developer Product `StarterPack`, `NeonCapsule1`, `NeonCapsule3`, `NeonCapsule10`, `LuckBoost`, `CloneSquad`, `ServerLuck`, `CreditBoost`, `GatherBoost`, `MegaBoost`, `CreditsSmall`, `CreditsLarge`.
 5. Dán ID vào `src/shared/Config.luau`. Khi ID còn là `0`, nút trong shop sẽ hiện "Set ID".
 
 Dùng Rojo thì chạy `rojo serve` trong thư mục này.

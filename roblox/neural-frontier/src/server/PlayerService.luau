@@ -46,6 +46,10 @@ end
 
 -- ================= Chỉ số =================
 
+local function maxBots(player)
+	return Config.MaxBots + (if player:GetAttribute("MegaStorage") then Config.MegaStorageBonus else 0)
+end
+
 local function slots(player)
 	return Config.BotSlots + (if player:GetAttribute("BotSlots") then Config.ExtraSlotsPass else 0)
 end
@@ -103,11 +107,31 @@ function PlayerService.Luck(player, profile)
 	if boostOn(profile, "Luck") then
 		luck *= Config.Multipliers.LuckBoost
 	end
+	-- ai đó mua Server Luck: cả server cùng hưởng
+	if (workspace:GetAttribute("ServerLuckUntil") or 0) > os.time() then
+		luck *= Config.Multipliers.ServerLuck
+	end
 	return luck
 end
 
+-- Clone Squad: thêm N bản sao của bot mạnh nhất, mỗi bản sao có % sức mạnh
+local function bestEquipped(player, profile)
+	local list = equipped(player, profile)
+	return list[1] and profile.bots[list[1]]
+end
+local function cloneBonus(player, profile, stat)
+	if not boostOn(profile, "Clones") then
+		return 0
+	end
+	local best = bestEquipped(player, profile)
+	if not best then
+		return 0
+	end
+	return Config.BotStat(Config.BotById[best.type], best.level, stat, best.variant) * Config.Clones.power * Config.Clones.count
+end
+
 function PlayerService.GatherPerSecond(player, profile)
-	local total = 0
+	local total = cloneBonus(player, profile, "gather")
 	for _, i in equipped(player, profile) do
 		local entry = profile.bots[i]
 		total += Config.BotStat(Config.BotById[entry.type], entry.level, "gather", entry.variant)
@@ -127,7 +151,7 @@ function PlayerService.BotAttack(player)
 	if not profile then
 		return 0
 	end
-	local total = 0
+	local total = cloneBonus(player, profile, "attack")
 	for _, i in equipped(player, profile) do
 		local entry = profile.bots[i]
 		total += Config.BotStat(Config.BotById[entry.type], entry.level, "attack", entry.variant)
@@ -154,6 +178,13 @@ local function publishBots(player, profile)
 	for _, i in equipped(player, profile) do
 		local entry = profile.bots[i]
 		table.insert(parts, entry.type .. ":" .. entry.level .. ":" .. (entry.variant or ""))
+	end
+	-- bản sao hologram (Clone Squad) bay cùng đội
+	local best = bestEquipped(player, profile)
+	if best and boostOn(profile, "Clones") then
+		for _ = 1, Config.Clones.count do
+			table.insert(parts, best.type .. ":" .. best.level .. ":Clone")
+		end
 	end
 	player:SetAttribute("Bots", table.concat(parts, ","))
 end
@@ -224,6 +255,7 @@ function PlayerService.PushState(player)
 		backpack = profile.backpack,
 		bots = profile.bots,
 		equipped = equipped(player, profile),
+		maxBots = maxBots(player),
 		slots = slots(player),
 		gather = PlayerService.GatherPerSecond(player, profile),
 		attack = PlayerService.BotAttack(player),
@@ -369,6 +401,12 @@ end
 
 -- ================= Hành động =================
 
+local function harvestNode(player, profile, node, zone)
+	WorldService.HarvestNode(node)
+	local gained = addData(player, profile, zone.nodeValue * (1 + 0.05 * (profile.level - 1)))
+	PlayerService.Fx("Harvest", node.Position, zone.crystal, math.floor(gained))
+end
+
 function actions.Harvest(player, profile, session)
 	local t = os.clock()
 	if t - session.lastHarvest < Config.Player.HarvestCooldown then
@@ -387,9 +425,7 @@ function actions.Harvest(player, profile, session)
 		notify(player, "🎒 Backpack full! Upload at the Hub")
 		return
 	end
-	WorldService.HarvestNode(node)
-	local gained = addData(player, profile, zone.nodeValue * (1 + 0.05 * (profile.level - 1)))
-	PlayerService.Fx("Harvest", node.Position, zone.crystal, math.floor(gained))
+	harvestNode(player, profile, node, zone)
 end
 
 -- Quay 1 bot theo tỉ lệ (đã tính luck)
@@ -480,7 +516,7 @@ function actions.OpenCapsule(player, profile, session, capsuleId, count)
 		notify(player, string.format("🔒 %s unlocks at level %d", capsule.name, capsule.level))
 		return
 	end
-	if #profile.bots + count > Config.MaxBots then
+	if #profile.bots + count > maxBots(player) then
 		notify(player, "🤖 Bot storage is full. Recycle some bots first!")
 		return
 	end
@@ -667,6 +703,33 @@ function actions.ClaimDaily(player, profile)
 	PlayerService.PushState(player)
 end
 
+-- Dịch chuyển: về Hub miễn phí cho mọi người; tới vùng cần Game Pass Zone Warp
+function actions.Warp(player, profile, session, target)
+	local t = os.clock()
+	if t - (session.lastWarp or 0) < 3 or not rootOf(player) then
+		return
+	end
+	if target == "Hub" then
+		session.lastWarp = t
+		player.Character:PivotTo(WorldService.HubSpawn())
+		return
+	end
+	local zone = type(target) == "string" and Config.ZoneById[target]
+	if not zone then
+		return
+	end
+	if not player:GetAttribute("ZoneWarp") then
+		notify(player, "🌀 Get the Zone Warp pass to teleport to zones")
+		return
+	end
+	if profile.level < zone.level then
+		notify(player, string.format("🔒 %s needs level %d", zone.name, zone.level))
+		return
+	end
+	session.lastWarp = t
+	player.Character:PivotTo(CFrame.new(zone.center + Vector3.new(0, 4, zone.size / 2 - 10)))
+end
+
 function actions.BuyBackpack(player, profile)
 	local nextTier = Config.Backpacks[profile.backpack + 1]
 	if not nextTier then
@@ -693,7 +756,8 @@ function actions.UseCore(player, profile, session, coreId)
 	if (session.cooldowns[core.id] or 0) > t then
 		return
 	end
-	session.cooldowns[core.id] = t + core.cooldown - 0.1 -- trừ chút độ trễ mạng
+	-- Core Overdrive: hồi chiêu nhanh x2; trừ chút độ trễ mạng
+	session.cooldowns[core.id] = t + core.cooldown * (if player:GetAttribute("CoreOverdrive") then 0.5 else 1) - 0.1
 	local root = rootOf(player)
 	local humanoid = humanoidOf(player)
 	if not root or not humanoid or humanoid.Health <= 0 then
@@ -756,9 +820,22 @@ local function tick()
 			if gained > 0 then
 				PlayerService.Fx("Gather", player, zone.crystal)
 			end
+			-- Auto Harvest: đội bot tự hút 1 tinh thể gần nhất mỗi giây
+			if player:GetAttribute("AutoHarvest") and profile.data < PlayerService.Capacity(player, profile) then
+				local node, nodeZone = WorldService.NearestNode(root.Position, Config.AutoHarvestRange)
+				if node and nodeZone and profile.level >= nodeZone.level then
+					harvestNode(player, profile, node, nodeZone)
+				end
+			end
 			if profile.data >= PlayerService.Capacity(player, profile) and player:GetAttribute("AutoUpload") then
 				upload(player, profile, true)
 			end
+		end
+		-- Clone Squad hết giờ / vừa bật: vẽ lại đội bot
+		local clones = boostOn(profile, "Clones")
+		if clones ~= session.clonesShown then
+			session.clonesShown = clones
+			publishBots(player, profile)
 		end
 		PlayerService.PushState(player)
 	end
@@ -793,6 +870,10 @@ function PlayerService.OnPlayerLoaded(player, profile)
 		humanoid.Health = humanoid.MaxHealth
 		humanoid.Died:Connect(function()
 			if profile.data > 0 then
+				if player:GetAttribute("DataShield") then
+					notify(player, "🛡️ Data Shield kept your data safe!")
+					return
+				end
 				notify(player, string.format("💀 You were knocked out and lost %s data!", Config.Short(profile.data)))
 				profile.data = 0
 			end

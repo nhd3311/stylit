@@ -8,6 +8,8 @@ local TweenService = game:GetService("TweenService")
 
 local BotModels = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("BotModels"))
 local Config = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Config"))
+local Audio = require(script.Parent:WaitForChild("Audio"))
+local Settings = require(script.Parent:WaitForChild("Settings"))
 
 local Effects = {}
 
@@ -96,6 +98,10 @@ end
 
 local function rebuildSquad(player)
 	local key = player:GetAttribute("Bots") or ""
+	-- cài đặt "ẩn đội bot người khác" (máy yếu / đông người)
+	if player ~= Players.LocalPlayer and Settings.Get("hideOtherSquads") then
+		key = ""
+	end
 	local squad = squads[player]
 	if squad and squad.key == key then
 		return
@@ -203,15 +209,21 @@ function handlers.Pulse(position, radius)
 end
 
 function handlers.Damage(position, amount)
+	Audio.Play("Hit", { position = position })
+	if Settings.Get("showDamageNumbers") == false then
+		return
+	end
 	floatingText(position, Config.Short(amount), Color3.fromRGB(255, 230, 120), 22)
 end
 
 function handlers.Explode(position, color, isBoss)
+	Audio.Play("Explode", { position = position, volume = if isBoss then 1.6 else 1, pitch = if isBoss then 0.75 else 1 })
 	burst(position, color, if isBoss then 30 else 10)
 	ring(position, if isBoss then 30 else 10, color, 0.5)
 end
 
 function handlers.Harvest(position, color, amount)
+	Audio.Play("Harvest", { position = position })
 	burst(position, color, 5)
 	if amount and amount > 0 then
 		floatingText(position + Vector3.new(0, 2, 0), "+" .. Config.Short(amount) .. " 💾", color, 22)
@@ -232,6 +244,7 @@ function handlers.Gather(player, color)
 end
 
 function handlers.BotShot(player, target)
+	Audio.Play("BotShot", { position = target, volume = if player == Players.LocalPlayer then 1 else 0.5 })
 	local squad = squads[player]
 	if squad then
 		for _, b in squad.bots do
@@ -267,8 +280,11 @@ end
 Effects.OnHurt = nil -- Main gán: chớp đỏ màn hình khi chính mình bị đánh
 
 function handlers.Hurt(player)
-	if player == Players.LocalPlayer and Effects.OnHurt then
-		Effects.OnHurt()
+	if player == Players.LocalPlayer then
+		Audio.Play("Hurt")
+		if Effects.OnHurt then
+			Effects.OnHurt()
+		end
 	end
 	local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
 	if root then
@@ -282,6 +298,13 @@ function Effects.Start(fxRemote)
 	end
 	Players.PlayerAdded:Connect(watchPlayer)
 	RunService.RenderStepped:Connect(updateSquads)
+	Settings.OnChanged(function(key)
+		if key == "hideOtherSquads" then
+			for _, other in Players:GetPlayers() do
+				rebuildSquad(other)
+			end
+		end
+	end)
 	fxRemote.OnClientEvent:Connect(function(kind, ...)
 		local handler = handlers[kind]
 		if handler then

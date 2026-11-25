@@ -12,6 +12,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Config = require(ReplicatedStorage.Shared.Config)
 local DataService = require(script.Parent.DataService)
+local GameAnalytics = require(script.Parent.AnalyticsService)
 local PlayerService = require(script.Parent.PlayerService)
 
 local MonetizationService = {}
@@ -99,6 +100,7 @@ local function grantProduct(player, profile, product)
 		local perSecond = PlayerService.GatherPerSecond(player, profile) * bestMult
 		local amount = math.max(product.min, math.floor(perSecond * 60 * product.minutes))
 		PlayerService.AddCredits(player, amount)
+		GameAnalytics.Source(player, amount, profile.credits, "IAP", product.name)
 		return true, string.format("%s (+%s credits)", product.name, Config.Short(amount))
 	elseif product.kind == "Capsule" then
 		local capsule = Config.CapsuleById[product.capsule]
@@ -128,6 +130,7 @@ local function grantProduct(player, profile, product)
 		end
 		if product.credits then
 			PlayerService.AddCredits(player, product.credits)
+			GameAnalytics.Source(player, product.credits, profile.credits, "IAP", product.name)
 		end
 		for boost, seconds in product.boosts or {} do
 			profile.boosts[boost] = math.max(os.time(), profile.boosts[boost] or 0) + seconds

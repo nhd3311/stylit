@@ -103,8 +103,8 @@ local function save(player, profile, _session, input)
 	-- làm sạch ngay (không giữ bảng của client); nền là bảng đang chờ lưu nếu có
 	local settings = SettingsService.Sanitize(input, slot.queued or ensure(profile))
 	local now = os.clock()
-	local wait = SAVE_INTERVAL - (now - slot.last)
-	if wait <= 0 then
+	local remaining = SAVE_INTERVAL - (now - slot.last)
+	if remaining <= 0 then
 		slot.last = now
 		slot.queued = nil
 		profile.settings = settings
@@ -116,7 +116,7 @@ local function save(player, profile, _session, input)
 		return
 	end
 	slot.scheduled = true
-	task.delay(wait, function()
+	task.delay(remaining, function()
 		slot.scheduled = false
 		local queued = slot.queued
 		slot.queued = nil

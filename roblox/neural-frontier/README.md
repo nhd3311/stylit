@@ -159,6 +159,20 @@ Giá là gợi ý, anh tự đặt trên Creator Dashboard. **x3 và x10 rẻ h�
 - Cơ hội ✨ Shiny / 🌈 Holo cũng được hiện rõ trên từng capsule.
 - Khi publish, trong **Maturity & Compliance Questionnaire** nhớ khai là game **có paid random items**.
 
+## 🚀 Hệ thống chuẩn bị launch
+
+| Hệ thống | Chỗ chỉnh | Cần điền trước khi launch |
+|---|---|---|
+| 🎵 Âm thanh (nhạc theo khu vực, nhạc boss, 36 hiệu ứng) | `shared/AudioConfig.luau` | Toàn bộ id đang là `0` (game im lặng, không lỗi). Chỉ dùng audio public trên Creator Store hoặc do chính tài khoản/nhóm của game upload. Điền mỗi `Music.Hub` là có nhạc khắp nơi. |
+| 🎟️ Mã quà | `server/CodesConfig.luau` (chỉ server đọc được, người chơi không xem trộm được) | Mã mẫu: `RELEASE`, `NEONBOTS`, `FREECAPSULE`, `LAUNCHWEEK` (hết hạn 01/01/2027). Mỗi người thử tối đa 5 lần / 60 giây. |
+| 🏅 Thành tựu + Badge | `shared/RewardsConfig.luau` | `badgeId = 0` thì vẫn có thành tựu + thưởng Credits, chỉ không trao badge. Tạo badge ở Creator Dashboard rồi dán ID. |
+| 🏆 Bảng xếp hạng | `server/LeaderboardService.luau` | 4 bảng trong Hub (Top Level, Uploaded, Glitch Champions, Collection). Chưa publish thì bảng ghi "Available after publishing". |
+| 👥 Chơi cùng bạn | `shared/SocialConfig.luau` | Có bạn bè cùng server thì được cộng % Credits. `GroupId = 0` thì ẩn quà tham gia nhóm. Sau 20 phút chơi game nhắc Favorite + Like. |
+| ⚙️ Cài đặt | `client/Settings.luau` + `server/SettingsService.luau` | Âm lượng nhạc/hiệu ứng, đồ hoạ thấp, ẩn đội bot người khác, cỡ giao diện, số sát thương. Được lưu theo tài khoản. |
+| 📊 Analytics | `server/AnalyticsService.luau` | Tự ghi phễu hướng dẫn, Credits vào/ra, lên level, mua Robux. Xem ở Creator Dashboard → Analytics. |
+
+Nút ⚙️ 🎟️ 🏅 👥 nằm thành cột ở mép phải màn hình.
+
 ## ▶️ Chạy thử trong Studio
 
 1. Mở `NeuralFrontier.rbxlx` bằng Studio (**File → Open from File**), rồi bấm **Play**. Chưa publish vẫn chơi được ở chế độ thử, nhưng data không được lưu.
@@ -186,6 +200,13 @@ Dùng Rojo thì chạy `rojo serve` trong thư mục này.
 | `client/Main.client.luau` | HUD hologram, nút 3D bong bóng, menu có bong bóng bay, các bảng (Bots, Capsules, Database, Daily, Gear, Missions, Shop, Warp), hoạt cảnh mở capsule |
 | `client/Effects.luau` | Vẽ đội thú máy bay theo, laser, số sát thương, nổ, hào quang |
 | `client/Fx.luau` | Làm tinh thể xoay, đèn nhấp nháy |
+| `client/Audio.luau` | Nhạc nền theo khu vực (chuyển mượt), nhạc boss, hiệu ứng 2D/3D có pool |
+| `server/CodesService.luau` + `server/CodesConfig.luau` | Nhập mã quà, chống spam, mã hết hạn |
+| `server/AchievementService.luau` + `client/RewardsPanels.luau` | Thành tựu, badge, bảng Codes và Achievements |
+| `server/LeaderboardService.luau` | 4 bảng xếp hạng toàn server trong Hub |
+| `server/FriendsService.luau` + `client/SocialPanel.luau` | Thưởng chơi cùng bạn, mời bạn, quà nhóm Roblox |
+| `server/SettingsService.luau` + `client/Settings.luau` | Lưu và áp dụng cài đặt người chơi |
+| `server/AnalyticsService.luau` | Ghi số liệu cho Creator Dashboard (bọc an toàn, lỗi không làm hỏng game) |
 
 Server quyết định mọi thứ (tiền, data, sát thương). Client chỉ gửi yêu cầu và hiển thị, nên khó hack tiền.
 

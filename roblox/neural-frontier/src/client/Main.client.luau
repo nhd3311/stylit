@@ -20,6 +20,13 @@ local Config = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Co
 local Effects = require(script.Parent:WaitForChild("Effects"))
 local HabitatFx = require(script.Parent:WaitForChild("Habitat"))
 local Fx = require(script.Parent:WaitForChild("Fx"))
+local Audio = require(script.Parent:WaitForChild("Audio"))
+local RewardsPanels = require(script.Parent:WaitForChild("RewardsPanels"))
+local Settings = require(script.Parent:WaitForChild("Settings"))
+local SocialPanel = require(script.Parent:WaitForChild("SocialPanel"))
+local SocialReminder = require(script.Parent:WaitForChild("SocialReminder"))
+Audio.Start()
+Audio.AutoTrack() -- nhạc theo khu vực + nhạc boss + tiếng warp, tự nhận từ vị trí nhân vật
 local remotes = ReplicatedStorage:WaitForChild("Remotes")
 
 local player = Players.LocalPlayer
@@ -197,6 +204,7 @@ local function press3D(face, depth)
 	local scale = new("UIScale", { Parent = face })
 	local lift = UDim2.fromOffset(0, -2)
 	face.MouseEnter:Connect(function()
+		Audio.Play("Hover")
 		tween(face, 0.1, { Position = rest + lift })
 		tween(scale, 0.1, { Scale = 1.03 })
 	end)
@@ -271,6 +279,7 @@ local function button(props)
 		press3D(b, depth)
 		local armed = false
 		b.Activated:Connect(function()
+			Audio.Play("Click")
 			if props.confirm and not armed then
 				armed = true
 				local oldText, oldColor = b.Text, b.BackgroundColor3
@@ -341,13 +350,18 @@ end
 
 local gui = new("ScreenGui", { Name = "FrontierUI", ResetOnSpawn = false, ZIndexBehavior = Enum.ZIndexBehavior.Sibling, ScreenInsets = Enum.ScreenInsets.CoreUISafeInsets })
 local uiScale = new("UIScale", { Parent = gui })
+local userScale = 1 -- cỡ giao diện người chơi chọn trong Settings (0.8 - 1.25)
 local function updateScale()
 	local camera = workspace.CurrentCamera
 	if camera then
-		uiScale.Scale = math.clamp(math.min(camera.ViewportSize.X / 1280, camera.ViewportSize.Y / 720), 0.55, 1.15)
+		uiScale.Scale = math.clamp(math.min(camera.ViewportSize.X / 1280, camera.ViewportSize.Y / 720), 0.55, 1.15) * userScale
 	end
 end
 updateScale()
+Settings.OnUiScale(function(scale)
+	userScale = scale
+	updateScale()
+end)
 if workspace.CurrentCamera then
 	workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(updateScale)
 end
@@ -399,6 +413,7 @@ local creditsText = text({ Position = UDim2.fromOffset(56, 17), Size = UDim2.fro
 new("UIGradient", { Color = ColorSequence.new(WHITE, C.gold), Rotation = 90, Parent = creditsText })
 
 local function creditPopup(amount)
+	Audio.Play("Coin")
 	local label = text({ AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -10, 0.5, 0), Size = UDim2.fromOffset(90, 24), FontFace = DISPLAY, TextSize = 12, TextColor3 = C.lime, TextStrokeTransparency = 0.4, TextXAlignment = Enum.TextXAlignment.Right, ZIndex = 5, Text = "+" .. short(amount), Parent = creditsCard })
 	tween(label, 0.9, { Position = UDim2.new(1, -10, 0.5, -26), TextTransparency = 1, TextStrokeTransparency = 1 })
 	task.delay(0.95, function()
@@ -566,6 +581,7 @@ local function showCountdown()
 		countdownLabel.Visible = true
 		for _, label in { "3", "2", "1", "GO!" } do
 			countdownLabel.Text = label
+			Audio.Play(if label == "GO!" then "Go" else "Countdown")
 			countdownScale.Scale = 1.6
 			tween(countdownScale, 0.35, { Scale = 1 }, Enum.EasingStyle.Back)
 			task.wait(0.75)
@@ -649,6 +665,7 @@ local function useCore(core)
 		return
 	end
 	if state.level < core.level then
+		Audio.Play("Error")
 		toast(string.format("%s %s unlocks at level %d", core.emoji, core.name, core.level), 3, C.red)
 		return
 	end
@@ -657,6 +674,7 @@ local function useCore(core)
 		return
 	end
 	cooldownUntil[core.id] = t + coreCooldown(core)
+	Audio.Play(core.id) -- Pulse / Dash / Overclock / Shield
 	if core.id == "Dash" then
 		-- client sở hữu vật lý nhân vật nên tự đẩy về phía trước
 		local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
@@ -1485,7 +1503,24 @@ end
 EXTRA_PANELS = {
 	Warp = { title = "ZONE WARP", icon = "🌀", color = C.violet },
 	Guide = { title = "GUIDE", icon = "❓", color = C.gold },
+	Settings = { title = "SETTINGS", icon = "⚙️", color = C.cyan },
+	Codes = { title = "GIFT CODES", icon = "🎟️", color = C.magenta },
+	Achievements = { title = "ACHIEVEMENTS", icon = "🏅", color = C.gold },
+	Social = { title = "PLAY WITH FRIENDS", icon = "👥", color = Color3.fromRGB(90, 200, 255) },
 }
+
+-- bảng do module riêng vẽ (Settings, Codes, Achievements, Social): đưa bộ hàm dựng UI qua ctx
+local moduleCtx = { fire = fire, section = section, row = row, button = button, text = text, new = new, content = content, nextOrder = nextOrder, C = C, DISPLAY = DISPLAY, BODY = BODY, toast = toast, short = short, player = player }
+local function modulePanel(render)
+	return function()
+		moduleCtx.state = state
+		render(moduleCtx)
+	end
+end
+panels.Settings = modulePanel(Settings.Renderer)
+panels.Codes = modulePanel(RewardsPanels.Codes)
+panels.Achievements = modulePanel(RewardsPanels.Achievements)
+panels.Social = modulePanel(SocialPanel)
 
 function panels.Warp()
 	local pass = player:GetAttribute("ZoneWarp") == true
@@ -1641,7 +1676,26 @@ function panels.Guide()
 	guideRow("🌀", C.violet, "Warp", "Tap 🌀 on the zone banner. The Hub and your Habitat are always free.")
 end
 
+local function count(t)
+	local n = 0
+	for _ in t or {} do
+		n += 1
+	end
+	return n
+end
+
 local function panelSignature()
+	-- bảng module: chỉ vẽ lại khi dữ liệu của chính bảng đó đổi (không làm mất thanh trượt / ô đang gõ)
+	if openPanel == "Settings" then
+		return "Settings"
+	elseif openPanel == "Codes" then
+		return "Codes|" .. count(state.redeemedCodes)
+	elseif openPanel == "Achievements" then
+		return "Achievements|" .. count(state.achievements) .. "|" .. state.level
+	elseif openPanel == "Social" then
+		local s = state.social or {}
+		return string.format("Social|%s|%s|%s", tostring(s.friendsHere), tostring(s.friendBoost), tostring(s.groupReward))
+	end
 	local parts = { openPanel, state.level, state.backpack, state.slots, #state.bots, tostring(state.luck), tostring(state.restricted), tostring(state.starterPack), tostring(state.daily.ready) .. state.daily.day }
 	for id, kinds in state.variants or {} do
 		table.insert(parts, id .. (if kinds.Shiny then "s" else "") .. (if kinds.Holo then "h" else ""))
@@ -1676,6 +1730,9 @@ function renderPanel(animate)
 	local entry = openPanel and (MENU_BY_ID[openPanel] or EXTRA_PANELS[openPanel])
 	if not entry or not state then
 		openPanel = nil
+		if panel.Visible then
+			Audio.Play("PanelClose")
+		end
 		panel.Visible = false
 		return
 	end
@@ -1687,6 +1744,7 @@ function renderPanel(animate)
 	content.CanvasPosition = if animate then Vector2.zero else scroll
 	lastSig = panelSignature()
 	if animate or not panel.Visible then
+		Audio.Play("PanelOpen")
 		-- mở bảng: phóng to + nghiêng nhẹ rồi về thẳng cho cảm giác 3D
 		panelScale.Scale = 0.86
 		panel.Rotation = -3
@@ -1769,6 +1827,7 @@ for i, entry in MENU do
 		spawnBubbles(b, 3, bubbleColor)
 	end)
 	b.Activated:Connect(function()
+		Audio.Play("Bubble")
 		spawnBubbles(b, 7, bubbleColor)
 		openPanel = if openPanel == entry.id then nil else entry.id
 		renderPanel(true)
@@ -1874,7 +1933,8 @@ local function renderHud()
 	badges.Gear.Visible = nextPack ~= nil and state.credits >= nextPack.price
 	renderBoosts()
 
-	if openPanel and panelSignature() ~= lastSig then
+	-- đang gõ chữ (ô nhập mã) thì không vẽ lại kẻo mất focus
+	if openPanel and not UserInputService:GetFocusedTextBox() and panelSignature() ~= lastSig then
 		renderPanel()
 	end
 end
@@ -2191,6 +2251,23 @@ guideButton.Activated:Connect(function()
 	renderPanel(true)
 end)
 
+-- cột nút tròn 3D ở mép phải (dưới danh sách boost): Settings / Codes / Achievements / Social
+local SIDE_BUTTONS = {
+	{ id = "Settings", icon = "⚙️", label = "SETTINGS", color = C.cyan:Lerp(C.blue, 0.4) },
+	{ id = "Codes", icon = "🎟️", label = "CODES", color = C.magenta:Lerp(C.violet, 0.3) },
+	{ id = "Achievements", icon = "🏅", label = "AWARDS", color = C.gold:Lerp(C.orange, 0.3) },
+	{ id = "Social", icon = "👥", label = "FRIENDS", color = Color3.fromRGB(70, 170, 255) },
+}
+for i, spec in SIDE_BUTTONS do
+	local face = button({ Parent = gui, AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -16, 0, 300 + (i - 1) * 64), Size = UDim2.fromOffset(48, 52), Text = spec.icon, TextSize = 22, Color = spec.color, Radius = 24, onClick = function() end })
+	text({ AnchorPoint = Vector2.new(0.5, 0), Position = UDim2.new(0.5, 0, 1, 1), Size = UDim2.fromOffset(64, 11), FontFace = DISPLAY, TextSize = 7, TextColor3 = spec.color:Lerp(WHITE, 0.35), TextStrokeTransparency = 0.4, Text = spec.label, Parent = face.Parent })
+	face.Activated:Connect(function()
+		spawnBubbles(face, 6, spec.color:Lerp(WHITE, 0.4))
+		openPanel = if openPanel == spec.id then nil else spec.id
+		renderPanel(true)
+	end)
+end
+
 -- ================= Hoạt cảnh mở capsule =================
 
 local hatchLayer = new("TextButton", { Size = UDim2.fromScale(1, 1), BackgroundColor3 = C.void, BackgroundTransparency = 0.15, AutoButtonColor = false, Text = "", Visible = false, ZIndex = 40, Parent = gui })
@@ -2295,6 +2372,7 @@ local function playHatch(capsuleId, results)
 	-- 1) capsule rung lắc, bot càng hiếm rung càng lâu
 	local cap = BotModels.Capsule(capsule.color, 2.4)
 	cap.model.Parent = hatchView
+	Audio.Play(if capsuleId == "Fuse" then "Fuse" else "HatchShake")
 	hatchCamera.CFrame = CFrame.lookAt(Vector3.new(0, 1, -6.5), Vector3.new(0, 0.1, 0))
 	local shakeTime = if rank >= 4 then 2.2 elseif rank == 3 then 1.6 else 1.2
 	local start = os.clock()
@@ -2309,6 +2387,7 @@ local function playHatch(capsuleId, results)
 	stopHatchLoop()
 
 	-- 2) bung nắp
+	Audio.Play("HatchPop")
 	flashScreen(if rank >= 4 then rarity else WHITE, if rank >= 4 then 0.1 else 0.35)
 	local openStart = os.clock()
 	hatchConn = RunService.RenderStepped:Connect(function()
@@ -2339,6 +2418,10 @@ local function playHatch(capsuleId, results)
 	hatchRarity.Text = string.format("%s%s  ·  %s", string.upper(bot.rarity), if variant then "  ·  " .. string.upper(variant) .. " x" .. stat(Config.VariantMult(variant)) else "", detail)
 	hatchRarity.TextColor3 = rarity
 	hatchNew.Visible = best.new == true
+	Audio.Play("Reveal" .. bot.rarity)
+	if variant then
+		Audio.Play(variant) -- "Shiny" / "Holo" phát chồng lên
+	end
 	if rank >= 4 then
 		flashScreen(rarity, 0.5)
 	end
@@ -2403,6 +2486,7 @@ remotes.State.OnClientEvent:Connect(function(newState)
 	state = newState
 	renderHud()
 	if first then
+		Settings.Apply(state.settings) -- âm lượng, đồ hoạ, cỡ UI... đã lưu từ lần chơi trước
 		toast("👋 Welcome, Bot Tamer! Gather data in 🌿 Byte Meadow, upload it at the Hub 📡, then open capsules at the Capsule Lab 🥚", 7)
 		if (state.tutorial or 0) < #TUTORIAL then
 			-- người mới: chạy hướng dẫn (quà ngày đợi sau)
@@ -2428,17 +2512,21 @@ remotes.Notify.OnClientEvent:Connect(function(message, action)
 		openPanel = action:sub(6)
 		renderPanel(true)
 	elseif action == "LevelUp" then
+		Audio.Play("LevelUp")
 		flashScreen(C.gold, 0.7)
 		showLevelUp(message)
 		return
 	elseif action == "Boss" then
+		Audio.Play("BossAlert")
 		flashScreen(C.magenta, 0.7)
 		showBoss(message)
 		return
 	elseif action == "Announce" then
+		Audio.Play("Quest", { volume = 0.6 })
 		toast(message, 4, C.gold)
 		return
 	elseif action == "EventOpen" then
+		Audio.Play("Countdown", { pitch = 0.8 })
 		flashScreen(C.red, 0.8)
 		toast(message, 5, C.red)
 		return
@@ -2448,16 +2536,24 @@ remotes.Notify.OnClientEvent:Connect(function(message, action)
 		showCountdown()
 		return
 	elseif action == "EventOut" then
+		Audio.Play("Eliminated")
 		flashScreen(C.red, 0.6)
 		toast(message, 4, C.red)
 		return
 	elseif action == "EventWin" then
+		Audio.Play("Win")
 		flashScreen(C.gold, 0.5)
 		showBanner("VICTORY", message)
 		return
 	elseif action == "EventJoined" then
+		Audio.Play("Quest", { volume = 0.6 })
 		toast(message, 3, C.lime)
 		return
+	end
+	if action == "Reward" then
+		Audio.Play(if message:find("^📡") then "Upload" elseif message:find("^✅") or message:find("^📚") or message:find("^🏅") then "Quest" elseif message:find("^🎁") then "Daily" else "Coin")
+	elseif message ~= "" and accentFor(message, action) == C.red then
+		Audio.Play("Error")
 	end
 	if message ~= "" then
 		toast(message, 3, accentFor(message, action))
@@ -2468,3 +2564,4 @@ Effects.Start(remotes:WaitForChild("Fx"))
 HabitatFx.Start()
 Fx.Start(workspace:WaitForChild("World"))
 gui.Parent = player:WaitForChild("PlayerGui")
+SocialReminder.Start(toast)

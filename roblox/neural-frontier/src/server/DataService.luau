@@ -41,8 +41,13 @@ local function defaultData()
 		starterPack = false, -- đã mua Starter Pack (chỉ bán 1 lần)
 		habitat = { stored = 0, last = os.time(), fedAt = os.time() }, -- kho credits vườn + lần cho ăn
 		tutorial = 0, -- số bước hướng dẫn đã xong (99 = xong/bỏ qua)
+		redeemedCodes = {}, -- [MÃ] = true: mã quà đã dùng
+		achievements = {}, -- [key] = os.time() lúc mở khoá thành tựu
+		groupRewardClaimed = false, -- đã nhận thưởng tham gia nhóm Roblox
+		invitesRewarded = {}, -- [tostring(userId)] = true: đã nhận thưởng mời bạn với người này
+		settings = { musicVolume = 0.6, sfxVolume = 0.8, lowGraphics = false, hideOtherSquads = false, uiScale = 1, showDamageNumbers = true },
 		quest = 1,
-		stats = { uploaded = 0, kills = 0, bosses = {}, eventWins = 0 },
+		stats = { uploaded = 0, kills = 0, bosses = {}, eventWins = 0, fused = 0 },
 		boosts = {},
 		purchases = {},
 		lastSave = os.time(),

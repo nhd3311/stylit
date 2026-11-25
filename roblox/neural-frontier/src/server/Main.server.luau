@@ -4,12 +4,18 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local AchievementService = require(script.Parent.AchievementService)
+local CodesService = require(script.Parent.CodesService)
 local DataService = require(script.Parent.DataService)
 local EnemyService = require(script.Parent.EnemyService)
 local EventService = require(script.Parent.EventService)
+local FriendsService = require(script.Parent.FriendsService)
+local GameAnalytics = require(script.Parent.AnalyticsService)
 local HabitatService = require(script.Parent.HabitatService)
+local LeaderboardService = require(script.Parent.LeaderboardService)
 local MonetizationService = require(script.Parent.MonetizationService)
 local PlayerService = require(script.Parent.PlayerService)
+local SettingsService = require(script.Parent.SettingsService)
 local WorldService = require(script.Parent.WorldService)
 
 local remotes = Instance.new("Folder")
@@ -23,10 +29,16 @@ remotes.Parent = ReplicatedStorage
 
 DataService.Start()
 WorldService.Start()
+LeaderboardService.Start()
 PlayerService.Start(remotes)
 EnemyService.Start()
 EventService.Start()
 HabitatService.Start()
+FriendsService.Start()
+CodesService.Start()
+AchievementService.Start()
+SettingsService.Start()
+GameAnalytics.Start(PlayerService) -- nghe event bus: hướng dẫn, kiếm/tiêu credits, lên level, mở capsule
 MonetizationService.Start(remotes)
 
 local function onPlayerAdded(player)

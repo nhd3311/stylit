@@ -2,7 +2,7 @@
 --   • Mã không phân biệt hoa/thường, bỏ khoảng trắng đầu/cuối.
 --   • Mã lạ hoặc đã hết hạn (expires) thì từ chối.
 --   • Mỗi mã chỉ dùng 1 lần cho mỗi người chơi: profile.redeemedCodes[code] = true.
---   • Chống dò mã: tối đa RewardsConfig.CodeAttempts.max lần thử mỗi `window` giây mỗi người chơi.
+--   • Chống dò mã: tối đa CodesConfig.CodeAttempts.max lần thử mỗi `window` giây mỗi người chơi.
 --   • Thưởng: credits (nhân theo level), boost (cộng thêm vào thời gian đang chạy),
 --     capsule miễn phí (PlayerService.Hatch). Kho bot đầy thì KHÔNG tiêu mã, báo dọn kho trước.
 
@@ -10,7 +10,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Config = require(ReplicatedStorage.Shared.Config)
-local RewardsConfig = require(ReplicatedStorage.Shared.RewardsConfig)
+local CodesConfig = require(script.Parent.CodesConfig)
 local PlayerService = require(script.Parent.PlayerService)
 
 local CodesService = {}
@@ -18,7 +18,7 @@ local CodesService = {}
 local MAX_INPUT = 64 -- chuỗi client gửi dài hơn thế thì bỏ qua luôn
 local BOOST_LABELS = { Credits = "x2 Credits", Gather = "x2 Gather", Luck = "x2 Luck", Clones = "x4 Clone Squad" }
 
-local codes = {} -- [MÃ HOA] = định nghĩa trong RewardsConfig.Codes
+local codes = {} -- [MÃ HOA] = định nghĩa trong CodesConfig.Codes
 local attempts = {} -- [player] = { os.clock() của các lần thử gần đây }
 
 -- ================= Tiện ích =================
@@ -33,7 +33,7 @@ end
 
 -- giới hạn số lần thử trong cửa sổ thời gian; trả về false + số giây phải chờ nếu vượt
 local function allowAttempt(player)
-	local limit = RewardsConfig.CodeAttempts
+	local limit = CodesConfig.CodeAttempts
 	local now = os.clock()
 	local list = attempts[player]
 	if not list then
@@ -154,7 +154,7 @@ end
 
 -- dựng bảng tra theo mã viết hoa + cảnh báo lỗi cấu hình (để người làm game sửa sớm)
 local function buildCodes()
-	for rawCode, def in RewardsConfig.Codes do
+	for rawCode, def in CodesConfig.Codes do
 		local code = string.upper(rawCode)
 		if codes[code] then
 			warn("[CodesService] Mã bị trùng (khác hoa/thường):", rawCode)

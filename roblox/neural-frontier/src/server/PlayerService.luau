@@ -23,6 +23,10 @@ PlayerService.DamageArea = nil -- (player, position, radius, amount)
 -- service khác (HabitatService) gắn hàm vào đây:
 PlayerService.BotsChanged = {} -- hàm(player, profile) chạy mỗi khi đội/kho bot đổi
 PlayerService.StateExtras = {} -- [tên] = hàm(player, profile) -> dữ liệu thêm vào state gửi client
+PlayerService.FriendMultiplier = nil -- (player) -> number, FriendsService gắn vào (chơi cùng bạn được thưởng)
+local function friendMult(player)
+	return if PlayerService.FriendMultiplier then PlayerService.FriendMultiplier(player) else 1
+end
 
 -- ===== Kênh sự kiện (event bus) =====
 -- Service khác nghe sự kiện game mà không cần sửa file này:
@@ -165,7 +169,7 @@ function PlayerService.GatherPerSecond(player, profile)
 	if boostOn(profile, "Gather") then
 		total *= Config.Multipliers.GatherBoost
 	end
-	return total * (1 + gatherBonus(profile))
+	return total * (1 + gatherBonus(profile)) * friendMult(player)
 end
 
 -- Sát thương/giây đội bot gây lên 1 quái gần nhất
@@ -424,7 +428,7 @@ local function upload(player, profile, quiet)
 	end
 	local amount = math.floor(profile.data)
 	profile.data = 0
-	local credits = amount * creditMult(player, profile)
+	local credits = amount * creditMult(player, profile) * friendMult(player)
 	PlayerService.AddCredits(player, credits)
 	profile.stats.uploaded += amount
 	notify(player, string.format("📡 Uploaded %s data → +%s credits", Config.Short(amount), Config.Short(credits)), "Reward")

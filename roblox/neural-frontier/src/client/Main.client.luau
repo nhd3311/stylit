@@ -4,6 +4,7 @@
 --   • dock kỹ năng (Q E R F + G thu thập) có vòng hồi chiêu và đếm giây
 --   • menu trái và các bảng Bots / Capsules / Database / Daily / Gear / Missions / Shop, thú máy 3D trong thẻ
 --   • biến thể ✨ Shiny / 🌈 Holo, Fuse, khoá bot, quà đăng nhập, Starter Pack, sự kiện Glitch Floor
+--   • Habitat (nuôi bot kiếm Credits khi offline), hướng dẫn người mới có tia sáng chỉ đường, nút ❓ Guide
 --   • hoạt cảnh mở capsule (rung, bung nắp, vầng sáng theo độ hiếm)
 -- Toàn bộ dựng bằng code, không cần ảnh upload, tự co giãn theo màn hình.
 
@@ -17,6 +18,7 @@ local UserInputService = game:GetService("UserInputService")
 local BotModels = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("BotModels"))
 local Config = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Config"))
 local Effects = require(script.Parent:WaitForChild("Effects"))
+local HabitatFx = require(script.Parent:WaitForChild("Habitat"))
 local Fx = require(script.Parent:WaitForChild("Fx"))
 local remotes = ReplicatedStorage:WaitForChild("Remotes")
 
@@ -54,6 +56,7 @@ local CORE_COLORS = { Pulse = C.magenta, Dash = C.lime, Overclock = C.gold, Shie
 local MENU = {
 	{ id = "Bots", label = "BOTS", title = "BOT SQUAD", icon = "🤖", color = C.magenta },
 	{ id = "Capsules", label = "CAPSULES", title = "CAPSULE LAB", icon = "🥚", color = C.orange },
+	{ id = "Habitat", label = "HABITAT", title = "BOT HABITAT", icon = "🏠", color = Color3.fromRGB(70, 220, 160) },
 	{ id = "Database", label = "DATABASE", title = "BOT DATABASE", icon = "📚", color = C.blue },
 	{ id = "Daily", label = "DAILY", title = "DAILY REWARDS", icon = "🎁", color = C.lime },
 	{ id = "Gear", label = "GEAR", title = "GEAR LAB", icon = "🎒", color = C.cyan },
@@ -844,7 +847,8 @@ local function botCard(parent, bot, level, cardOrder, tag, animate, variant)
 	end
 	if tag then
 		local active = tag == "ACTIVE"
-		chip(card, tag, if active then C.lime else C.off, if active then C.void else C.muted, true)
+		local home = tag == "HOME"
+		chip(card, tag, if active then C.lime elseif home then Color3.fromRGB(70, 220, 160) else C.off, if active or home then C.void else C.muted, true)
 	end
 	text({
 		Position = UDim2.fromOffset(8, 96),
@@ -925,7 +929,8 @@ local function shopCard(parent, cardOrder, name, description, color, owned, id, 
 end
 
 local panels = {}
-local EXTRA_PANELS -- bảng phụ (Warp), định nghĩa ở dưới
+local EXTRA_PANELS -- bảng phụ (Warp, Guide), định nghĩa ở dưới
+local startTutorial -- hướng dẫn người mới, định nghĩa ở dưới
 local renderPanel -- khai báo trước (các bảng gọi để chuyển qua bảng khác), định nghĩa ở dưới
 local function goPanel(id)
 	return function()
@@ -965,7 +970,7 @@ function panels.Bots()
 			local maxed = entry.level >= Config.BotUpgrade.MaxLevel
 			local price = Config.BotUpgradePrice(bot, entry.level)
 			-- chỉ 12 thẻ đầu cử động để máy yếu không lag
-			local card = botCard(squad, bot, entry.level, cardOrder, if equippedSet[i] then "ACTIVE" else "RESERVE", cardOrder <= 12, entry.variant)
+			local card = botCard(squad, bot, entry.level, cardOrder, if equippedSet[i] then "ACTIVE" elseif entry.home then "HOME" else "RESERVE", cardOrder <= 12, entry.variant)
 			-- khoá: bot khoá không bị Recycle hay Fuse
 			button({
 				Parent = card,
@@ -994,10 +999,10 @@ function panels.Bots()
 				AnchorPoint = Vector2.new(1, 0),
 				Position = UDim2.new(1, -8, 1, -38),
 				Size = UDim2.fromOffset(40, 30),
-				Text = if entry.locked then "🔒" else "♻",
+				Text = if entry.locked then "🔒" elseif entry.home then "🏠" else "♻",
 				Color = C.glassHi,
-				confirm = if entry.locked then nil else "OK?",
-				onClick = if entry.locked then nil else function()
+				confirm = if entry.locked or entry.home then nil else "OK?",
+				onClick = if entry.locked or entry.home then nil else function()
 					fire("RecycleBot", i)
 				end,
 			})
@@ -1479,6 +1484,7 @@ end
 -- bảng không nằm trong menu trái
 EXTRA_PANELS = {
 	Warp = { title = "ZONE WARP", icon = "🌀", color = C.violet },
+	Guide = { title = "GUIDE", icon = "❓", color = C.gold },
 }
 
 function panels.Warp()
@@ -1486,6 +1492,11 @@ function panels.Warp()
 	section("TELEPORT", if pass then "🌀 Zone Warp: instant, no cooldown" else string.format("Free warp every %ds · Zone Warp pass = no cooldown", Config.FreeWarpCooldown))
 	row({ icon = "🏙️", iconColor = C.cyan, title = "Hub", sub = "Upload data, Capsule Lab, shops, Glitch Floor portal", buttons = { { text = "🌀 WARP", color = C.cyan:Lerp(C.void, 0.3), onClick = function()
 		fire("Warp", "Hub")
+		openPanel = nil
+		renderPanel()
+	end } }, height = 58 })
+	row({ icon = "🏠", iconColor = Color3.fromRGB(70, 220, 160), title = "My Habitat", sub = "Raise bots and show off your collection", buttons = { { text = "🌀 WARP", color = Color3.fromRGB(40, 150, 110), onClick = function()
+		fire("Warp", "Habitat")
 		openPanel = nil
 		renderPanel()
 	end } }, height = 58 })
@@ -1513,10 +1524,131 @@ function panels.Warp()
 	end
 end
 
+local HABITAT_COLOR = Color3.fromRGB(70, 220, 160)
+
+function panels.Habitat()
+	local h = state.habitat
+	if not h then
+		section("BOT HABITAT", "Loading...")
+		return
+	end
+	-- thẻ tổng quan: sản lượng, độ vui, kho, nút Thu hoạch / Cho ăn / Ghé vườn
+	local card = new("Frame", { LayoutOrder = nextOrder(), Size = UDim2.new(1, 0, 0, 128), BackgroundColor3 = WHITE, BorderSizePixel = 0, Parent = content }, {
+		corner(14),
+		new("UIGradient", { Color = ColorSequence.new(HABITAT_COLOR:Lerp(C.void, 0.45), C.glass) }),
+		stroke(HABITAT_COLOR, 1.6, 0.15),
+	})
+	text({ Position = UDim2.fromOffset(14, 8), Size = UDim2.new(1, -200, 0, 22), FontFace = DISPLAY, TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left, Text = "🏠 YOUR HABITAT" .. (if h.plot then "  #" .. h.plot else ""), Parent = card })
+	text({ Position = UDim2.fromOffset(14, 32), Size = UDim2.new(1, -200, 0, 20), FontFace = BODY_LIGHT, TextSize = 15, TextXAlignment = Enum.TextXAlignment.Left, RichText = true, Text = string.format("💰 <b>%s</b> credits/min  ·  ⚡ %d%% efficiency", short(h.rate * 60 * h.efficiency), math.floor(h.efficiency * 100 + 0.5)), Parent = card })
+	local mood = bar(card, UDim2.fromOffset(14, 60), UDim2.new(1, -200, 0, 18), C.lime, C.gold, 10)
+	mood.fill.Size = UDim2.fromScale(h.happiness / 100, 1)
+	mood.label.Text = string.format("%s Happiness %d%%", if h.happiness >= 60 then "😊" elseif h.happiness >= 25 then "😐" else "😢", math.floor(h.happiness))
+	local storage = bar(card, UDim2.fromOffset(14, 90), UDim2.new(1, -200, 0, 18), C.gold, C.orange, 10)
+	storage.fill.Size = UDim2.fromScale(math.clamp(h.stored / math.max(1, h.cap), 0, 1), 1)
+	storage.label.Text = string.format("📦 %s / %s credits", short(h.stored), short(h.cap))
+	button({ Parent = card, AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -12, 0, 8), Size = UDim2.fromOffset(170, 36), Text = "💰 COLLECT " .. short(h.stored), Color = if h.stored >= 1 then C.gold:Lerp(C.void, 0.15) else C.off, onClick = function()
+		fire("CollectHabitat")
+	end })
+	button({ Parent = card, AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -12, 0, 48), Size = UDim2.fromOffset(170, 36), Text = "🍖 FEED · 💳 " .. short(h.feedCost), Color = if h.count > 0 then C.lime:Lerp(C.void, 0.3) else C.off, onClick = function()
+		fire("FeedHabitat")
+	end })
+	button({ Parent = card, AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -12, 0, 88), Size = UDim2.fromOffset(170, 34), Text = "🌀 VISIT MY HABITAT", Color = C.violet, onClick = function()
+		fire("Warp", "Habitat")
+		openPanel = nil
+		renderPanel()
+	end })
+	if not h.plot then
+		row({ icon = "ℹ", iconColor = C.off, title = "No free plot on this server", sub = "Your bots still earn credits; you just can't visit them here.", height = 56 })
+	end
+
+	-- bot đang nghỉ trong vườn
+	section("RESTING BOTS", string.format("%d / %d slots  ·  resting bots don't fight", h.count, h.slots))
+	local resting = grid(UDim2.fromOffset(150, 204))
+	local candidates = {}
+	for i, entry in state.bots do
+		local bot = Config.BotById[entry.type]
+		if bot then
+			if entry.home then
+				local cardEl = botCard(resting, bot, entry.level, i, "HOME", true, entry.variant)
+				button({ Parent = cardEl, Position = UDim2.new(0, 8, 1, -38), Size = UDim2.new(1, -16, 0, 30), Text = "↩ TO SQUAD", Color = C.cyan:Lerp(C.void, 0.35), onClick = function()
+					fire("PlaceHome", i)
+				end })
+			else
+				table.insert(candidates, i)
+			end
+		end
+	end
+	if h.count == 0 then
+		row({ icon = "🏠", iconColor = HABITAT_COLOR, title = "Your Habitat is empty", sub = "Place spare bots below. They earn credits even while you're offline!", height = 56 })
+	end
+
+	-- thêm bot: ưu tiên bot gather cao
+	section("ADD BOTS", "Higher gather = more credits")
+	table.sort(candidates, function(a, b)
+		local ea, eb = state.bots[a], state.bots[b]
+		return Config.BotStat(Config.BotById[ea.type], ea.level, "gather", ea.variant) > Config.BotStat(Config.BotById[eb.type], eb.level, "gather", eb.variant)
+	end)
+	local adds = grid(UDim2.fromOffset(150, 204))
+	local full = h.count >= h.slots
+	for k, i in candidates do
+		if k > 12 then
+			break
+		end
+		local entry = state.bots[i]
+		local cardEl = botCard(adds, Config.BotById[entry.type], entry.level, k, nil, k <= 6, entry.variant)
+		button({ Parent = cardEl, Position = UDim2.new(0, 8, 1, -38), Size = UDim2.new(1, -16, 0, 30), Text = if full then "FULL" else "🏠 PLACE", Color = if full then C.off else HABITAT_COLOR:Lerp(C.void, 0.3), onClick = if full then nil else function()
+			fire("PlaceHome", i)
+		end })
+	end
+end
+
+-- hàng hướng dẫn: icon, tiêu đề, giải thích
+local function guideRow(icon, color, title, sub)
+	row({ icon = icon, iconColor = color, title = title, sub = sub, height = 62 })
+end
+
+function panels.Guide()
+	row({
+		icon = "📖",
+		iconColor = C.gold,
+		title = "New here? Replay the tutorial",
+		sub = "A light beam will show you where to go, step by step.",
+		accent = C.gold,
+		buttons = { { text = "▶ TUTORIAL", color = C.gold:Lerp(C.void, 0.2), onClick = function()
+			startTutorial(1)
+		end } },
+		height = 64,
+	})
+	section("🎮 CORE LOOP")
+	guideRow("💾", C.cyan, "Gather data", "Walk into a zone. Your bots gather data every second. Click crystals or press G for more.")
+	guideRow("📡", C.cyan, "Upload at the Hub", "Step on the glowing Upload Pad to turn data into credits and XP. If you get knocked out, you lose the data you carry!")
+	guideRow("⬆️", C.violet, "Level up", "Levels unlock new stages, abilities and capsules. Follow MISSIONS for big rewards.")
+	section("⚔️ COMBAT")
+	guideRow("💥", C.magenta, "Abilities", "Q Pulse · E Dash · R Overclock · F Shield. Your squad shoots nearby enemies on its own.")
+	guideRow("👑", C.gold, "Bosses", "Every stage has a boss. Everyone who deals damage gets the reward.")
+	section("🤖 BOTS & COLLECTION")
+	guideRow("🥚", C.orange, "Capsules", "Each capsule gives 1 bot. The exact odds are shown on every capsule.")
+	guideRow("✨", Color3.fromRGB(255, 215, 90), "Shiny & Holo", "Rare variants with x1.5 / x3 stats. Fuse 5 identical bots into the next variant.")
+	guideRow("🔒", C.gold, "Lock & upgrade", "Lock favourites so they're never recycled. Upgrade bots with credits.")
+	guideRow("📚", C.blue, "Bot Database", "Discover every bot of a capsule to claim a set reward and a permanent gather bonus.")
+	section("🏠 HABITAT")
+	guideRow("🏠", HABITAT_COLOR, "Raise bots", "Place spare bots in your Habitat. They wander your plot and earn credits even offline.")
+	guideRow("🍖", C.lime, "Feed & collect", "Happy bots earn more. Feed them, then come back to collect before storage is full.")
+	section("🎁 DAILY & EVENTS")
+	guideRow("🎁", C.lime, "Daily rewards", "Claim every day. Day 7 gives a free Neon Capsule. Missing a day resets the streak.")
+	guideRow("🟥", C.red, "Glitch Floor", "Every few minutes. Tap JOIN, dodge the falling tiles and be the last one standing!")
+	section("🌀 TRAVEL")
+	guideRow("🌀", C.violet, "Warp", "Tap 🌀 on the zone banner. The Hub and your Habitat are always free.")
+end
+
 local function panelSignature()
 	local parts = { openPanel, state.level, state.backpack, state.slots, #state.bots, tostring(state.luck), tostring(state.restricted), tostring(state.starterPack), tostring(state.daily.ready) .. state.daily.day }
 	for id, kinds in state.variants or {} do
 		table.insert(parts, id .. (if kinds.Shiny then "s" else "") .. (if kinds.Holo then "h" else ""))
+	end
+	local h = state.habitat
+	if h and openPanel == "Habitat" then
+		table.insert(parts, string.format("%d/%d:%d:%d:%s", h.count, h.slots, math.floor(h.happiness / 10), math.floor(h.stored / math.max(1, h.cap) * 20), tostring(h.plot)))
 	end
 	for _, capsule in Config.Capsules do
 		table.insert(parts, countDiscovered(capsule) .. (if state.claimedSets[capsule.id] then "c" else ""))
@@ -1526,7 +1658,7 @@ local function panelSignature()
 	end
 	for _, entry in state.bots do
 		local bot = Config.BotById[entry.type]
-		table.insert(parts, entry.type .. entry.level .. (entry.variant or "") .. (if entry.locked then "L" else "") .. (if bot and state.credits >= Config.BotUpgradePrice(bot, entry.level) then "1" else "0"))
+		table.insert(parts, entry.type .. entry.level .. (entry.variant or "") .. (if entry.locked then "L" else "") .. (if entry.home then "H" else "") .. (if bot and state.credits >= Config.BotUpgradePrice(bot, entry.level) then "1" else "0"))
 	end
 	local nextPack = Config.Backpacks[state.backpack + 1]
 	table.insert(parts, if nextPack and state.credits >= nextPack.price then "1" else "0")
@@ -1597,8 +1729,8 @@ end)
 
 -- ================= Menu trái =================
 
-local menu = new("Frame", { AnchorPoint = Vector2.new(0, 0.5), Position = UDim2.new(0, 10, 0.5, 40), Size = UDim2.fromOffset(200, #MENU * 56), BackgroundTransparency = 1, Parent = gui }, {
-	new("UIListLayout", { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }),
+local menu = new("Frame", { AnchorPoint = Vector2.new(0, 0.5), Position = UDim2.new(0, 10, 0.5, 62), Size = UDim2.fromOffset(200, #MENU * 55), BackgroundTransparency = 1, Parent = gui }, {
+	new("UIListLayout", { Padding = UDim.new(0, 5), SortOrder = Enum.SortOrder.LayoutOrder }),
 })
 local badges = {}
 local menuFaces = {} -- { face, tile, color } cho hiệu ứng nhún + bong bóng
@@ -1641,7 +1773,7 @@ for i, entry in MENU do
 		openPanel = if openPanel == entry.id then nil else entry.id
 		renderPanel(true)
 	end)
-	table.insert(menuFaces, { face = b, tile = tile, color = bubbleColor })
+	table.insert(menuFaces, { face = b, tile = tile, color = bubbleColor, id = entry.id })
 end
 
 -- bong bóng lác đác từ các nút menu cho menu "sống"
@@ -1735,6 +1867,8 @@ local function renderHud()
 	badges.Capsules.Visible = capsuleDeal()
 	badges.Database.Visible = setClaimable()
 	badges.Daily.Visible = state.daily.ready
+	local h = state.habitat
+	badges.Habitat.Visible = h ~= nil and h.count > 0 and (h.stored >= h.cap * 0.5 or h.happiness < 25)
 	starterHolder.Visible = not state.starterPack
 	local nextPack = Config.Backpacks[state.backpack + 1]
 	badges.Gear.Visible = nextPack ~= nil and state.credits >= nextPack.price
@@ -1816,6 +1950,245 @@ task.spawn(function()
 		task.wait(1)
 		renderBoosts()
 	end
+end)
+
+-- ================= Hướng dẫn người chơi mới =================
+-- Mỗi bước: target = tên part trong World (hoặc "crystal" / "enemy" = cái gần nhất) để chiếu tia sáng,
+-- ui = id nút menu để chỉ tay, done() = điều kiện tự qua bước, manual = bấm NEXT.
+local TUTORIAL = {
+	{ title = "Welcome, Bot Tamer! 👋", text = "Your bot squad gathers data and fights for you. Let's learn the basics together!", manual = true },
+	{ title = "Go to Byte Meadow 🌿", text = "Follow the light beam across the bridge into Byte Meadow.", target = "GateBeam_Meadow", done = function()
+		return state.zone ~= nil
+	end },
+	{ title = "Harvest data 💾", text = "Click a glowing crystal (or press G). Your squad also gathers data every second.", target = "crystal", done = function()
+		return state.data > 0
+	end },
+	{ title = "Upload at the Hub 📡", text = "Head back to the Hub and step on the glowing Upload Pad to turn data into credits and XP.", target = "UploadPad", done = function()
+		return (state.stats.uploaded or 0) > 0
+	end },
+	{ title = "Open a capsule 🥚", text = "Go to the Capsule Lab and open a Meadow Capsule to get a new bot.", target = "MeadowPod", done = function()
+		return #state.bots >= 2
+	end },
+	{ title = "Meet your squad 🤖", text = "Tap BOTS in the menu to see your squad. You can upgrade, lock and fuse bots there.", ui = "Bots", done = function()
+		return openPanel == "Bots"
+	end },
+	{ title = "Raise bots in your Habitat 🏠", text = "Tap HABITAT and place a spare bot. It earns credits even while you're offline!", ui = "Habitat", done = function()
+		return state.habitat ~= nil and state.habitat.count > 0
+	end },
+	{ title = "Fight a drone ⚔️", text = "Find a Rogue Drone in Byte Meadow and press Q to Pulse. Your bots shoot automatically.", target = "enemy", done = function()
+		return (state.stats.kills or 0) > 0
+	end },
+	{ title = "You're ready! 🚀", text = "Claim daily rewards, join Glitch Floor and finish missions. Tap ❓ anytime for the full guide.", manual = true },
+}
+local tutorialStep = nil
+
+local tutorialCard = glass({ AnchorPoint = Vector2.new(0.5, 1), Position = UDim2.new(0.5, 0, 1, -116), Size = UDim2.fromOffset(500, 112), Visible = false, ZIndex = 9, Parent = gui }, C.gold, 14)
+brackets(tutorialCard, C.gold, 12)
+local tutorialCount = text({ Position = UDim2.fromOffset(14, 8), Size = UDim2.fromOffset(200, 14), FontFace = DISPLAY, TextSize = 8, TextColor3 = C.gold, TextXAlignment = Enum.TextXAlignment.Left, Text = "", Parent = tutorialCard })
+local tutorialTitle = text({ Position = UDim2.fromOffset(14, 24), Size = UDim2.new(1, -150, 0, 24), TextSize = 18, TextXAlignment = Enum.TextXAlignment.Left, Text = "", Parent = tutorialCard })
+local tutorialText = text({ Position = UDim2.fromOffset(14, 50), Size = UDim2.new(1, -150, 0, 56), FontFace = BODY_LIGHT, TextSize = 14, TextColor3 = C.muted, TextWrapped = true, TextXAlignment = Enum.TextXAlignment.Left, TextYAlignment = Enum.TextYAlignment.Top, Text = "", Parent = tutorialCard })
+local tutorialDots = new("Frame", { AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -14, 0, 10), Size = UDim2.fromOffset(120, 8), BackgroundTransparency = 1, Parent = tutorialCard }, {
+	new("UIListLayout", { FillDirection = Enum.FillDirection.Horizontal, HorizontalAlignment = Enum.HorizontalAlignment.Right, Padding = UDim.new(0, 4), SortOrder = Enum.SortOrder.LayoutOrder }),
+})
+
+-- tia sáng 3D từ nhân vật tới đích + mũi tên nhún nhảy trên đích
+local guideFolder = Instance.new("Folder")
+guideFolder.Name = "TutorialGuide"
+guideFolder.Parent = workspace
+local guideAnchor = Instance.new("Part")
+guideAnchor.Anchored = true
+guideAnchor.CanCollide = false
+guideAnchor.CanQuery = false
+guideAnchor.CanTouch = false
+guideAnchor.Transparency = 1
+guideAnchor.Size = Vector3.one * 0.2
+guideAnchor.Parent = guideFolder
+local guideEnd = Instance.new("Attachment")
+guideEnd.Parent = guideAnchor
+local guideBeam = Instance.new("Beam")
+guideBeam.Attachment1 = guideEnd
+guideBeam.Color = ColorSequence.new(C.gold, C.cyan)
+guideBeam.Width0 = 0.5
+guideBeam.Width1 = 0.5
+guideBeam.FaceCamera = true
+guideBeam.LightEmission = 1
+guideBeam.Segments = 12
+guideBeam.Transparency = NumberSequence.new(0.15, 0.35)
+guideBeam.Enabled = false
+guideBeam.Parent = guideAnchor
+local guideArrow = Instance.new("BillboardGui")
+guideArrow.Adornee = guideAnchor
+guideArrow.Size = UDim2.fromOffset(90, 90)
+guideArrow.AlwaysOnTop = true
+guideArrow.Enabled = false
+guideArrow.Parent = guideFolder
+local guideArrowLabel = text({ Size = UDim2.fromScale(1, 1), TextSize = 64, Text = "⬇️", Parent = guideArrow })
+local function attachBeamToCharacter(character)
+	local root = character:WaitForChild("HumanoidRootPart", 10)
+	if root then
+		local start = Instance.new("Attachment")
+		start.Name = "TutorialStart"
+		start.Parent = root
+		guideBeam.Attachment0 = start
+	end
+end
+player.CharacterAdded:Connect(attachBeamToCharacter)
+if player.Character then
+	task.spawn(attachBeamToCharacter, player.Character)
+end
+
+-- ngón tay chỉ vào nút menu
+local pointer = text({ AnchorPoint = Vector2.new(0, 0.5), Size = UDim2.fromOffset(44, 44), TextSize = 34, Text = "👈", Visible = false, ZIndex = 12, Parent = gui })
+
+local crystals = {}
+task.spawn(function()
+	local world = workspace:WaitForChild("World")
+	for _, part in world:GetChildren() do
+		if part.Name == "DataNode" then
+			table.insert(crystals, part)
+		end
+	end
+	world.ChildAdded:Connect(function(part)
+		if part.Name == "DataNode" then
+			table.insert(crystals, part)
+		end
+	end)
+end)
+
+local function nearest(list, from)
+	local best, bestDist
+	for _, part in list do
+		if part.Parent and part.Transparency < 0.9 then
+			local d = (part.Position - from).Magnitude
+			if not bestDist or d < bestDist then
+				best, bestDist = part, d
+			end
+		end
+	end
+	return best
+end
+
+local function stepTarget(step)
+	local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+	if not root or not step.target then
+		return nil
+	end
+	if step.target == "crystal" then
+		return nearest(crystals, root.Position)
+	elseif step.target == "enemy" then
+		local enemies = workspace:FindFirstChild("Enemies")
+		return enemies and nearest(enemies:GetChildren(), root.Position)
+	end
+	local world = workspace:FindFirstChild("World")
+	return world and world:FindFirstChild(step.target)
+end
+
+local showStep, finishTutorial
+local nextHolder
+
+local function updateGuide()
+	local step = tutorialStep and TUTORIAL[tutorialStep]
+	local target = step and stepTarget(step)
+	guideBeam.Enabled = target ~= nil and guideBeam.Attachment0 ~= nil
+	guideArrow.Enabled = target ~= nil
+	if target then
+		guideAnchor.Position = target.Position
+	end
+	local face = nil
+	if step and step.ui and openPanel ~= step.ui then
+		for _, item in menuFaces do
+			if item.id == step.ui then
+				face = item.face
+			end
+		end
+	end
+	pointer.Visible = face ~= nil
+	if face then
+		pointer.Parent = face
+		pointer.Position = UDim2.new(1, 8 + math.sin(os.clock() * 6) * 5, 0.5, 0)
+	end
+end
+
+function showStep()
+	local step = TUTORIAL[tutorialStep]
+	tutorialCard.Visible = true
+	tutorialCount.Text = string.format("TUTORIAL %d / %d", tutorialStep, #TUTORIAL)
+	tutorialTitle.Text = step.title
+	tutorialText.Text = step.text
+	nextHolder.Visible = step.manual == true
+	for _, child in tutorialDots:GetChildren() do
+		if child:IsA("GuiObject") then
+			child:Destroy()
+		end
+	end
+	for k = 1, #TUTORIAL do
+		new("Frame", { LayoutOrder = k, Size = UDim2.fromOffset(8, 8), BackgroundColor3 = if k < tutorialStep then C.lime elseif k == tutorialStep then C.gold else C.off, BorderSizePixel = 0, Parent = tutorialDots }, { corner(4) })
+	end
+	local scale = tutorialCard:FindFirstChildOfClass("UIScale") or new("UIScale", { Parent = tutorialCard })
+	scale.Scale = 0.85
+	tween(scale, 0.3, { Scale = 1 }, Enum.EasingStyle.Back)
+end
+
+local function advanceTutorial()
+	fire("Tutorial", tutorialStep)
+	spawnBubbles(tutorialCard, 8, C.gold:Lerp(WHITE, 0.4))
+	tutorialStep += 1
+	if tutorialStep > #TUTORIAL then
+		finishTutorial()
+	else
+		showStep()
+	end
+end
+
+function finishTutorial()
+	tutorialStep = nil
+	tutorialCard.Visible = false
+	guideBeam.Enabled = false
+	guideArrow.Enabled = false
+	pointer.Visible = false
+	fire("Tutorial", 99)
+	toast("🎓 Tutorial complete! Tap ❓ anytime for the full guide.", 5, C.gold)
+end
+
+function startTutorial(fromStep)
+	tutorialStep = fromStep or 1
+	fire("Tutorial", tutorialStep - 1)
+	openPanel = nil
+	renderPanel()
+	showStep()
+end
+
+local nextButton = button({ Parent = tutorialCard, AnchorPoint = Vector2.new(1, 1), Position = UDim2.new(1, -12, 1, -10), Size = UDim2.fromOffset(120, 40), Text = "NEXT ▶", Font = DISPLAY, TextSize = 12, Color = C.lime:Lerp(C.void, 0.25), Radius = 18, onClick = function()
+	if tutorialStep then
+		advanceTutorial()
+	end
+end })
+nextHolder = nextButton.Parent
+button({ Parent = tutorialCard, AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, -12, 0, 24), Size = UDim2.fromOffset(120, 30), Text = "SKIP", TextSize = 12, Color = C.off, confirm = "SKIP ALL?", onClick = function()
+	finishTutorial()
+end })
+
+-- kiểm tra tiến độ + cập nhật tia sáng
+task.spawn(function()
+	while true do
+		task.wait(0.1)
+		if tutorialStep and state then
+			local step = TUTORIAL[tutorialStep]
+			if step.done and step.done() then
+				advanceTutorial()
+			end
+		end
+		updateGuide()
+	end
+end)
+
+-- nút ❓ Guide luôn hiện cạnh thẻ phi công
+local guideButton = button({ Parent = gui, Position = UDim2.fromOffset(318, 6), Size = UDim2.fromOffset(48, 52), Text = "❓", TextSize = 24, Color = C.gold:Lerp(C.orange, 0.3), Radius = 24, onClick = function() end })
+text({ AnchorPoint = Vector2.new(0.5, 0), Position = UDim2.new(0.5, 0, 1, 2), Size = UDim2.fromOffset(60, 12), FontFace = DISPLAY, TextSize = 7, TextColor3 = C.gold, TextStrokeTransparency = 0.4, Text = "GUIDE", Parent = guideButton.Parent })
+guideButton.Activated:Connect(function()
+	spawnBubbles(guideButton, 6, C.gold:Lerp(WHITE, 0.4))
+	openPanel = if openPanel == "Guide" then nil else "Guide"
+	renderPanel(true)
 end)
 
 -- ================= Hoạt cảnh mở capsule =================
@@ -2031,7 +2404,10 @@ remotes.State.OnClientEvent:Connect(function(newState)
 	renderHud()
 	if first then
 		toast("👋 Welcome, Bot Tamer! Gather data in 🌿 Byte Meadow, upload it at the Hub 📡, then open capsules at the Capsule Lab 🥚", 7)
-		if state.daily and state.daily.ready then
+		if (state.tutorial or 0) < #TUTORIAL then
+			-- người mới: chạy hướng dẫn (quà ngày đợi sau)
+			startTutorial(math.max(1, (state.tutorial or 0) + 1))
+		elseif state.daily and state.daily.ready then
 			openPanel = "Daily"
 			renderPanel(true)
 		end
@@ -2089,5 +2465,6 @@ remotes.Notify.OnClientEvent:Connect(function(message, action)
 end)
 
 Effects.Start(remotes:WaitForChild("Fx"))
+HabitatFx.Start()
 Fx.Start(workspace:WaitForChild("World"))
 gui.Parent = player:WaitForChild("PlayerGui")

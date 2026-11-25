@@ -20,6 +20,9 @@ local dailyInfo -- định nghĩa ở mục Quà đăng nhập
 
 -- EnemyService gắn vào đây để tránh require vòng
 PlayerService.DamageArea = nil -- (player, position, radius, amount)
+-- service khác (HabitatService) gắn hàm vào đây:
+PlayerService.BotsChanged = {} -- hàm(player, profile) chạy mỗi khi đội/kho bot đổi
+PlayerService.StateExtras = {} -- [tên] = hàm(player, profile) -> dữ liệu thêm vào state gửi client
 
 function PlayerService.Notify(player, message, action)
 	remotes.Notify:FireClient(player, message, action)
@@ -63,7 +66,8 @@ end
 local function equipped(player, profile)
 	local order = {}
 	for i, entry in profile.bots do
-		if Config.BotById[entry.type] then
+		-- bot đang nghỉ ở Habitat (home) không ra trận
+		if Config.BotById[entry.type] and not entry.home then
 			table.insert(order, i)
 		end
 	end
@@ -187,6 +191,9 @@ local function publishBots(player, profile)
 		end
 	end
 	player:SetAttribute("Bots", table.concat(parts, ","))
+	for _, hook in PlayerService.BotsChanged do
+		hook(player, profile)
+	end
 end
 
 local function countKeys(map)
@@ -245,7 +252,7 @@ function PlayerService.PushState(player)
 	end
 	local root = rootOf(player)
 	local zone = root and Config.ZoneAt(root.Position)
-	remotes.State:FireClient(player, {
+	local state = {
 		credits = profile.credits,
 		level = profile.level,
 		xp = profile.xp,
@@ -273,8 +280,13 @@ function PlayerService.PushState(player)
 		eventWins = profile.stats.eventWins or 0,
 		boosts = profile.boosts,
 		stats = profile.stats,
+		tutorial = profile.tutorial or 0,
 		vip = player:GetAttribute("VIP") == true,
-	})
+	}
+	for key, extra in PlayerService.StateExtras do
+		state[key] = extra(player, profile)
+	end
+	remotes.State:FireClient(player, state)
 end
 
 -- ================= Tiến trình =================
@@ -583,6 +595,10 @@ function actions.RecycleBot(player, profile, session, index)
 		notify(player, "🔒 This bot is locked. Unlock it first.")
 		return
 	end
+	if entry.home then
+		notify(player, "🏠 This bot is resting in your Habitat. Take it out first.")
+		return
+	end
 	table.remove(profile.bots, index)
 	local refund = Config.RecycleValue(bot, entry.level, entry.variant)
 	profile.credits += refund
@@ -606,7 +622,7 @@ function actions.RecycleReserve(player, profile, session, rarity)
 		local entry = profile.bots[i]
 		local bot = Config.BotById[entry.type]
 		-- không đụng tới bot đang ra trận, bot đã khoá và bot biến thể
-		if not keep[i] and bot and bot.rarity == rarity and not entry.locked and not entry.variant and #profile.bots > 1 then
+		if not keep[i] and bot and bot.rarity == rarity and not entry.locked and not entry.variant and not entry.home and #profile.bots > 1 then
 			refund += Config.RecycleValue(bot, entry.level, entry.variant)
 			table.remove(profile.bots, i)
 			count += 1
@@ -620,6 +636,13 @@ function actions.RecycleReserve(player, profile, session, rarity)
 	notify(player, string.format("♻️ Recycled %d %s bots for %s credits", count, rarity, Config.Short(refund)), "Reward")
 	publishBots(player, profile)
 	PlayerService.PushState(player)
+end
+
+-- tiến độ hướng dẫn (client gửi số bước đã xong; 99 = xong/bỏ qua)
+function actions.Tutorial(player, profile, session, step)
+	if type(step) == "number" then
+		profile.tutorial = math.clamp(math.floor(step), 0, 99)
+	end
 end
 
 -- khoá / mở khoá bot (bot khoá không bị Recycle, không bị Fuse)
@@ -646,7 +669,7 @@ function actions.FuseBots(player, profile, session, botType, variant)
 	end
 	local picks = {}
 	for i, entry in profile.bots do
-		if entry.type == bot.id and entry.variant == variant and not entry.locked then
+		if entry.type == bot.id and entry.variant == variant and not entry.locked and not entry.home then
 			table.insert(picks, i)
 		end
 	end
@@ -708,6 +731,16 @@ end
 function actions.Warp(player, profile, session, target)
 	local t = os.clock()
 	if t - (session.lastWarp or 0) < 3 or not rootOf(player) then
+		return
+	end
+	if target == "Habitat" then
+		local plot = Config.Habitat.Plots[player:GetAttribute("Plot") or 0]
+		if plot then
+			session.lastWarp = t
+			local front = Config.PlotFront(plot)
+			local at = plot + front * (Config.Habitat.PlotSize / 2 + 6) + Vector3.new(0, 4, 0)
+			player.Character:PivotTo(CFrame.lookAt(at, plot + Vector3.new(0, 4, 0)))
+		end
 		return
 	end
 	if target == "Hub" then

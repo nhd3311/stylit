@@ -257,6 +257,36 @@ Config.Quests = {
 	{ text = "Defeat the Celestial Core", check = "boss", target = "Citadel", reward = 1.5e11 },
 }
 
+-- ===== Habitat: đảo nuôi bot + trưng bày bộ sưu tập =====
+-- Mỗi người chơi được 1 ô vườn. Bot đặt vào vườn (nghỉ, không ra trận) đi dạo quanh ô
+-- và làm ra Credits cả khi offline: credits/giây = tổng gather bot trong vườn
+-- x hệ số data của vùng xịn nhất đã mở x RateFactor x hiệu suất (theo độ vui).
+-- Độ vui giảm dần trong HungerHours giờ; cho ăn (tốn credits) thì vui lại 100%.
+-- Kho chứa tối đa CapHours giờ sản lượng; ghé vườn bấm Collect để nhận.
+Config.Habitat = {
+	Center = Vector3.new(0, 0, 165),
+	SizeX = 160,
+	SizeZ = 140,
+	PlotSize = 32,
+	Plots = {
+		Vector3.new(-60, 0, 128), Vector3.new(-24, 0, 128), Vector3.new(24, 0, 128), Vector3.new(60, 0, 128),
+		Vector3.new(-60, 0, 200), Vector3.new(-24, 0, 200), Vector3.new(24, 0, 200), Vector3.new(60, 0, 200),
+	},
+	-- 3 bệ trưng bày ở phía sau mỗi ô: lệch ngang dx, cao h
+	Pedestals = { { dx = -9, h = 2 }, { dx = 0, h = 3 }, { dx = 9, h = 2 } },
+	PedestalInset = 5,
+	Slots = 6,
+	ExtraSlotsPass = 6,
+	RateFactor = 0.2,
+	CapHours = 4,
+	HungerHours = 6,
+	MinEfficiency = 0.3, -- đói hẳn vẫn làm được 30%
+}
+-- hướng mặt trước của ô vườn (quay ra lối đi giữa đảo)
+function Config.PlotFront(plot)
+	return if plot.Z < Config.Habitat.Center.Z then Vector3.new(0, 0, 1) else Vector3.new(0, 0, -1)
+end
+
 -- ===== Quà đăng nhập mỗi ngày =====
 -- Chuỗi 7 ngày; lỡ 1 ngày thì quay lại ngày 1. Credits nhân theo level (Config.ScaledCredits).
 -- capsule = "Best": capsule Credits xịn nhất đã mở khoá.
@@ -298,6 +328,7 @@ Config.GamePasses = {
 	CoreOverdrive = { id = 0, name = "🔋 Core Overdrive", description = "Abilities recharge 2x faster" },
 	ZoneWarp = { id = 0, name = "🌀 Zone Warp", description = "Warp to any unlocked zone with no cooldown" },
 	MegaStorage = { id = 0, name = "📦 Mega Storage", description = "+60 bot storage" },
+	BigHabitat = { id = 0, name = "🏡 Habitat Expansion", description = "+6 habitat slots and x2 habitat storage" },
 	BotSlots = { id = 0, name = "🤖 +3 Bot Slots", description = "Bring 3 more bots into battle" },
 	BigBackpack = { id = 0, name = "🎒 Big Backpack", description = "x2 backpack capacity forever" },
 	AutoUpload = { id = 0, name = "📡 Auto Upload", description = "Data uploads itself when your backpack is full" },
@@ -334,6 +365,7 @@ Config.ShopRobux = {
 	{ "pass", "CoreOverdrive" },
 	{ "pass", "ZoneWarp" },
 	{ "pass", "MegaStorage" },
+	{ "pass", "BigHabitat" },
 	{ "pass", "BotSlots" },
 	{ "pass", "BigBackpack" },
 	{ "pass", "AutoUpload" },

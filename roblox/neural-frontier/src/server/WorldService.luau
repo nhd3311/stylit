@@ -43,6 +43,7 @@ local THEMES = {
 	Frost = { a = Color3.fromRGB(218, 238, 255), b = Color3.fromRGB(186, 218, 245), glow = Color3.fromRGB(120, 220, 255), wall = Color3.fromRGB(30, 52, 86), trim = Color3.fromRGB(150, 225, 255) },
 	Magma = { a = Color3.fromRGB(70, 46, 44), b = Color3.fromRGB(52, 34, 32), glow = Color3.fromRGB(255, 110, 30), wall = Color3.fromRGB(34, 20, 18), trim = Color3.fromRGB(255, 120, 40), glowChance = 0.12 },
 	Rift = { a = Color3.fromRGB(36, 14, 48), b = Color3.fromRGB(20, 6, 30), glow = Color3.fromRGB(255, 60, 220), wall = Color3.fromRGB(12, 4, 20), trim = Color3.fromRGB(255, 70, 230), glowChance = 0.08 },
+	Habitat = { a = Color3.fromRGB(205, 245, 220), b = Color3.fromRGB(178, 230, 202), glow = Color3.fromRGB(120, 255, 190), wall = Color3.fromRGB(40, 72, 64), trim = Color3.fromRGB(130, 255, 205) },
 	Citadel = { a = Color3.fromRGB(246, 246, 252), b = Color3.fromRGB(232, 224, 196), glow = Color3.fromRGB(255, 210, 110), wall = Color3.fromRGB(220, 226, 238), trim = Color3.fromRGB(255, 205, 90) },
 }
 
@@ -145,6 +146,7 @@ end
 local function voidGrid()
 	local center = Vector3.new(0, -90, -800)
 	block("Void", Vector3.new(2048, 2, 2048), CFrame.new(center), Color3.fromRGB(10, 8, 26))
+	block("VoidSouth", Vector3.new(2048, 2, 400), CFrame.new(0, -90.05, 320), Color3.fromRGB(10, 8, 26))
 	for i = -16, 16 do
 		local line = { CanCollide = false, Transparency = 0.25 }
 		block("GridX", Vector3.new(2048, 0.2, 0.8), CFrame.new(center + Vector3.new(0, 1.1, i * 64)), Color3.fromRGB(120, 70, 255), NEON, line)
@@ -461,7 +463,7 @@ local function zoneGate(zone)
 		local pillar = block("GatePillar", Vector3.new(4, 20, 4), CFrame.new(x, 10, z), Color3.fromRGB(40, 44, 60), METAL)
 		block("GateGlow", Vector3.new(0.6, 19, 4.2), pillar.CFrame * CFrame.new(-math.sign(x) * 2.2, 0, 0), color, NEON, { CanCollide = false })
 	end
-	local beam = block("GateBeam", Vector3.new(32, 2.4, 4), CFrame.new(0, 21, z), color, NEON)
+	local beam = block("GateBeam_" .. zone.id, Vector3.new(32, 2.4, 4), CFrame.new(0, 21, z), color, NEON)
 	Visuals.Light(beam, color, 30, 2.5)
 	local lock = if zone.level > 1 then string.format("\n<font size='22' color='#FFD84D'>🔒 Level %d</font>", zone.level) else ""
 	Visuals.Label(beam, string.format("%s %s%s", zone.emoji, string.upper(zone.name), lock), UDim2.fromScale(30, 7), Vector3.new(0, 5, 0), Color3.new(1, 1, 1), 400)
@@ -533,7 +535,7 @@ local function buildHub()
 	local c = Config.Hub.center
 	local theme = THEMES.Hub
 	tiledIsland(c, 110, 110, theme)
-	walls(c, 110, 110, theme, { north = 10 }, true)
+	walls(c, 110, 110, theme, { north = 10, south = 10 }, true)
 	block("PlazaRing", Vector3.new(0.3, 30, 30), CFrame.new(c + Vector3.new(0, 0.05, 0)) * CFrame.Angles(0, 0, math.pi / 2), theme.glow, NEON, { Shape = Enum.PartType.Cylinder, CanCollide = false, Transparency = 0.45 })
 	-- trụ đèn 4 góc
 	for _, corner in { Vector3.new(-1, 0, -1), Vector3.new(1, 0, -1), Vector3.new(-1, 0, 1), Vector3.new(1, 0, 1) } do
@@ -657,6 +659,75 @@ local function buildHub()
 
 end
 
+-- ================= Habitat: đảo nuôi bot =================
+
+local PLOT_COLORS = {
+	Color3.fromRGB(255, 214, 226), Color3.fromRGB(214, 236, 255), Color3.fromRGB(226, 255, 214), Color3.fromRGB(255, 240, 200),
+	Color3.fromRGB(232, 218, 255), Color3.fromRGB(200, 250, 240), Color3.fromRGB(255, 222, 200), Color3.fromRGB(220, 230, 250),
+}
+
+-- 1 ô vườn: sàn màu pastel, viền neon, hàng rào kính 3 phía (chừa mặt trước), 6 tổ tròn,
+-- 3 bệ trưng bày phía sau, biển tên phía trước (client gắn tên chủ ô + bộ sưu tập)
+local function buildPlot(i, plot, theme)
+	local H = Config.Habitat
+	local size = H.PlotSize
+	local front = Config.PlotFront(plot)
+	local color = PLOT_COLORS[(i - 1) % #PLOT_COLORS + 1]
+	local floor = block("PlotFloor_" .. i, Vector3.new(size, 0.3, size), CFrame.new(plot + Vector3.new(0, 0.15, 0)), color)
+	for _, side in { -1, 1 } do
+		block("PlotEdge", Vector3.new(size, 0.12, 0.5), CFrame.new(plot + Vector3.new(0, 0.33, side * size / 2)), theme.trim, NEON, { CanCollide = false, Transparency = 0.2 })
+		block("PlotEdge", Vector3.new(0.5, 0.12, size), CFrame.new(plot + Vector3.new(side * size / 2, 0.33, 0)), theme.trim, NEON, { CanCollide = false, Transparency = 0.2 })
+		-- rào kính hai bên
+		block("PlotFence", Vector3.new(0.6, 2.2, size), CFrame.new(plot + Vector3.new(side * (size / 2 + 0.4), 1.1, 0)), Color3.fromRGB(220, 240, 255), Enum.Material.Glass, { Transparency = 0.55 })
+	end
+	block("PlotFence", Vector3.new(size, 2.2, 0.6), CFrame.new(plot - front * (size / 2 + 0.4) + Vector3.new(0, 1.1, 0)), Color3.fromRGB(220, 240, 255), Enum.Material.Glass, { Transparency = 0.55 })
+	for k = 1, 6 do
+		local angle = (k - 1) / 6 * math.pi * 2
+		block("Nest", Vector3.new(0.4, 5, 5), CFrame.new(plot + Vector3.new(math.cos(angle) * 8, 0.45, math.sin(angle) * 8)) * CFrame.Angles(0, 0, math.pi / 2), color:Lerp(Color3.new(1, 1, 1), 0.45), PLASTIC, { Shape = Enum.PartType.Cylinder })
+	end
+	for _, spec in H.Pedestals do
+		local pos = plot - front * (size / 2 - H.PedestalInset) + Vector3.new(spec.dx, 0, 0)
+		block("Pedestal", Vector3.new(spec.h, 4, 4), CFrame.new(pos + Vector3.new(0, spec.h / 2, 0)) * CFrame.Angles(0, 0, math.pi / 2), Color3.fromRGB(240, 242, 250), Enum.Material.Marble, { Shape = Enum.PartType.Cylinder })
+		block("PedestalRing", Vector3.new(0.3, 4.4, 4.4), CFrame.new(pos + Vector3.new(0, spec.h + 0.15, 0)) * CFrame.Angles(0, 0, math.pi / 2), theme.trim, NEON, { Shape = Enum.PartType.Cylinder, CanCollide = false })
+	end
+	local signPos = plot + front * (size / 2 + 1.5) + Vector3.new(0, 4.5, 0)
+	local sign = block("PlotSign_" .. i, Vector3.new(14, 5, 0.6), CFrame.lookAt(signPos, signPos + front), theme.wall, METAL)
+	block("PlotSignTrim", Vector3.new(14.4, 0.4, 0.8), sign.CFrame * CFrame.new(0, 2.6, 0), theme.trim, NEON, { CanCollide = false })
+	for _, dx in { -6, 6 } do
+		block("PlotSignPost", Vector3.new(0.6, 4.5, 0.6), sign.CFrame * CFrame.new(dx, -4.75, 0), theme.wall, METAL)
+	end
+	prompt(floor, "Bot Habitat", "Open Habitat", 18).Triggered:Connect(function(player)
+		if WorldService.OnOpen then
+			WorldService.OnOpen(player, "Habitat")
+		end
+	end)
+end
+
+local function buildHabitat()
+	local H = Config.Habitat
+	local theme = THEMES.Habitat
+	tiledIsland(H.Center, H.SizeX, H.SizeZ, theme)
+	walls(H.Center, H.SizeX, H.SizeZ, theme, { north = 10 }, true)
+	-- lối đi giữa hai hàng ô và lối vào từ cầu
+	block("HabitatPath", Vector3.new(H.SizeX - 8, 0.1, 6), CFrame.new(H.Center + Vector3.new(0, 0.05, 0)), theme.glow, NEON, { CanCollide = false, Transparency = 0.45 })
+	block("HabitatEntry", Vector3.new(6, 0.1, H.SizeZ / 2 - 4), CFrame.new(H.Center + Vector3.new(0, 0.05, -H.SizeZ / 4 - 2)), theme.glow, NEON, { CanCollide = false, Transparency = 0.45 })
+	-- cổng vào
+	local gateZ = H.Center.Z - H.SizeZ / 2 - 1.5
+	for _, x in { -9, 9 } do
+		block("HabitatGatePillar", Vector3.new(3, 13, 3), CFrame.new(x, 6.5, gateZ), theme.wall, METAL)
+	end
+	local beam = block("HabitatGateBeam", Vector3.new(21, 1.6, 3), CFrame.new(0, 13.6, gateZ), theme.trim, NEON)
+	Visuals.Light(beam, theme.glow, 24, 1.5)
+	Visuals.Label(beam, "🏠 BOT HABITAT\n<font size='16'>Raise bots · Show off your collection</font>", UDim2.fromScale(22, 5), Vector3.new(0, 4.5, 0), Color3.fromRGB(190, 255, 225), 300)
+	-- cây voxel và khối data trang trí ở 4 góc đảo
+	for _, corner in { Vector3.new(-1, 0, -1), Vector3.new(1, 0, -1), Vector3.new(-1, 0, 1), Vector3.new(1, 0, 1) } do
+		voxelTree(H.Center + Vector3.new(corner.X * (H.SizeX / 2 - 6), 0, corner.Z * (H.SizeZ / 2 - 6)), 1.1)
+	end
+	for i, plot in H.Plots do
+		buildPlot(i, plot, theme)
+	end
+end
+
 -- ================= Sàn đấu Glitch Floor =================
 
 local function buildArena()
@@ -717,6 +788,8 @@ function WorldService.Start()
 		decorate(zone, theme)
 	end
 	buildArena()
+	buildHabitat()
+	bridge(Config.Habitat.Center.Z - Config.Habitat.SizeZ / 2, Config.Hub.center.Z + 55, THEMES.Habitat)
 end
 
 function WorldService.HubSpawn()

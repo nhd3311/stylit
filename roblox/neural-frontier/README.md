@@ -70,6 +70,26 @@ Bot không mua thẳng nữa mà **mở từ Capsule**. Mỗi capsule cho đúng
 - Sưu tầm đủ 5 bot của một capsule thì nhận thưởng một lần: Credits và **+% gather vĩnh viễn** (Meadow +5%, Canyon +10%, Spires +15%, Frost +20%, Magma +25%, Rift +30%, Citadel +40%, Neon +25%). Tổng cộng **40 bot** để sưu tầm.
 - Mỗi bot có 2 huy hiệu ✨/🌈 sáng lên khi anh từng sở hữu bản biến thể đó.
 
+## 🏠 Habitat: nuôi bot và trưng bày bộ sưu tập
+
+- Đảo **Bot Habitat** nằm phía sau Hub (đi qua cầu ở cổng nam). Có **8 ô vườn**, mỗi người chơi vào server được chia 1 ô.
+- **Đặt bot vào vườn** (bảng 🏠 HABITAT): bot sẽ **đi dạo quanh ô, nhún nhảy**. Bot nghỉ trong vườn thì không ra trận.
+- Bot trong vườn **làm ra Credits cả khi offline**. Sản lượng = tổng gather của bot trong vườn × hệ số data của vùng xịn nhất đã mở.
+- **Độ vui** giảm dần trong 6 giờ. Bấm **🍖 Feed** để bot vui lại 100%; vui càng nhiều thì làm càng nhiều (đói hẳn vẫn làm được 30%).
+- Kho chứa tối đa **4 giờ** sản lượng, nên phải quay lại bấm **💰 Collect**. Đây là lý do để người chơi quay lại game mỗi ngày.
+- **Trưng bày**: 3 bot hiếm nhất của anh đứng xoay trên **bệ đá**. Biển tên hiện *"🏠 Tên · 📚 23/40 bots"* cho cả server xem.
+- Game Pass **🏡 Habitat Expansion**: +6 ô nghỉ và kho chứa x2.
+- Nút 🌀 Warp có thêm **"My Habitat"** (miễn phí).
+- ⚠️ Có 8 ô vườn, nên anh đặt **Max Players = 8** trong Game Settings (hoặc thêm ô trong `Config.Habitat.Plots`).
+
+## 📖 Hướng dẫn người mới + nút ❓ Guide
+
+- Người chơi mới vào game sẽ có **tutorial 9 bước**: đi vào Byte Meadow → thu thập → upload → mở capsule → xem đội bot → đặt bot vào Habitat → đánh drone → xong.
+- Bước nào cần đi tới đâu thì có **tia sáng chỉ đường** từ nhân vật tới đích và **mũi tên ⬇️** trên đích. Bước cần bấm menu thì có **ngón tay 👈** chỉ vào nút.
+- Làm đúng thì **tự qua bước sau**, có bong bóng ăn mừng. Có nút **SKIP**. Tiến độ được lưu, thoát ra vào lại vẫn làm tiếp.
+- Nút **❓ GUIDE** luôn hiện cạnh thẻ phi công. Mở ra là **hướng dẫn đầy đủ** mọi tính năng, có nút **▶ chơi lại tutorial**.
+- Người chơi cũ (level > 3) không bị bắt làm tutorial.
+
 ## 🎁 Quà đăng nhập 7 ngày
 
 Mỗi ngày (theo giờ UTC) nhận 1 lần. Chuỗi liên tục thì lên ngày tiếp theo, lỡ 1 ngày là quay về Ngày 1. Credits tự tăng theo level.
@@ -121,6 +141,7 @@ Trên điện thoại có sẵn nút bấm cho từng kỹ năng và nút 💾 t
 | Game Pass | 🔋 Core Overdrive | Kỹ năng hồi chiêu nhanh x2 | 149 R$ |
 | Game Pass | 🌀 Zone Warp | Dịch chuyển tức thì tới vùng đã mở (nút 🌀 trên thanh vùng). Về Hub thì miễn phí cho mọi người | 99 R$ |
 | Game Pass | 📦 Mega Storage | Kho bot +60 | 99 R$ |
+| Game Pass | 🏡 Habitat Expansion | +6 ô nghỉ trong Habitat, kho chứa x2 | 199 R$ |
 | Dev Product | 👥 x4 Clone Squad (15') | 4 bản sao hologram của bot mạnh nhất cùng đánh và thu thập (mỗi bản 50% sức mạnh) | 49 R$ |
 | Dev Product | 🌍 Server x2 Luck (15') | x2 luck cho **cả server**, cả server được báo tên người mua | 99 R$ |
 | Game Pass | 🥚 Triple Hatch | Mở 3 capsule Credits một lần | 199 R$ |
@@ -143,7 +164,7 @@ Giá là gợi ý, anh tự đặt trên Creator Dashboard. **x3 và x10 rẻ h�
 1. Mở `NeuralFrontier.rbxlx` bằng Studio (**File → Open from File**), rồi bấm **Play**. Chưa publish vẫn chơi được ở chế độ thử, nhưng data không được lưu.
 2. Muốn lưu data thì **Publish** game, rồi bật **Game Settings → Security → Enable Studio Access to API Services**.
 3. Muốn thử nhiều người chơi: tab **Test → Clients and Servers → 2 Players → Start**.
-4. Vào Creator Dashboard, tạo 14 Game Pass `VIP`, `LuckyScanner`, `TripleHatch`, `ShinyHunter`, `RapidFire`, `AutoHarvest`, `DataShield`, `CoreOverdrive`, `ZoneWarp`, `MegaStorage`, `BotSlots`, `BigBackpack`, `AutoUpload`, `TurboBoots` và 12 Developer Product `StarterPack`, `NeonCapsule1`, `NeonCapsule3`, `NeonCapsule10`, `LuckBoost`, `CloneSquad`, `ServerLuck`, `CreditBoost`, `GatherBoost`, `MegaBoost`, `CreditsSmall`, `CreditsLarge`.
+4. Vào Creator Dashboard, tạo 15 Game Pass `VIP`, `LuckyScanner`, `TripleHatch`, `ShinyHunter`, `RapidFire`, `AutoHarvest`, `DataShield`, `CoreOverdrive`, `ZoneWarp`, `MegaStorage`, `BigHabitat`, `BotSlots`, `BigBackpack`, `AutoUpload`, `TurboBoots` và 12 Developer Product `StarterPack`, `NeonCapsule1`, `NeonCapsule3`, `NeonCapsule10`, `LuckBoost`, `CloneSquad`, `ServerLuck`, `CreditBoost`, `GatherBoost`, `MegaBoost`, `CreditsSmall`, `CreditsLarge`.
 5. Dán ID vào `src/shared/Config.luau`. Khi ID còn là `0`, nút trong shop sẽ hiện "Set ID".
 
 Dùng Rojo thì chạy `rojo serve` trong thư mục này.
@@ -156,6 +177,8 @@ Dùng Rojo thì chạy `rojo serve` trong thư mục này.
 | `shared/BotModels.luau` | Dựng 7 dáng thú máy (Orb, Cat, Fox, Beetle, Owl, Jelly, Dragon) + cử động + biến thể Shiny/Holo, capsule 3D |
 | `server/DataService.luau` | Lưu và tải data, retry, chế độ thử khi chưa publish |
 | `server/WorldService.luau` | Dựng thế giới khối: đảo lát gạch, tường, cầu, trang trí theo vùng, Hub, Capsule Lab, sàn Glitch Floor |
+| `server/HabitatService.luau` | Chia ô vườn, bot nghỉ làm Credits khi offline, độ vui/cho ăn/thu hoạch, bệ trưng bày |
+| `client/Habitat.luau` | Vẽ bot đi dạo trong vườn, bot trên bệ trưng bày, biển tên chủ ô |
 | `server/EventService.luau` | Điều khiển sự kiện Glitch Floor: mời, đếm ngược, làm rơi ô sàn, loại người rơi, phát thưởng |
 | `server/PlayerService.luau` | Thu thập, upload, mở capsule + biến thể, Fuse, khoá bot, Database, quà ngày, kỹ năng, level, nhiệm vụ |
 | `server/EnemyService.luau` | AI của quái và boss, đội bot tự bắn, chia thưởng boss |

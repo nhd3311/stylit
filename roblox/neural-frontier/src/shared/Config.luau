@@ -13,9 +13,9 @@ Config.AutosaveInterval = 120
 -- ===== Người chơi =====
 Config.Player = {
 	BaseHealth = 100,
-	HealthPerLevel = 12,
+	HealthGrowth = 1.065, -- máu x1.065 mỗi level (stage sau quái đánh đau hơn nhiều)
 	BasePower = 6, -- sát thương Pulse ở level 1
-	PowerPerLevel = 3,
+	PowerGrowth = 1.3, -- sát thương Pulse x1.3 mỗi level
 	XpBase = 60,
 	XpGrowth = 1.35,
 	MaxLevel = 60,
@@ -34,6 +34,11 @@ Config.Backpacks = {
 	{ name = "Data Vault", capacity = 5000, price = 60000 },
 	{ name = "Cloud Core", capacity = 15000, price = 300000 },
 	{ name = "Quantum Cache", capacity = 50000, price = 1500000 },
+	{ name = "Frost Drive", capacity = 2e6, price = 8e6 },
+	{ name = "Magma Vault", capacity = 4e7, price = 2e8 },
+	{ name = "Rift Archive", capacity = 6e8, price = 5e9 },
+	{ name = "Celestial Cloud", capacity = 1e10, price = 1.5e11 },
+	{ name = "Infinity Core", capacity = 2e11, price = 5e12 },
 }
 
 -- ===== Bot AI: lấy từ Capsule (không mua thẳng) =====
@@ -59,6 +64,30 @@ Config.Bots = {
 	{ id = "Volt", name = "Volt Fox", rarity = "Rare", gather = 45, attack = 55, value = 180000, form = "Fox", color = Color3.fromRGB(90, 160, 255), accent = Color3.fromRGB(255, 255, 120), size = 1.9 },
 	{ id = "Void", name = "Void Owl", rarity = "Epic", gather = 80, attack = 90, value = 600000, form = "Owl", color = Color3.fromRGB(110, 60, 190), accent = Color3.fromRGB(255, 80, 220), size = 2 },
 	{ id = "Quantum", name = "Quantum Dragon", rarity = "Legendary", gather = 150, attack = 150, value = 3000000, form = "Dragon", color = Color3.fromRGB(235, 242, 255), accent = Color3.fromRGB(0, 230, 255), size = 2.2 },
+	-- ❄️ Frost Capsule
+	{ id = "Snow", name = "Snow Orb", rarity = "Common", gather = 80, attack = 120, value = 1.2e6, form = "Orb", color = Color3.fromRGB(225, 245, 255), accent = Color3.fromRGB(120, 220, 255), size = 1.8 },
+	{ id = "FrostCat", name = "Frost Kitty", rarity = "Common", gather = 120, attack = 90, value = 1.5e6, form = "Cat", color = Color3.fromRGB(160, 215, 255), size = 1.8 },
+	{ id = "Glacier", name = "Glacier Beetle", rarity = "Rare", gather = 200, attack = 220, value = 5e6, form = "Beetle", color = Color3.fromRGB(110, 190, 255), accent = Color3.fromRGB(230, 250, 255), size = 1.9 },
+	{ id = "Borealis", name = "Borealis Jelly", rarity = "Epic", gather = 420, attack = 350, value = 1.5e7, form = "Jelly", color = Color3.fromRGB(120, 255, 210), accent = Color3.fromRGB(170, 130, 255), size = 2 },
+	{ id = "IceWyrm", name = "Ice Wyrm", rarity = "Legendary", gather = 800, attack = 850, value = 6e7, form = "Dragon", color = Color3.fromRGB(200, 240, 255), accent = Color3.fromRGB(60, 200, 255), size = 2.3 },
+	-- 🌋 Magma Capsule
+	{ id = "Ember", name = "Ember Orb", rarity = "Common", gather = 350, attack = 500, value = 3e7, form = "Orb", color = Color3.fromRGB(255, 120, 50), size = 1.9 },
+	{ id = "Cinder", name = "Cinder Fox", rarity = "Common", gather = 500, attack = 450, value = 4e7, form = "Fox", color = Color3.fromRGB(200, 70, 40), accent = Color3.fromRGB(255, 190, 60), size = 1.9 },
+	{ id = "MagmaBug", name = "Magma Beetle", rarity = "Rare", gather = 900, attack = 1000, value = 1.4e8, form = "Beetle", color = Color3.fromRGB(90, 40, 30), accent = Color3.fromRGB(255, 110, 30), size = 2 },
+	{ id = "Blaze", name = "Blaze Owl", rarity = "Epic", gather = 1800, attack = 1700, value = 4.5e8, form = "Owl", color = Color3.fromRGB(255, 90, 40), accent = Color3.fromRGB(255, 230, 90), size = 2.1 },
+	{ id = "Inferno", name = "Inferno Drake", rarity = "Legendary", gather = 3600, attack = 3800, value = 1.8e9, form = "Dragon", color = Color3.fromRGB(120, 30, 20), accent = Color3.fromRGB(255, 140, 30), size = 2.4 },
+	-- 🌀 Rift Capsule
+	{ id = "Static", name = "Static Orb", rarity = "Common", gather = 1500, attack = 2200, value = 9e8, form = "Orb", color = Color3.fromRGB(60, 20, 80), accent = Color3.fromRGB(255, 60, 220), size = 2 },
+	{ id = "RiftCat", name = "Rift Kitty", rarity = "Common", gather = 2200, attack = 1900, value = 1.2e9, form = "Cat", color = Color3.fromRGB(190, 60, 255), accent = Color3.fromRGB(60, 255, 230), size = 2 },
+	{ id = "NullBug", name = "Null Beetle", rarity = "Rare", gather = 4000, attack = 4400, value = 4e9, form = "Beetle", color = Color3.fromRGB(30, 10, 40), accent = Color3.fromRGB(255, 70, 230), size = 2.1 },
+	{ id = "Phase", name = "Phase Fox", rarity = "Epic", gather = 8000, attack = 7600, value = 1.3e10, form = "Fox", color = Color3.fromRGB(255, 70, 220), accent = Color3.fromRGB(80, 255, 255), size = 2.2 },
+	{ id = "Leviathan", name = "Rift Leviathan", rarity = "Legendary", gather = 16000, attack = 17000, value = 5.5e10, form = "Dragon", color = Color3.fromRGB(40, 10, 60), accent = Color3.fromRGB(255, 60, 220), size = 2.5 },
+	-- ☁️ Citadel Capsule
+	{ id = "Halo", name = "Halo Orb", rarity = "Common", gather = 7000, attack = 9000, value = 2.5e10, form = "Orb", color = Color3.fromRGB(255, 250, 235), accent = Color3.fromRGB(255, 210, 90), size = 2.1 },
+	{ id = "Seraph", name = "Seraph Kitty", rarity = "Common", gather = 9500, attack = 8500, value = 3.5e10, form = "Cat", color = Color3.fromRGB(255, 240, 200), accent = Color3.fromRGB(140, 220, 255), size = 2.1 },
+	{ id = "Aegis", name = "Aegis Beetle", rarity = "Rare", gather = 16000, attack = 18000, value = 1.2e11, form = "Beetle", color = Color3.fromRGB(240, 210, 120), accent = Color3.fromRGB(255, 255, 255), size = 2.2 },
+	{ id = "Oracle", name = "Oracle Owl", rarity = "Epic", gather = 32000, attack = 30000, value = 4e11, form = "Owl", color = Color3.fromRGB(250, 250, 255), accent = Color3.fromRGB(255, 200, 80), size = 2.3 },
+	{ id = "Celestial", name = "Celestial Dragon", rarity = "Legendary", gather = 64000, attack = 66000, value = 1.6e12, form = "Dragon", color = Color3.fromRGB(255, 245, 220), accent = Color3.fromRGB(255, 200, 60), size = 2.6 },
 	-- 💎 Neon Capsule (Robux)
 	{ id = "Holo", name = "Holo Kitty", rarity = "Epic", gather = 25, attack = 25, value = 150000, form = "Cat", color = Color3.fromRGB(0, 255, 220), accent = Color3.fromRGB(255, 120, 255), size = 1.7 },
 	{ id = "Prism", name = "Prism Fox", rarity = "Epic", gather = 35, attack = 40, value = 220000, form = "Fox", color = Color3.fromRGB(255, 120, 255), accent = Color3.fromRGB(120, 255, 255), size = 1.8 },
@@ -109,6 +138,26 @@ Config.Capsules = {
 		reward = { credits = 600000, gather = 0.15 },
 	},
 	{
+		id = "Frost", name = "Frost Capsule", emoji = "❄️", price = 2.5e6, level = 22, color = Color3.fromRGB(140, 220, 255),
+		drops = { { bot = "Snow", weight = 45 }, { bot = "FrostCat", weight = 30 }, { bot = "Glacier", weight = 17 }, { bot = "Borealis", weight = 7 }, { bot = "IceWyrm", weight = 1 } },
+		reward = { credits = 5e6, gather = 0.2 },
+	},
+	{
+		id = "Magma", name = "Magma Capsule", emoji = "🌋", price = 7e7, level = 30, color = Color3.fromRGB(255, 110, 40),
+		drops = { { bot = "Ember", weight = 45 }, { bot = "Cinder", weight = 30 }, { bot = "MagmaBug", weight = 17 }, { bot = "Blaze", weight = 7 }, { bot = "Inferno", weight = 1 } },
+		reward = { credits = 1.5e8, gather = 0.25 },
+	},
+	{
+		id = "Rift", name = "Rift Capsule", emoji = "🌀", price = 2e9, level = 40, color = Color3.fromRGB(255, 70, 220),
+		drops = { { bot = "Static", weight = 45 }, { bot = "RiftCat", weight = 30 }, { bot = "NullBug", weight = 17 }, { bot = "Phase", weight = 7 }, { bot = "Leviathan", weight = 1 } },
+		reward = { credits = 4e9, gather = 0.3 },
+	},
+	{
+		id = "Citadel", name = "Citadel Capsule", emoji = "☁️", price = 6e10, level = 50, color = Color3.fromRGB(255, 220, 130),
+		drops = { { bot = "Halo", weight = 45 }, { bot = "Seraph", weight = 30 }, { bot = "Aegis", weight = 17 }, { bot = "Oracle", weight = 7 }, { bot = "Celestial", weight = 1 } },
+		reward = { credits = 1.2e11, gather = 0.4 },
+	},
+	{
 		id = "Neon", name = "Neon Capsule", emoji = "💎", price = nil, level = 1, color = Color3.fromRGB(255, 70, 200), premium = true,
 		drops = { { bot = "Holo", weight = 50 }, { bot = "Prism", weight = 30 }, { bot = "Aurora", weight = 15 }, { bot = "Nova", weight = 4.5 }, { bot = "Singularity", weight = 0.5 } },
 		reward = { credits = 100000, gather = 0.25 },
@@ -150,7 +199,32 @@ Config.Zones = {
 		enemy = { name = "Neon Wraith", hp = 1500, damage = 55, speed = 15, credits = 650, xp = 260, count = 9, color = Color3.fromRGB(160, 60, 255) },
 		boss = { name = "Overmind", hp = 80000, damage = 130, speed = 10, credits = 60000, xp = 15000, respawn = 180, color = Color3.fromRGB(120, 0, 255), size = 15 },
 	},
+	{
+		id = "Frost", name = "Frost Server", emoji = "❄️", level = 22, center = Vector3.new(0, 0, -920), size = 180,
+		dataMult = 64, nodes = 26, nodeValue = 450, crystal = Color3.fromRGB(140, 230, 255),
+		enemy = { name = "Frost Sentinel", hp = 10000, damage = 100, speed = 15, credits = 4000, xp = 1800, count = 9, color = Color3.fromRGB(140, 220, 255) },
+		boss = { name = "Cryo Colossus", hp = 600000, damage = 260, speed = 10, credits = 400000, xp = 120000, respawn = 180, color = Color3.fromRGB(100, 200, 255), size = 15 },
+	},
+	{
+		id = "Magma", name = "Magma Forge", emoji = "🌋", level = 30, center = Vector3.new(0, 0, -1180), size = 180,
+		dataMult = 256, nodes = 26, nodeValue = 1800, crystal = Color3.fromRGB(255, 120, 40),
+		enemy = { name = "Magma Crawler", hp = 70000, damage = 170, speed = 16, credits = 25000, xp = 12000, count = 9, color = Color3.fromRGB(255, 110, 30) },
+		boss = { name = "Forge Tyrant", hp = 4.5e6, damage = 420, speed = 10, credits = 2.5e6, xp = 800000, respawn = 200, color = Color3.fromRGB(255, 80, 20), size = 16 },
+	},
+	{
+		id = "Rift", name = "Glitch Rift", emoji = "🌀", level = 40, center = Vector3.new(0, 0, -1440), size = 180,
+		dataMult = 1024, nodes = 26, nodeValue = 7500, crystal = Color3.fromRGB(255, 70, 220),
+		enemy = { name = "Rift Phantom", hp = 5e5, damage = 300, speed = 18, credits = 170000, xp = 80000, count = 10, color = Color3.fromRGB(255, 60, 220) },
+		boss = { name = "The Glitch Queen", hp = 3.2e7, damage = 750, speed = 11, credits = 1.7e7, xp = 5.5e6, respawn = 220, color = Color3.fromRGB(255, 40, 200), size = 17 },
+	},
+	{
+		id = "Citadel", name = "Cloud Citadel", emoji = "☁️", level = 50, center = Vector3.new(0, 0, -1710), size = 200,
+		dataMult = 4096, nodes = 28, nodeValue = 30000, crystal = Color3.fromRGB(255, 215, 120),
+		enemy = { name = "Aegis Drone", hp = 3.5e6, damage = 550, speed = 18, credits = 1.2e6, xp = 550000, count = 10, color = Color3.fromRGB(255, 220, 120) },
+		boss = { name = "Celestial Core", hp = 2.4e8, damage = 1300, speed = 11, credits = 1.2e8, xp = 3.8e7, respawn = 240, color = Color3.fromRGB(255, 230, 150), size = 18 },
+	},
 }
+Config.FreeWarpCooldown = 60 -- giây giữa 2 lần dịch chuyển miễn phí (pass Zone Warp: không chờ)
 Config.NodeRespawn = 25
 Config.Hub = { center = Vector3.new(0, 0, 0), radius = 45 }
 
@@ -173,6 +247,14 @@ Config.Quests = {
 	{ text = "Reach level 15 to open Neon Spires", check = "level", target = 15, reward = 80000 },
 	{ text = "Upload 500,000 data", check = "uploaded", target = 500000, reward = 300000 },
 	{ text = "Defeat the Overmind", check = "boss", target = "Spires", reward = 1000000 },
+	{ text = "Reach level 22 to open Frost Server", check = "level", target = 22, reward = 2e6 },
+	{ text = "Defeat the Cryo Colossus", check = "boss", target = "Frost", reward = 5e6 },
+	{ text = "Reach level 30 to open Magma Forge", check = "level", target = 30, reward = 4e7 },
+	{ text = "Defeat the Forge Tyrant", check = "boss", target = "Magma", reward = 1e8 },
+	{ text = "Reach level 40 to open Glitch Rift", check = "level", target = 40, reward = 1e9 },
+	{ text = "Defeat The Glitch Queen", check = "boss", target = "Rift", reward = 3e9 },
+	{ text = "Reach level 50 to open Cloud Citadel", check = "level", target = 50, reward = 4e10 },
+	{ text = "Defeat the Celestial Core", check = "boss", target = "Citadel", reward = 1.5e11 },
 }
 
 -- ===== Quà đăng nhập mỗi ngày =====
@@ -214,7 +296,7 @@ Config.GamePasses = {
 	AutoHarvest = { id = 0, name = "🤖 Auto Harvest", description = "Your squad harvests nearby crystals for you" },
 	DataShield = { id = 0, name = "🛡️ Data Shield", description = "Keep your data when you get knocked out" },
 	CoreOverdrive = { id = 0, name = "🔋 Core Overdrive", description = "Abilities recharge 2x faster" },
-	ZoneWarp = { id = 0, name = "🌀 Zone Warp", description = "Teleport to any unlocked zone instantly" },
+	ZoneWarp = { id = 0, name = "🌀 Zone Warp", description = "Warp to any unlocked zone with no cooldown" },
 	MegaStorage = { id = 0, name = "📦 Mega Storage", description = "+60 bot storage" },
 	BotSlots = { id = 0, name = "🤖 +3 Bot Slots", description = "Bring 3 more bots into battle" },
 	BigBackpack = { id = 0, name = "🎒 Big Backpack", description = "x2 backpack capacity forever" },
@@ -305,11 +387,11 @@ function Config.XpToNext(level)
 end
 
 function Config.MaxHealth(level)
-	return Config.Player.BaseHealth + Config.Player.HealthPerLevel * (level - 1)
+	return math.floor(Config.Player.BaseHealth * Config.Player.HealthGrowth ^ (level - 1))
 end
 
 function Config.Power(level)
-	return Config.Player.BasePower + Config.Player.PowerPerLevel * (level - 1)
+	return math.floor(Config.Player.BasePower * Config.Player.PowerGrowth ^ (level - 1))
 end
 
 function Config.VariantMult(variant)

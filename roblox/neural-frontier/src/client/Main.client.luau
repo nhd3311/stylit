@@ -140,23 +140,6 @@ local function sweepLayer(parent, radius, strength)
 	}))
 end
 
--- di chuột thì phóng to nhẹ, bấm thì nhún
-local function hoverable(button)
-	local scale = new("UIScale", { Parent = button })
-	button.MouseEnter:Connect(function()
-		tween(scale, 0.12, { Scale = 1.05 })
-	end)
-	button.MouseLeave:Connect(function()
-		tween(scale, 0.12, { Scale = 1 })
-	end)
-	button.MouseButton1Down:Connect(function()
-		tween(scale, 0.06, { Scale = 0.93 })
-	end)
-	button.MouseButton1Up:Connect(function()
-		tween(scale, 0.1, { Scale = 1.05 })
-	end)
-end
-
 -- khung kính tối có viền neon
 local function glass(props, accent, radius)
 	local frame = new("Frame", props)
@@ -200,27 +183,89 @@ local function setBar(b, ratio)
 	tween(b.fill, 0.25, { Size = UDim2.fromScale(math.clamp(ratio, 0, 1), 1) })
 end
 
--- nút bấm dùng trong bảng. confirm = chữ hiện ra để bấm lần 2 xác nhận
+-- màu tối hơn cho phần "đế" của nút 3D
+local function shade(color, k)
+	return color:Lerp(Color3.new(0, 0, 0), k or 0.45)
+end
+
+-- Hiệu ứng nút 3D: rê chuột thì mặt nút nổi lên, bấm thì lún xuống sát đế, thả ra thì bật lại
+local function press3D(face, depth)
+	local rest = face.Position
+	local scale = new("UIScale", { Parent = face })
+	local lift = UDim2.fromOffset(0, -2)
+	face.MouseEnter:Connect(function()
+		tween(face, 0.1, { Position = rest + lift })
+		tween(scale, 0.1, { Scale = 1.03 })
+	end)
+	face.MouseLeave:Connect(function()
+		tween(face, 0.12, { Position = rest })
+		tween(scale, 0.12, { Scale = 1 })
+	end)
+	face.MouseButton1Down:Connect(function()
+		tween(face, 0.05, { Position = rest + UDim2.fromOffset(0, depth) })
+	end)
+	face.MouseButton1Up:Connect(function()
+		tween(face, 0.18, { Position = rest + lift }, Enum.EasingStyle.Back)
+	end)
+end
+
+-- Bong bóng bay lên từ đáy một khung rồi tan (menu, nút đặc biệt)
+local function spawnBubbles(parent, count, color)
+	for _ = 1, count do
+		local size = math.random(6, 14)
+		local x = math.random()
+		local bubble = new("Frame", { AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.new(x, 0, 1, -4), Size = UDim2.fromOffset(size, size), BackgroundColor3 = color or WHITE, BackgroundTransparency = 0.7, BorderSizePixel = 0, ZIndex = 9, Parent = parent }, {
+			corner(size),
+			new("UIStroke", { Color = WHITE, Thickness = 1, Transparency = 0.3 }),
+			new("Frame", { Position = UDim2.fromScale(0.2, 0.16), Size = UDim2.fromScale(0.32, 0.32), BackgroundColor3 = WHITE, BackgroundTransparency = 0.15, BorderSizePixel = 0, ZIndex = 10 }, { corner(size) }),
+		})
+		local duration = 0.9 + math.random() * 0.9
+		tween(bubble, duration, { Position = UDim2.new(x, math.random(-16, 16), 1, -4 - math.random(34, 80)), BackgroundTransparency = 1 }, Enum.EasingStyle.Sine)
+		tween(bubble:FindFirstChildOfClass("UIStroke"), duration, { Transparency = 1 }, Enum.EasingStyle.Sine)
+		task.delay(duration, function()
+			bubble:Destroy()
+		end)
+	end
+end
+
+-- Nút 3D kiểu bong bóng: mặt nút (TextButton) nằm trên "đế" tối màu, có lớp bóng kính và đốm sáng.
+-- Hàm trả về mặt nút; khung bọc (holder) là cha của nó và nhận Position/Size/AnchorPoint.
+-- confirm = chữ hiện ra để bấm lần 2 xác nhận
 local function button(props)
 	local color = props.Color or C.cyan
-	local b = new("TextButton", {
+	local height = if props.Size then props.Size.Y.Offset else 36
+	local depth = props.Depth or (if height > 0 and height < 30 then 3 else 5)
+	local radius = props.Radius or 10
+	local holder = new("Frame", {
 		AnchorPoint = props.AnchorPoint or Vector2.zero,
 		Position = props.Position or UDim2.new(),
 		Size = props.Size,
+		BackgroundTransparency = 1,
+		LayoutOrder = props.LayoutOrder or 0,
+		Parent = props.Parent,
+	})
+	local base = new("Frame", { Position = UDim2.fromOffset(0, depth), Size = UDim2.new(1, 0, 1, -depth), BackgroundColor3 = shade(color), BorderSizePixel = 0, Parent = holder }, { corner(radius) })
+	local b = new("TextButton", {
+		Size = UDim2.new(1, 0, 1, -depth),
 		AutoButtonColor = false,
 		BackgroundColor3 = color,
 		BorderSizePixel = 0,
-		FontFace = BODY,
+		FontFace = props.Font or BODY,
 		TextSize = props.TextSize or 15,
 		TextColor3 = C.text,
-		TextStrokeTransparency = 0.7,
+		TextStrokeTransparency = 0.55,
 		TextWrapped = true,
 		Text = props.Text,
-		Parent = props.Parent,
-	}, { corner(8), stroke(color:Lerp(WHITE, 0.35), 1, 0.35) })
-	new("Frame", { Size = UDim2.new(1, 0, 0.5, 0), BackgroundColor3 = WHITE, BackgroundTransparency = 0.88, BorderSizePixel = 0, Parent = b }, { corner(8) })
+		Parent = holder,
+	}, { corner(radius), stroke(color:Lerp(WHITE, 0.45), 1, 0.35) })
+	new("Frame", { Position = UDim2.fromOffset(3, 2), Size = UDim2.new(1, -6, 0.45, 0), BackgroundColor3 = WHITE, BackgroundTransparency = 0.8, BorderSizePixel = 0, Parent = b }, { corner(radius) })
+	new("Frame", { Position = UDim2.fromOffset(7, 4), Size = UDim2.fromOffset(9, 5), BackgroundColor3 = WHITE, BackgroundTransparency = 0.3, BorderSizePixel = 0, Parent = b }, { corner(4) })
+	-- đổi màu mặt nút thì đế đổi theo
+	b:GetPropertyChangedSignal("BackgroundColor3"):Connect(function()
+		base.BackgroundColor3 = shade(b.BackgroundColor3)
+	end)
 	if props.onClick then
-		hoverable(b)
+		press3D(b, depth)
 		local armed = false
 		b.Activated:Connect(function()
 			if props.confirm and not armed then
@@ -359,13 +404,10 @@ local function creditPopup(amount)
 end
 
 -- nút Starter Pack (chỉ hiện khi chưa mua), bấm mở Shop
-local starterButton = new("TextButton", { Position = UDim2.fromOffset(10, 168), Size = UDim2.fromOffset(300, 32), AutoButtonColor = false, BackgroundColor3 = WHITE, BorderSizePixel = 0, FontFace = DISPLAY, TextSize = 10, TextColor3 = C.void, Text = "🎁 STARTER PACK · ONE-TIME OFFER", Visible = false, Parent = gui }, {
-	corner(10),
-	new("UIGradient", { Color = ColorSequence.new(C.gold, C.orange) }),
-	stroke(WHITE, 1.2, 0.4),
-})
-sweepLayer(starterButton, 10, 0.5)
-hoverable(starterButton)
+local starterButton = button({ Parent = gui, Position = UDim2.fromOffset(10, 166), Size = UDim2.fromOffset(300, 36), Text = "🎁 STARTER PACK · ONE-TIME OFFER", Font = DISPLAY, TextSize = 10, Color = C.orange, Radius = 18, onClick = function() end })
+local starterHolder = starterButton.Parent
+starterHolder.Visible = false
+sweepLayer(starterButton, 18, 0.5)
 
 -- ---------- Vùng + ba lô (trên giữa) ----------
 local zoneBanner = glass({ AnchorPoint = Vector2.new(0.5, 0), Position = UDim2.new(0.5, 0, 0, 6), Size = UDim2.fromOffset(400, 32), Parent = gui }, C.cyan, 16)
@@ -567,23 +609,31 @@ local dockRow = new("Frame", { Size = UDim2.fromScale(1, 1), BackgroundTranspare
 
 local tiles = {}
 local function abilityTile(order, emoji, key, name, color, onPress)
-	local b = new("TextButton", { LayoutOrder = order, Size = UDim2.fromOffset(70, 78), AutoButtonColor = false, BackgroundColor3 = WHITE, BorderSizePixel = 0, Text = "", Parent = dockRow }, {
-		corner(12),
-		vgradient(color:Lerp(C.void, 0.3), color:Lerp(C.void, 0.75)),
-		stroke(color, 1.6, 0.15),
+	-- khung bọc + đế tối để ô kỹ năng nổi khối 3D
+	local holder = new("Frame", { LayoutOrder = order, Size = UDim2.fromOffset(70, 82), BackgroundTransparency = 1, Parent = dockRow })
+	new("Frame", { Position = UDim2.fromOffset(0, 5), Size = UDim2.new(1, 0, 1, -5), BackgroundColor3 = shade(color, 0.6), BorderSizePixel = 0, Parent = holder }, { corner(14) })
+	local b = new("TextButton", { Size = UDim2.new(1, 0, 1, -5), AutoButtonColor = false, BackgroundColor3 = WHITE, BorderSizePixel = 0, Text = "", Parent = holder }, {
+		corner(14),
+		vgradient(color:Lerp(C.void, 0.2), color:Lerp(C.void, 0.7)),
+		stroke(color:Lerp(WHITE, 0.3), 1.6, 0.1),
 	})
+	new("Frame", { Position = UDim2.fromOffset(4, 3), Size = UDim2.new(1, -8, 0.4, 0), BackgroundColor3 = WHITE, BackgroundTransparency = 0.82, BorderSizePixel = 0, Parent = b }, { corner(12) })
+	new("Frame", { Position = UDim2.fromOffset(26, 5), Size = UDim2.fromOffset(10, 6), BackgroundColor3 = WHITE, BackgroundTransparency = 0.35, BorderSizePixel = 0, Parent = b }, { corner(4) })
 	text({ Position = UDim2.fromOffset(0, 8), Size = UDim2.new(1, 0, 0, 40), TextSize = 28, Text = emoji, Parent = b })
 	text({ Position = UDim2.new(0, 0, 1, -22), Size = UDim2.new(1, 0, 0, 16), FontFace = DISPLAY, TextSize = 7, Text = string.upper(name), Parent = b })
 	local keyChip = text({ Position = UDim2.fromOffset(4, 4), Size = UDim2.fromOffset(18, 18), BackgroundColor3 = C.void, BackgroundTransparency = 0.25, FontFace = DISPLAY, TextSize = 9, TextColor3 = color:Lerp(WHITE, 0.5), Text = key, Parent = b })
 	corner(5).Parent = keyChip
-	local shade = new("Frame", { AnchorPoint = Vector2.new(0, 1), Position = UDim2.fromScale(0, 1), Size = UDim2.fromScale(1, 0), BackgroundColor3 = C.void, BackgroundTransparency = 0.3, BorderSizePixel = 0, ZIndex = 5, Parent = b }, { corner(12) })
+	local cooldownShade = new("Frame", { AnchorPoint = Vector2.new(0, 1), Position = UDim2.fromScale(0, 1), Size = UDim2.fromScale(1, 0), BackgroundColor3 = C.void, BackgroundTransparency = 0.3, BorderSizePixel = 0, ZIndex = 5, Parent = b }, { corner(14) })
 	local timer = text({ Size = UDim2.fromScale(1, 1), FontFace = DISPLAY, TextSize = 18, TextStrokeTransparency = 0.3, ZIndex = 6, Text = "", Parent = b })
 	local lock = text({ Size = UDim2.fromScale(1, 1), BackgroundColor3 = C.void, BackgroundTransparency = 0.2, FontFace = DISPLAY, TextSize = 10, TextColor3 = C.muted, ZIndex = 7, Visible = false, Text = "", Parent = b })
 	corner(12).Parent = lock
-	sweepLayer(b, 12, 0.8)
-	hoverable(b)
-	b.Activated:Connect(onPress)
-	return { shade = shade, timer = timer, lock = lock }
+	sweepLayer(b, 14, 0.8)
+	press3D(b, 5)
+	b.Activated:Connect(function()
+		spawnBubbles(b, 3, color:Lerp(WHITE, 0.5))
+		onPress()
+	end)
+	return { shade = cooldownShade, timer = timer, lock = lock }
 end
 
 -- Core Overdrive: hồi chiêu nhanh x2
@@ -656,11 +706,20 @@ local headerLine = new("Frame", { Position = UDim2.fromOffset(0, 54), Size = UDi
 	new("UIGradient", { Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.5, 0), NumberSequenceKeypoint.new(1, 1) }) }),
 })
 local panelTitle = text({ Position = UDim2.fromOffset(20, 0), Size = UDim2.new(1, -90, 0, 54), FontFace = DISPLAY, TextSize = 16, TextXAlignment = Enum.TextXAlignment.Left, Text = "", Parent = panel })
-local closeButton = new("TextButton", { AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -12, 0, 27), Size = UDim2.fromOffset(38, 38), AutoButtonColor = false, BackgroundColor3 = C.red, BackgroundTransparency = 0.6, FontFace = DISPLAY, TextSize = 14, TextColor3 = C.text, Text = "✕", Parent = panel }, {
-	corner(10),
-	stroke(C.red, 1.2, 0.2),
-})
-hoverable(closeButton)
+local closeButton = button({ Parent = panel, AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -12, 0, 28), Size = UDim2.fromOffset(40, 42), Text = "✕", Font = DISPLAY, TextSize = 15, Color = C.red, Radius = 20, onClick = function() end })
+
+-- bong bóng lớn trôi chậm sau nội dung bảng
+local panelBubbles = new("Frame", { Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1, ClipsDescendants = true, ZIndex = 0, Parent = panel })
+local panelBubbleList = {}
+for i = 1, 9 do
+	local size = math.random(40, 120)
+	local bubble = new("Frame", { AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(math.random(), math.random()), Size = UDim2.fromOffset(size, size), BackgroundColor3 = WHITE, BackgroundTransparency = 0.94, BorderSizePixel = 0, Parent = panelBubbles }, {
+		corner(size),
+		new("UIStroke", { Color = WHITE, Thickness = 1.2, Transparency = 0.8 }),
+		new("Frame", { Position = UDim2.fromScale(0.22, 0.16), Size = UDim2.fromScale(0.25, 0.18), BackgroundColor3 = WHITE, BackgroundTransparency = 0.8, BorderSizePixel = 0 }, { corner(size) }),
+	})
+	table.insert(panelBubbleList, { frame = bubble, x = math.random(), speed = 0.012 + math.random() * 0.02, phase = i })
+end
 local content = new("ScrollingFrame", { Position = UDim2.fromOffset(14, 64), Size = UDim2.new(1, -28, 1, -76), BackgroundTransparency = 1, BorderSizePixel = 0, ScrollBarThickness = 5, ScrollBarImageColor3 = C.cyan, CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.Y, ScrollingDirection = Enum.ScrollingDirection.Y, Parent = panel }, {
 	new("UIListLayout", { Padding = UDim.new(0, 10), SortOrder = Enum.SortOrder.LayoutOrder }),
 	new("UIPadding", { PaddingTop = UDim.new(0, 4), PaddingBottom = UDim.new(0, 8), PaddingLeft = UDim.new(0, 2), PaddingRight = UDim.new(0, 10) }),
@@ -1424,7 +1483,7 @@ EXTRA_PANELS = {
 
 function panels.Warp()
 	local pass = player:GetAttribute("ZoneWarp") == true
-	section("TELEPORT", if pass then "Zone Warp active" else "Returning to the Hub is free")
+	section("TELEPORT", if pass then "🌀 Zone Warp: instant, no cooldown" else string.format("Free warp every %ds · Zone Warp pass = no cooldown", Config.FreeWarpCooldown))
 	row({ icon = "🏙️", iconColor = C.cyan, title = "Hub", sub = "Upload data, Capsule Lab, shops, Glitch Floor portal", buttons = { { text = "🌀 WARP", color = C.cyan:Lerp(C.void, 0.3), onClick = function()
 		fire("Warp", "Hub")
 		openPanel = nil
@@ -1432,7 +1491,7 @@ function panels.Warp()
 	end } }, height = 58 })
 	for _, zone in Config.Zones do
 		local unlocked = state.level >= zone.level
-		local can = pass and unlocked
+		local can = unlocked
 		row({
 			icon = zone.emoji,
 			iconColor = zone.crystal,
@@ -1441,13 +1500,13 @@ function panels.Warp()
 			dim = not unlocked,
 			accent = if can then zone.crystal else nil,
 			buttons = { {
-				text = if not unlocked then "🔒 LV." .. zone.level elseif pass then "🌀 WARP" else "🌀 PASS",
-				color = if can then C.violet elseif unlocked then C.violet:Lerp(C.void, 0.5) else C.off,
+				text = if not unlocked then "🔒 LV." .. zone.level else "🌀 WARP",
+				color = if can then C.violet else C.off,
 				onClick = if can then function()
 					fire("Warp", zone.id)
 					openPanel = nil
 					renderPanel()
-				end elseif unlocked then goPanel("Shop") else nil,
+				end else nil,
 			} },
 			height = 58,
 		})
@@ -1496,8 +1555,37 @@ function renderPanel(animate)
 	content.CanvasPosition = if animate then Vector2.zero else scroll
 	lastSig = panelSignature()
 	if animate or not panel.Visible then
-		panelScale.Scale = 0.88
-		tween(panelScale, 0.28, { Scale = 1 }, Enum.EasingStyle.Back)
+		-- mở bảng: phóng to + nghiêng nhẹ rồi về thẳng cho cảm giác 3D
+		panelScale.Scale = 0.86
+		panel.Rotation = -3
+		tween(panelScale, 0.3, { Scale = 1 }, Enum.EasingStyle.Back)
+		tween(panel, 0.35, { Rotation = 0 }, Enum.EasingStyle.Back)
+		-- từng thẻ bật lên lần lượt
+		local items = {}
+		for _, child in content:GetChildren() do
+			if child:IsA("GuiObject") then
+				if child:FindFirstChildOfClass("UIGridLayout") then
+					for _, cell in child:GetChildren() do
+						if cell:IsA("GuiObject") then
+							table.insert(items, cell)
+						end
+					end
+				else
+					table.insert(items, child)
+				end
+			end
+		end
+		for i, item in items do
+			if i > 28 then
+				break
+			end
+			local s = new("UIScale", { Scale = 0.8, Parent = item })
+			task.delay(0.05 + i * 0.025, function()
+				if s.Parent then
+					tween(s, 0.28, { Scale = 1 }, Enum.EasingStyle.Back)
+				end
+			end)
+		end
 	end
 	panel.Visible = true
 end
@@ -1513,34 +1601,57 @@ local menu = new("Frame", { AnchorPoint = Vector2.new(0, 0.5), Position = UDim2.
 	new("UIListLayout", { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }),
 })
 local badges = {}
+local menuFaces = {} -- { face, tile, color } cho hiệu ứng nhún + bong bóng
 for i, entry in MENU do
-	local b = new("TextButton", { LayoutOrder = i, Size = UDim2.fromOffset(200, 50), AutoButtonColor = false, BackgroundColor3 = WHITE, BackgroundTransparency = 0.08, BorderSizePixel = 0, Text = "", Parent = menu }, {
-		corner(12),
-		new("UIGradient", { Color = ColorSequence.new(entry.color:Lerp(C.void, 0.45), C.glass) }),
+	-- khung bọc + đế 3D + mặt nút dạng viên thuốc bóng
+	local holder = new("Frame", { LayoutOrder = i, Size = UDim2.fromOffset(200, 50), BackgroundTransparency = 1, Parent = menu })
+	new("Frame", { Position = UDim2.fromOffset(0, 6), Size = UDim2.new(1, 0, 1, -6), BackgroundColor3 = shade(entry.color, 0.55), BorderSizePixel = 0, Parent = holder }, { corner(22) })
+	local b = new("TextButton", { Size = UDim2.new(1, 0, 1, -6), AutoButtonColor = false, BackgroundColor3 = WHITE, BorderSizePixel = 0, Text = "", Parent = holder }, {
+		corner(22),
+		new("UIGradient", { Color = ColorSequence.new(entry.color:Lerp(WHITE, 0.15), entry.color:Lerp(C.void, 0.35)), Rotation = 90 }),
 	})
-	local edge = stroke(entry.color, 1.6, 0.15)
+	local edge = stroke(entry.color:Lerp(WHITE, 0.5), 1.6, 0.1)
 	edge.Parent = b
-	local tile = new("Frame", { Position = UDim2.fromOffset(5, 5), Size = UDim2.fromOffset(40, 40), BackgroundColor3 = entry.color, BorderSizePixel = 0, Parent = b }, {
-		corner(10),
-		vgradient(WHITE, Color3.fromRGB(170, 170, 190)),
-		stroke(WHITE, 1, 0.5),
+	-- bóng kính nửa trên + đốm sáng
+	new("Frame", { Position = UDim2.fromOffset(8, 3), Size = UDim2.new(1, -16, 0.42, 0), BackgroundColor3 = WHITE, BackgroundTransparency = 0.72, BorderSizePixel = 0, Parent = b }, { corner(14) })
+	-- icon trong "bong bóng" tròn
+	local tile = new("Frame", { Position = UDim2.fromOffset(4, 3), Size = UDim2.fromOffset(38, 38), BackgroundColor3 = WHITE, BackgroundTransparency = 0.08, BorderSizePixel = 0, Parent = b }, {
+		corner(19),
+		new("UIGradient", { Color = ColorSequence.new(WHITE, entry.color:Lerp(WHITE, 0.55)), Rotation = 90 }),
+		stroke(entry.color:Lerp(C.void, 0.2), 2, 0),
 	})
-	text({ Size = UDim2.fromScale(1, 1), TextSize = 22, Text = entry.icon, Parent = tile })
-	text({ Position = UDim2.fromOffset(56, 0), Size = UDim2.new(1, -70, 1, 0), FontFace = DISPLAY, TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left, Text = entry.label, Parent = b })
-	local badge = text({ AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.new(1, -4, 0, 4), Size = UDim2.fromOffset(20, 20), BackgroundColor3 = C.red, BackgroundTransparency = 0, FontFace = DISPLAY, TextSize = 11, Text = "!", Visible = false, ZIndex = 8, Parent = b })
-	corner(10).Parent = badge
-	stroke(WHITE, 1.5, 0).Parent = badge
+	new("Frame", { Position = UDim2.fromOffset(8, 5), Size = UDim2.fromOffset(10, 7), BackgroundColor3 = WHITE, BackgroundTransparency = 0.1, BorderSizePixel = 0, ZIndex = 3, Parent = tile }, { corner(5) })
+	text({ Size = UDim2.fromScale(1, 1), TextSize = 21, Text = entry.icon, ZIndex = 2, Parent = tile })
+	text({ Position = UDim2.fromOffset(50, 0), Size = UDim2.new(1, -58, 1, 0), FontFace = DISPLAY, TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left, TextStrokeTransparency = 0.35, TextStrokeColor3 = shade(entry.color, 0.6), Text = entry.label, Parent = b })
+	local badge = text({ AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.new(1, -6, 0, 4), Size = UDim2.fromOffset(22, 22), BackgroundColor3 = C.red, BackgroundTransparency = 0, FontFace = DISPLAY, TextSize = 11, Text = "!", Visible = false, ZIndex = 8, Parent = b })
+	corner(11).Parent = badge
+	stroke(WHITE, 2, 0).Parent = badge
 	badges[entry.id] = badge
-	sweepLayer(b, 12, 0.8)
-	hoverable(b)
+	sweepLayer(b, 22, 0.8)
+	press3D(b, 6)
 	if entry.id == "Shop" then
-		TweenService:Create(edge, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), { Transparency = 0.75 }):Play()
+		TweenService:Create(edge, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), { Transparency = 0.8 }):Play()
 	end
+	local bubbleColor = entry.color:Lerp(WHITE, 0.5)
+	b.MouseEnter:Connect(function()
+		spawnBubbles(b, 3, bubbleColor)
+	end)
 	b.Activated:Connect(function()
+		spawnBubbles(b, 7, bubbleColor)
 		openPanel = if openPanel == entry.id then nil else entry.id
 		renderPanel(true)
 	end)
+	table.insert(menuFaces, { face = b, tile = tile, color = bubbleColor })
 end
+
+-- bong bóng lác đác từ các nút menu cho menu "sống"
+task.spawn(function()
+	while true do
+		task.wait(1.4)
+		local pick = menuFaces[math.random(1, #menuFaces)]
+		spawnBubbles(pick.face, 2, pick.color)
+	end
+end)
 
 starterButton.Activated:Connect(goPanel("Shop"))
 warpButton.Activated:Connect(goPanel("Warp"))
@@ -1624,7 +1735,7 @@ local function renderHud()
 	badges.Capsules.Visible = capsuleDeal()
 	badges.Database.Visible = setClaimable()
 	badges.Daily.Visible = state.daily.ready
-	starterButton.Visible = not state.starterPack
+	starterHolder.Visible = not state.starterPack
 	local nextPack = Config.Backpacks[state.backpack + 1]
 	badges.Gear.Visible = nextPack ~= nil and state.credits >= nextPack.price
 	renderBoosts()
@@ -1662,6 +1773,17 @@ RunService.RenderStepped:Connect(function(dt)
 	end
 	dataBar.outline.Color = if dataFull then C.magenta else C.cyan
 	dataBar.outline.Transparency = if dataFull then 0.5 - 0.5 * math.sin(t * 8) else 0.45
+	-- icon menu nhún nhảy lệch nhịp
+	for i, item in menuFaces do
+		item.tile.Position = UDim2.fromOffset(4, 3 + math.sin(t * 2.4 + i * 0.9) * 1.6)
+	end
+	-- bong bóng nền bảng trôi lên chậm
+	if panel.Visible then
+		for _, bubble in panelBubbleList do
+			local y = 1.15 - ((t * bubble.speed + bubble.phase * 0.13) % 1.3)
+			bubble.frame.Position = UDim2.fromScale(bubble.x + math.sin(t * 0.6 + bubble.phase) * 0.03, y)
+		end
+	end
 	for i = #previews, 1, -1 do
 		local p = previews[i]
 		if not p.model.Parent then

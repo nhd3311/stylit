@@ -4,6 +4,10 @@
 --       Byte Meadow: cây voxel, khối data bay, bồn cây
 --       Circuit Canyon: vách hẻm núi bậc thang, mạch điện neon dưới sàn, tủ server nhấp nháy
 --       Neon Spires: tháp kính nhiều tầng có cửa sổ neon, vòng hologram bay
+--       Frost Server: cụm pha lê băng, tủ server đóng băng, tuyết rơi
+--       Magma Forge: hồ dung nham, trụ lò rèn có lửa, tàn lửa bay lên
+--       Glitch Rift: khối glitch lơ lửng xoay, cột sáng neon, bia đá đen viền hồng
+--       Cloud Citadel: cột đá trắng mũ vàng, cổng vòm vàng, mây khối trôi
 --   • cầu nối giữa các đảo, trụ đỡ cắm xuống vực, lưới neon dưới đáy vực, mảnh đảo trôi xa xa
 --   • sàn đấu Glitch Floor bay bên phải Hub (EventService điều khiển)
 
@@ -36,6 +40,10 @@ local THEMES = {
 	Meadow = { a = Color3.fromRGB(170, 235, 205), b = Color3.fromRGB(138, 212, 184), glow = Color3.fromRGB(80, 255, 170), wall = Color3.fromRGB(34, 68, 72), trim = Color3.fromRGB(90, 255, 180) },
 	Canyon = { a = Color3.fromRGB(232, 160, 100), b = Color3.fromRGB(206, 134, 80), glow = Color3.fromRGB(255, 170, 60), wall = Color3.fromRGB(104, 58, 38), trim = Color3.fromRGB(255, 190, 80) },
 	Spires = { a = Color3.fromRGB(54, 42, 94), b = Color3.fromRGB(40, 30, 74), glow = Color3.fromRGB(190, 90, 255), wall = Color3.fromRGB(22, 16, 42), trim = Color3.fromRGB(200, 110, 255) },
+	Frost = { a = Color3.fromRGB(218, 238, 255), b = Color3.fromRGB(186, 218, 245), glow = Color3.fromRGB(120, 220, 255), wall = Color3.fromRGB(30, 52, 86), trim = Color3.fromRGB(150, 225, 255) },
+	Magma = { a = Color3.fromRGB(70, 46, 44), b = Color3.fromRGB(52, 34, 32), glow = Color3.fromRGB(255, 110, 30), wall = Color3.fromRGB(34, 20, 18), trim = Color3.fromRGB(255, 120, 40), glowChance = 0.12 },
+	Rift = { a = Color3.fromRGB(36, 14, 48), b = Color3.fromRGB(20, 6, 30), glow = Color3.fromRGB(255, 60, 220), wall = Color3.fromRGB(12, 4, 20), trim = Color3.fromRGB(255, 70, 230), glowChance = 0.08 },
+	Citadel = { a = Color3.fromRGB(246, 246, 252), b = Color3.fromRGB(232, 224, 196), glow = Color3.fromRGB(255, 210, 110), wall = Color3.fromRGB(220, 226, 238), trim = Color3.fromRGB(255, 205, 90) },
 }
 
 local function prompt(parent, objectText, actionText, distance)
@@ -77,7 +85,7 @@ local function tiledIsland(center, sizeX, sizeZ, theme)
 		for iz = 0, nz - 1 do
 			local x = center.X - sizeX / 2 + (ix + 0.5) * tx
 			local z = center.Z - sizeZ / 2 + (iz + 0.5) * tz
-			local glowTile = random:NextNumber() < 0.04
+			local glowTile = random:NextNumber() < (theme.glowChance or 0.04)
 			local color = if glowTile then theme.glow else jitter(if (ix + iz) % 2 == 0 then theme.a else theme.b, 0.035)
 			block("Tile", Vector3.new(tx - 0.35, 1.2, tz - 0.35), CFrame.new(x, center.Y - 0.6, z), color, if glowTile then NEON else PLASTIC, if glowTile then { Transparency = 0.2 } else nil)
 		end
@@ -135,7 +143,7 @@ end
 
 -- Đáy vực: mặt phẳng tối + lưới neon tím, nhìn xuyên sương mù như "không gian số"
 local function voidGrid()
-	local center = Vector3.new(0, -90, -330)
+	local center = Vector3.new(0, -90, -800)
 	block("Void", Vector3.new(2048, 2, 2048), CFrame.new(center), Color3.fromRGB(10, 8, 26))
 	for i = -16, 16 do
 		local line = { CanCollide = false, Transparency = 0.25 }
@@ -147,9 +155,9 @@ end
 -- Mảnh đảo khối trôi xa xa hai bên cho khung cảnh có chiều sâu
 local function skyShards()
 	local colors = { THEMES.Hub.trim, THEMES.Meadow.trim, THEMES.Canyon.trim, THEMES.Spires.trim }
-	for i = 1, 22 do
+	for i = 1, 40 do
 		local side = if i % 2 == 0 then 1 else -1
-		local pos = Vector3.new(side * random:NextNumber(190, 340), random:NextNumber(-20, 90), random:NextNumber(-760, 120))
+		local pos = Vector3.new(side * random:NextNumber(190, 340), random:NextNumber(-20, 90), random:NextNumber(-1800, 120))
 		local size = Vector3.new(random:NextNumber(10, 34), random:NextNumber(4, 12), random:NextNumber(10, 34))
 		local cf = CFrame.new(pos) * CFrame.Angles(random:NextNumber(-0.2, 0.2), random:NextNumber(0, 6), random:NextNumber(-0.2, 0.2))
 		block("Shard", size, cf, Color3.fromRGB(30, 30, 52), METAL)
@@ -266,6 +274,105 @@ local function holoRing(pos, color)
 	ring:SetAttribute("Spin", 0.5)
 end
 
+-- ❄️ cụm pha lê băng: vài khối kính xanh nghiêng, lõi neon
+local function iceCluster(pos, theme)
+	for _ = 1, random:NextInteger(3, 5) do
+		local h = random:NextNumber(5, 15)
+		local w = random:NextNumber(1.6, 3)
+		local cf = CFrame.new(pos + Vector3.new(random:NextNumber(-2.5, 2.5), h / 2 - 0.5, random:NextNumber(-2.5, 2.5))) * CFrame.Angles(random:NextNumber(-0.35, 0.35), random:NextNumber(0, 6), random:NextNumber(-0.35, 0.35))
+		block("Ice", Vector3.new(w, h, w), cf, Color3.fromRGB(170, 225, 255), Enum.Material.Glass, { Transparency = 0.3, Reflectance = 0.25 })
+	end
+	local core = block("IceCore", Vector3.one * 1.6, CFrame.new(pos + Vector3.new(0, 2, 0)), theme.glow, NEON, { CanCollide = false })
+	Visuals.Light(core, theme.glow, 14, 1.5)
+end
+
+-- hạt rơi/bay trên cả vùng (tuyết, tàn lửa) bằng ParticleEmitter dạng hộp
+local function weather(zone, color, fromTop)
+	local emitter = block("Weather", Vector3.new(zone.size, 1, zone.size), CFrame.new(zone.center + Vector3.new(0, if fromTop then 60 else 1, 0)), color, PLASTIC, { Transparency = 1, CanCollide = false, CanQuery = false })
+	local p = Instance.new("ParticleEmitter")
+	p.Shape = Enum.ParticleEmitterShape.Box
+	p.ShapeStyle = Enum.ParticleEmitterShapeStyle.Volume
+	p.EmissionDirection = if fromTop then Enum.NormalId.Bottom else Enum.NormalId.Top
+	p.Color = ColorSequence.new(color)
+	p.LightEmission = if fromTop then 0.3 else 1
+	p.Rate = 70
+	p.Lifetime = NumberRange.new(6, 10)
+	p.Speed = NumberRange.new(4, 9)
+	p.SpreadAngle = Vector2.new(15, 15)
+	p.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, if fromTop then 0.35 else 0.25), NumberSequenceKeypoint.new(1, 0.1) })
+	p.Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.2), NumberSequenceKeypoint.new(1, 1) })
+	p.Parent = emitter
+end
+
+-- 🌋 hồ dung nham phát sáng có viền đá
+local function lavaPool(pos, theme)
+	local w, d = random:NextNumber(8, 14), random:NextNumber(8, 14)
+	block("LavaRim", Vector3.new(w + 1.4, 0.5, d + 1.4), CFrame.new(pos + Vector3.new(0, 0.25, 0)), theme.wall, METAL)
+	local lava = block("Lava", Vector3.new(w, 0.3, d), CFrame.new(pos + Vector3.new(0, 0.42, 0)), theme.glow, NEON, { CanCollide = false })
+	lava:SetAttribute("Blink", true)
+	Visuals.Light(lava, theme.glow, 18, 2)
+end
+
+-- 🌋 trụ lò rèn: khối bazan + lửa trên đỉnh
+local function forgePillar(pos, theme)
+	local h = random:NextNumber(10, 22)
+	block("Forge", Vector3.new(4, h, 4), CFrame.new(pos + Vector3.new(0, h / 2, 0)), jitter(theme.a, 0.1), METAL)
+	block("ForgeBand", Vector3.new(4.3, 0.6, 4.3), CFrame.new(pos + Vector3.new(0, h * 0.7, 0)), theme.trim, NEON, { CanCollide = false })
+	local top = block("ForgeTop", Vector3.new(4.6, 1, 4.6), CFrame.new(pos + Vector3.new(0, h + 0.5, 0)), theme.wall, METAL)
+	local fire = Instance.new("Fire")
+	fire.Size = 7
+	fire.Heat = 12
+	fire.Color = Color3.fromRGB(255, 120, 30)
+	fire.SecondaryColor = Color3.fromRGB(255, 220, 80)
+	fire.Parent = top
+	Visuals.Light(top, theme.glow, 24, 2.5)
+end
+
+-- 🌀 khối glitch lơ lửng xoay
+local function glitchCube(pos, theme)
+	local size = random:NextNumber(1.5, 4)
+	local cube = block("GlitchCube", Vector3.one * size, CFrame.new(pos) * CFrame.Angles(random:NextNumber(0, 6), random:NextNumber(0, 6), random:NextNumber(0, 6)), if random:NextNumber() < 0.5 then theme.glow else Color3.fromRGB(60, 255, 230), NEON, { CanCollide = false, Transparency = 0.15 })
+	cube:SetAttribute("Spin", random:NextNumber(-2, 2))
+	if random:NextNumber() < 0.4 then
+		cube:SetAttribute("Blink", true)
+	end
+end
+
+-- 🌀 bia đá đen viền neon + cột sáng
+local function monolith(pos, theme)
+	local h = random:NextNumber(12, 26)
+	local slab = block("Monolith", Vector3.new(6, h, 2), CFrame.new(pos + Vector3.new(0, h / 2, 0)) * CFrame.Angles(0, random:NextNumber(0, 6), 0), Color3.fromRGB(10, 6, 16), Enum.Material.Glass, { Reflectance = 0.3 })
+	block("MonolithEdge", Vector3.new(6.2, 0.4, 2.2), slab.CFrame * CFrame.new(0, h / 2, 0), theme.trim, NEON, { CanCollide = false })
+	local beam = block("RiftBeam", Vector3.new(0.8, 70, 0.8), CFrame.new(pos + Vector3.new(random:NextNumber(-6, 6), 35, random:NextNumber(-6, 6))), theme.glow, NEON, { CanCollide = false, Transparency = 0.35 })
+	beam:SetAttribute("Blink", true)
+end
+
+-- ☁️ cột đá trắng mũ vàng
+local function column(pos, theme)
+	local h = random:NextNumber(14, 26)
+	block("Column", Vector3.new(h, 3.4, 3.4), CFrame.new(pos + Vector3.new(0, h / 2, 0)) * CFrame.Angles(0, 0, math.pi / 2), theme.a, Enum.Material.Marble, { Shape = Enum.PartType.Cylinder })
+	for _, y in { 0.6, h } do
+		block("ColumnCap", Vector3.new(4.8, 1.2, 4.8), CFrame.new(pos + Vector3.new(0, y, 0)), theme.trim, METAL, { Reflectance = 0.3 })
+	end
+end
+
+-- ☁️ cổng vòm vàng
+local function goldenArch(pos, theme)
+	for _, dx in { -5, 5 } do
+		block("ArchPillar", Vector3.new(2, 14, 2), CFrame.new(pos + Vector3.new(dx, 7, 0)), theme.a, Enum.Material.Marble)
+	end
+	local top = block("ArchTop", Vector3.new(13, 1.6, 2.4), CFrame.new(pos + Vector3.new(0, 14.8, 0)), theme.trim, METAL, { Reflectance = 0.35 })
+	Visuals.Light(top, theme.glow, 20, 1.5)
+end
+
+-- ☁️ mây khối (nhiều quả cầu trắng) trôi trên cao
+local function cloud(pos)
+	for _ = 1, random:NextInteger(4, 7) do
+		local r = random:NextNumber(5, 10)
+		block("Cloud", Vector3.one * r, CFrame.new(pos + Vector3.new(random:NextNumber(-8, 8), random:NextNumber(-1.5, 2), random:NextNumber(-5, 5))), Color3.fromRGB(255, 255, 255), PLASTIC, { Shape = Enum.PartType.Ball, CanCollide = false, Transparency = 0.15 })
+	end
+end
+
 local function decorate(zone, theme)
 	if zone.id == "Meadow" then
 		for _ = 1, 18 do
@@ -289,6 +396,50 @@ local function decorate(zone, theme)
 				serverRack(pos, theme)
 			end
 		end
+	elseif zone.id == "Frost" then
+		for _ = 1, 16 do
+			iceCluster(ringPoint(zone, 0.82, 0.94), theme)
+		end
+		for _ = 1, 6 do
+			local pos = ringPoint(zone, 0.8, 0.88)
+			serverRack(pos, theme)
+		end
+		for _ = 1, 8 do
+			dataCube(zone.center + Vector3.new(random:NextNumber(-0.45, 0.45) * zone.size, random:NextNumber(9, 16), random:NextNumber(-0.45, 0.45) * zone.size), theme.glow)
+		end
+		weather(zone, Color3.fromRGB(240, 250, 255), true)
+	elseif zone.id == "Magma" then
+		for _ = 1, 10 do
+			lavaPool(ringPoint(zone, 0.8, 0.92), theme)
+		end
+		for _ = 1, 12 do
+			forgePillar(ringPoint(zone, 0.84, 0.94), theme)
+		end
+		for _ = 1, 12 do
+			circuitTrace(zone, theme)
+		end
+		weather(zone, Color3.fromRGB(255, 150, 40), false)
+	elseif zone.id == "Rift" then
+		for _ = 1, 10 do
+			monolith(ringPoint(zone, 0.84, 0.94), theme)
+		end
+		for _ = 1, 26 do
+			glitchCube(zone.center + Vector3.new(random:NextNumber(-0.47, 0.47) * zone.size, random:NextNumber(6, 22), random:NextNumber(-0.47, 0.47) * zone.size), theme)
+		end
+		for _ = 1, 10 do
+			circuitTrace(zone, theme)
+		end
+	elseif zone.id == "Citadel" then
+		for _ = 1, 16 do
+			column(ringPoint(zone, 0.84, 0.94), theme)
+		end
+		for _ = 1, 4 do
+			goldenArch(ringPoint(zone, 0.8, 0.86), theme)
+		end
+		for _ = 1, 10 do
+			cloud(zone.center + Vector3.new(random:NextNumber(-0.6, 0.6) * zone.size, random:NextNumber(24, 40), random:NextNumber(-0.6, 0.6) * zone.size))
+		end
+		holoRing(zone.center + Vector3.new(0, 34, 0), theme.glow)
 	else
 		for _ = 1, 14 do
 			neonTower(ringPoint(zone, 0.84, 0.94), random:NextNumber(20, 60), theme)
@@ -443,11 +594,12 @@ local function buildHub()
 	local toCenter = Vector3.new(c.X - lab.X, 0, c.Z - lab.Z).Unit
 	local side = Vector3.new(-toCenter.Z, 0, toCenter.X)
 	local wallPos = lab - toCenter * 7 + Vector3.new(0, 8, 0)
-	local wall = Visuals.Part({ Name = "LabWall", Size = Vector3.new(42, 16, 1.5), CFrame = CFrame.lookAt(wallPos, wallPos + toCenter), Color = Color3.fromRGB(28, 32, 50), Material = Enum.Material.Metal, Parent = world })
-	Visuals.Part({ Name = "LabStrip", Size = Vector3.new(42.2, 0.6, 1.7), CFrame = wall.CFrame * CFrame.new(0, 6.5, 0), Color = Color3.fromRGB(255, 70, 200), Material = Enum.Material.Neon, CanCollide = false, Parent = world })
+	local labWidth = #Config.Capsules * 9.5 + 4
+	local wall = Visuals.Part({ Name = "LabWall", Size = Vector3.new(labWidth, 16, 1.5), CFrame = CFrame.lookAt(wallPos, wallPos + toCenter), Color = Color3.fromRGB(28, 32, 50), Material = Enum.Material.Metal, Parent = world })
+	Visuals.Part({ Name = "LabStrip", Size = Vector3.new(labWidth + 0.2, 0.6, 1.7), CFrame = wall.CFrame * CFrame.new(0, 6.5, 0), Color = Color3.fromRGB(255, 70, 200), Material = Enum.Material.Neon, CanCollide = false, Parent = world })
 	Visuals.Label(wall, "🥚 CAPSULE LAB", UDim2.fromScale(26, 4.5), Vector3.new(0, 11, 0), Color3.fromRGB(255, 160, 230), 260)
 	for i, capsule in Config.Capsules do
-		local pos = lab + side * ((i - 2.5) * 9.5)
+		local pos = lab + side * ((i - (#Config.Capsules + 1) / 2) * 9.5)
 		local premium = capsule.premium == true
 		local width = if premium then 7.5 else 6.5
 		local base = Visuals.Part({ Name = capsule.id .. "Pod", Shape = Enum.PartType.Cylinder, Size = Vector3.new(1.2, width + 1, width + 1), CFrame = CFrame.new(pos + Vector3.new(0, 0.6, 0)) * CFrame.Angles(0, 0, math.pi / 2), Color = Color3.fromRGB(40, 44, 64), Material = Enum.Material.Metal, Parent = world })

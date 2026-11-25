@@ -703,7 +703,8 @@ function actions.ClaimDaily(player, profile)
 	PlayerService.PushState(player)
 end
 
--- Dịch chuyển: về Hub miễn phí cho mọi người; tới vùng cần Game Pass Zone Warp
+-- Dịch chuyển: về Hub luôn miễn phí. Tới vùng đã mở: miễn phí mỗi FreeWarpCooldown giây,
+-- có Game Pass Zone Warp thì không phải chờ.
 function actions.Warp(player, profile, session, target)
 	local t = os.clock()
 	if t - (session.lastWarp or 0) < 3 or not rootOf(player) then
@@ -718,13 +719,18 @@ function actions.Warp(player, profile, session, target)
 	if not zone then
 		return
 	end
-	if not player:GetAttribute("ZoneWarp") then
-		notify(player, "🌀 Get the Zone Warp pass to teleport to zones")
-		return
-	end
 	if profile.level < zone.level then
 		notify(player, string.format("🔒 %s needs level %d", zone.name, zone.level))
 		return
+	end
+	local pass = player:GetAttribute("ZoneWarp") == true
+	local remaining = Config.FreeWarpCooldown - (t - (session.lastFreeWarp or -math.huge))
+	if not pass and remaining > 0 then
+		notify(player, string.format("🌀 Free warp recharging (%ds). Zone Warp pass = no cooldown!", math.ceil(remaining)))
+		return
+	end
+	if not pass then
+		session.lastFreeWarp = t
 	end
 	session.lastWarp = t
 	player.Character:PivotTo(CFrame.new(zone.center + Vector3.new(0, 4, zone.size / 2 - 10)))

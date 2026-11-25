@@ -27,8 +27,14 @@ Mọi thứ là **khối nổi lơ lửng** trên khoảng không, dưới đáy
 | 🌿 Byte Meadow | 1 | x1 | Gạch caro bạc hà, cây voxel có "quả pixel" phát sáng, khối data bay | Rogue Drone | 👑 Glitch King |
 | 🏜️ Circuit Canyon | 6 | x4 | Gạch đồng, vách hẻm núi bậc thang, mạch điện neon dưới sàn, tủ server nhấp nháy | Scrap Hunter | 👑 Rust Titan |
 | 🌃 Neon Spires | 15 | x16 | Gạch tím đậm, tháp kính nhiều tầng có cửa sổ neon, vòng hologram bay | Neon Wraith | 👑 Overmind |
+| ❄️ Frost Server | 22 | x64 | Gạch trắng băng, cụm pha lê kính, tủ server đóng băng, **tuyết rơi** | Frost Sentinel | 👑 Cryo Colossus |
+| 🌋 Magma Forge | 30 | x256 | Gạch bazan có nhiều ô dung nham, hồ lava nhấp nháy, trụ lò rèn **có lửa thật**, tàn lửa bay lên | Magma Crawler | 👑 Forge Tyrant |
+| 🌀 Glitch Rift | 40 | x1024 | Gạch đen/hồng, khối glitch lơ lửng xoay, bia đá đen, cột sáng neon cao vút | Rift Phantom | 👑 The Glitch Queen |
+| ☁️ Cloud Citadel | 50 | x4096 | Gạch trắng/vàng, cột đá cẩm thạch mũ vàng, cổng vòm vàng, mây khối trôi, vòng hào quang khổng lồ | Aegis Drone | 👑 Celestial Core |
 
-Mỗi vùng có **tường khối cao thấp so le** với viền neon trên đỉnh. Boss hồi sinh sau 2–3 phút và cả server được báo. Ai góp sát thương đều được thưởng.
+Mỗi vùng có **tường khối cao thấp so le** với viền neon trên đỉnh. Máu người chơi và sức mạnh Pulse tăng theo cấp số nhân để đánh được quái ở stage cao. Có thêm 5 tier ba lô (tới **Infinity Core**) và 8 nhiệm vụ mới cho các stage sau.
+
+**Dịch chuyển**: bấm nút 🌀 trên thanh vùng. Về Hub luôn miễn phí. Tới vùng đã mở thì **miễn phí mỗi 60 giây**; có pass 🌀 Zone Warp thì không phải chờ. Boss hồi sinh sau 2–3 phút và cả server được báo. Ai góp sát thương đều được thưởng.
 
 ## 🥚 Capsule Lab + 🤖 20 thú máy
 
@@ -39,6 +45,10 @@ Bot không mua thẳng nữa mà **mở từ Capsule**. Mỗi capsule cho đúng
 | 🌿 Meadow | 120 Credits | 1 | Scout Orb 45% · Byte Kitty 30% · Miner Beetle 17% · Glitch Fox 7% · **Pixel Owl 1%** |
 | 🏜️ Canyon | 4K Credits | 6 | Guard Beetle 45% · Laser Orb 30% · Dune Kitty 17% · Harvester Jelly 7% · **Sun Drake 1%** |
 | 🌃 Spires | 90K Credits | 15 | Titan Beetle 45% · Neon Jelly 30% · Volt Fox 17% · Void Owl 7% · **Quantum Dragon 1%** |
+| ❄️ Frost | 2.5M Credits | 22 | Snow Orb 45% · Frost Kitty 30% · Glacier Beetle 17% · Borealis Jelly 7% · **Ice Wyrm 1%** |
+| 🌋 Magma | 70M Credits | 30 | Ember Orb 45% · Cinder Fox 30% · Magma Beetle 17% · Blaze Owl 7% · **Inferno Drake 1%** |
+| 🌀 Rift | 2B Credits | 40 | Static Orb 45% · Rift Kitty 30% · Null Beetle 17% · Phase Fox 7% · **Rift Leviathan 1%** |
+| ☁️ Citadel | 60B Credits | 50 | Halo Orb 45% · Seraph Kitty 30% · Aegis Beetle 17% · Oracle Owl 7% · **Celestial Dragon 1%** |
 | 💎 **Neon** | **Robux** | 1 | Holo Kitty 50% · Prism Fox 30% · Aurora Owl 15% · **Nova Dragon 4.5%** · **Singularity 0.5%** |
 
 - Độ hiếm: Common → Rare → Epic → Legendary → **Mythic** (chỉ có trong Neon Capsule).
@@ -57,7 +67,7 @@ Bot không mua thẳng nữa mà **mở từ Capsule**. Mỗi capsule cho đúng
 ## 📚 Bot Database
 
 - Bot chưa có hiện **bóng đen "???"**, có rồi thì hiện thú máy 3D đầy màu sắc.
-- Sưu tầm đủ 5 bot của một capsule thì nhận thưởng một lần: Credits và **+% gather vĩnh viễn** (Meadow +5%, Canyon +10%, Spires +15%, Neon +25%).
+- Sưu tầm đủ 5 bot của một capsule thì nhận thưởng một lần: Credits và **+% gather vĩnh viễn** (Meadow +5%, Canyon +10%, Spires +15%, Frost +20%, Magma +25%, Rift +30%, Citadel +40%, Neon +25%). Tổng cộng **40 bot** để sưu tầm.
 - Mỗi bot có 2 huy hiệu ✨/🌈 sáng lên khi anh từng sở hữu bản biến thể đó.
 
 ## 🎁 Quà đăng nhập 7 ngày
@@ -88,6 +98,13 @@ Vào game mà có quà chưa nhận thì bảng Daily tự mở.
 | F | 🛡️ Shield | 12 | Giảm 70% sát thương trong 6 giây |
 
 Trên điện thoại có sẵn nút bấm cho từng kỹ năng và nút 💾 thu thập.
+
+## 🫧 Giao diện 3D bong bóng
+
+- **Mọi nút đều nổi khối 3D**: mặt nút nằm trên đế tối màu. Rê chuột thì nút nổi lên, bấm thì lún xuống, thả ra thì bật lại. Có lớp bóng kính và đốm sáng như bong bóng.
+- **Menu dạng viên thuốc bóng**: icon nằm trong bong bóng tròn và nhún nhảy lệch nhịp. **Bong bóng bay lên** khi rê chuột, bấm, và lác đác cả lúc rảnh.
+- **Ô kỹ năng** cũng nổi 3D và có bong bóng khi bấm.
+- Mở bảng thì bảng **nghiêng nhẹ rồi về thẳng**, từng thẻ **bật lên lần lượt**. Nền bảng có **bong bóng lớn trôi chậm**.
 
 ## 💎 Shop (Robux là nguồn thu chính)
 
@@ -143,7 +160,7 @@ Dùng Rojo thì chạy `rojo serve` trong thư mục này.
 | `server/PlayerService.luau` | Thu thập, upload, mở capsule + biến thể, Fuse, khoá bot, Database, quà ngày, kỹ năng, level, nhiệm vụ |
 | `server/EnemyService.luau` | AI của quái và boss, đội bot tự bắn, chia thưởng boss |
 | `server/MonetizationService.luau` | Game Pass, Dev Product, Neon Capsule, kiểm tra PolicyService |
-| `client/Main.client.luau` | HUD hologram, nút kỹ năng, bảng Bots / Capsules / Database / Gear / Missions / Shop, hoạt cảnh mở capsule |
+| `client/Main.client.luau` | HUD hologram, nút 3D bong bóng, menu có bong bóng bay, các bảng (Bots, Capsules, Database, Daily, Gear, Missions, Shop, Warp), hoạt cảnh mở capsule |
 | `client/Effects.luau` | Vẽ đội thú máy bay theo, laser, số sát thương, nổ, hào quang |
 | `client/Fx.luau` | Làm tinh thể xoay, đèn nhấp nháy |
 

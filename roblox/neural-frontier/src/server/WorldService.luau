@@ -78,7 +78,7 @@ end
 local function tiledIsland(center, sizeX, sizeZ, theme)
 	block("IslandBase", Vector3.new(sizeX + 6, 8, sizeZ + 6), CFrame.new(center + Vector3.new(0, -5, 0)), theme.wall, METAL)
 	block("IslandTrim", Vector3.new(sizeX + 6.4, 0.5, sizeZ + 6.4), CFrame.new(center + Vector3.new(0, -8.7, 0)), theme.trim, NEON, { CanCollide = false })
-	block("IslandGlow", Vector3.new(sizeX, 0.2, sizeZ), CFrame.new(center + Vector3.new(0, -0.75, 0)), theme.glow, NEON, { CanCollide = false })
+	block("IslandGlow", Vector3.new(sizeX, 0.2, sizeZ), CFrame.new(center + Vector3.new(0, -0.75, 0)), theme.glow, NEON, { CanCollide = false, Transparency = 0.3 })
 	local nx, nz = math.floor(sizeX / TILE), math.floor(sizeZ / TILE)
 	local tx, tz = sizeX / nx, sizeZ / nz
 	for ix = 0, nx - 1 do
@@ -87,7 +87,7 @@ local function tiledIsland(center, sizeX, sizeZ, theme)
 			local z = center.Z - sizeZ / 2 + (iz + 0.5) * tz
 			local glowTile = random:NextNumber() < (theme.glowChance or 0.04)
 			local color = if glowTile then theme.glow else jitter(if (ix + iz) % 2 == 0 then theme.a else theme.b, 0.035)
-			block("Tile", Vector3.new(tx - 0.35, 1.2, tz - 0.35), CFrame.new(x, center.Y - 0.6, z), color, if glowTile then NEON else PLASTIC, if glowTile then { Transparency = 0.2 } else nil)
+			block("Tile", Vector3.new(tx - 0.35, 1.2, tz - 0.35), CFrame.new(x, center.Y - 0.6, z), color, if glowTile then NEON else PLASTIC, if glowTile then { Transparency = 0.4 } else nil)
 		end
 	end
 end
@@ -104,7 +104,7 @@ local function walls(center, sizeX, sizeZ, theme, openings, low)
 		local h = if low then 2.6 else 6 + random:NextInteger(0, 4) * 2
 		local size = if alongX then Vector3.new(TILE, h, 3) else Vector3.new(3, h, TILE)
 		block("Wall", size, CFrame.new(pos + Vector3.new(0, h / 2, 0)), if low then Color3.fromRGB(200, 230, 255) else jitter(theme.wall, 0.06), if low then Enum.Material.Glass else METAL, if low then { Transparency = 0.55 } else nil)
-		block("WallTrim", Vector3.new(size.X + 0.2, 0.4, size.Z + 0.2), CFrame.new(pos + Vector3.new(0, h + 0.2, 0)), theme.trim, NEON, { CanCollide = false })
+		block("WallTrim", Vector3.new(size.X + 0.2, 0.4, size.Z + 0.2), CFrame.new(pos + Vector3.new(0, h + 0.2, 0)), theme.trim, NEON, { CanCollide = false, Transparency = 0.2 })
 	end
 	for i = 0, sizeX / TILE - 1 do
 		local x = center.X - sizeX / 2 + (i + 0.5) * TILE
@@ -124,7 +124,7 @@ local function bridge(zFrom, zTo, theme)
 	local mid = (zFrom + zTo) / 2
 	local width = 18
 	block("BridgeBase", Vector3.new(width, 3, length), CFrame.new(0, -2.5, mid), theme.wall, METAL)
-	block("BridgeGlow", Vector3.new(width - 1, 0.2, length), CFrame.new(0, -0.75, mid), theme.glow, NEON, { CanCollide = false })
+	block("BridgeGlow", Vector3.new(width - 1, 0.2, length), CFrame.new(0, -0.75, mid), theme.glow, NEON, { CanCollide = false, Transparency = 0.3 })
 	local n = math.max(1, math.floor(length / TILE))
 	for i = 0, n - 1 do
 		for col, x in { -4.4, 4.4 } do

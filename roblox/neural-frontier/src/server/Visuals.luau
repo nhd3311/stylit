@@ -81,15 +81,17 @@ function Visuals.SetupLighting()
 	atmosphere.Offset = 0.15
 	atmosphere.Color = Color3.fromRGB(210, 180, 255)
 	atmosphere.Decay = Color3.fromRGB(70, 50, 140)
-	atmosphere.Glare = 0.3
+	atmosphere.Glare = 0.12
 	atmosphere.Haze = 1.8
 	local bloom = ensure("BloomEffect", "Bloom")
-	bloom.Intensity = 0.9
-	bloom.Size = 28
-	bloom.Threshold = 0.85
+	-- bloom vừa phải: neon vẫn sáng nhưng không loá mắt
+	bloom.Intensity = 0.45
+	bloom.Size = 20
+	bloom.Threshold = 0.95
 	local grade = ensure("ColorCorrectionEffect", "Grade")
 	grade.Saturation = 0.25
-	grade.Contrast = 0.12
+	grade.Contrast = 0.1
+	grade.Brightness = -0.03
 	grade.TintColor = Color3.fromRGB(245, 240, 255)
 	ensure("SunRaysEffect", "SunRays").Intensity = 0.06
 end
